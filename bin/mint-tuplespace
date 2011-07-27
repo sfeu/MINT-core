@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require "MINT-core/overrides/rinda"
+require 'rinda-patch'
+
+port = 4000
+ts = Rinda::TupleSpace.new
+DRb.start_service("druby://0.0.0.0:#{port}", ts)
+puts "Rinda listening on #{DRb.uri}..."
+DRb.thread.join
+

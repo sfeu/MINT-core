@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require 'MINT-core'
+include MINT
+a = AUIAgent.new
+
+mapping_external_pts_update = ExecuteOnStateChange.new(PTS,"finished",a.method(:initial_calculation),a.method(:initial_calculation))
+a.addMapping(mapping_external_pts_update)
+
+gesture_next= ComplementarySendEvent.new(HandGesture,"next",{ AIO  =>"focused"},:next)
+a.addMapping(gesture_next)
+
+gesture_previous= ComplementarySendEvent.new(HandGesture,"previous",{ AIO  =>"focused"},:prev)
+a.addMapping(gesture_previous)
+
+# gesture_widen = Complementary.new(HandGesture,"widened",{ AIO  =>"focused"},:parent)
+#a.addMapping(gesture_widen)
+
+#gesture_narrow= Complementary.new(HandGesture,"narrowed",{ AIO  =>"focused"},:child)
+#a.addMapping(gesture_narrow)
+
+gesture_confirmed= ComplementarySendEvent.new(HandGesture,"confirmed",{ AIINChoose  =>"focused"},:choose)
+a.addMapping(gesture_confirmed)
+
+mouse_confirmed= ComplementarySendEvent.new(Pointer,"selected",{ AIINChoose  =>"focused"},:choose)
+a.addMapping(mouse_confirmed)
+
+#sync_unhighlight = Synchronize.new(AIO,"presented",CIO, :unhighlight, :displayed)
+#a.addMapping(sync_unhighlight)
+
+#sync_highlight = Synchronize.new(AIO,"focused",CIO,:highlight, :highlighted)
+#a.addMapping(sync_highlight)
+
+
+#mapping_pointer_dragging_destinations = ExecuteEventOnStateChange.new(Pointer,[:dragging],AIChoice.all(:abstract_states=>/presenting/),:focus)
+#a.addMapping(mapping_pointer_dragging_destinations)
+
+
+a.run

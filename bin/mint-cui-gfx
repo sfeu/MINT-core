@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require 'MINT-core'
+include MINT
+
+
+l = LayoutAgent.new
+
+mapping_external_recalculate = ExecuteOnStateChange.new(Screen,"finished",l.method(:initial_calculation),l.method(:initial_calculation))
+l.addMapping(mapping_external_recalculate)
+
+mapping_pointer_selecting = ExecuteOnStateChange.new(Pointer,[:stopped],CUIControl.method(:find_cio_from_coordinates))
+l.addMapping(mapping_pointer_selecting)
+
+mapping_cache = ExecuteOnStateChange.new(CIO,[:displayed],CUIControl.method(:fill_active_cio_cache))
+l.addMapping(mapping_cache)
+
+mapping_cache1 = ExecuteOnStateChange.new(CIO,[:hidden],CUIControl.method(:fill_active_cio_cache))
+l.addMapping(mapping_cache1)
+
+
+realityframe = ExecuteOnStateChange.new(AIINChoose,["dragging"],l.method(:wait_border_crossing))
+l.addMapping(realityframe)
+
+
+#joypad_up= Complementary.new(Joypad,"up",{ CIO  =>"highlighted"},:up)
+#l.addMapping(joypad_up)
+#
+#joypad_down= Complementary.new(Joypad,"down",{ CIO  =>"highlighted"},:down)
+#l.addMapping(joypad_down)
+#
+#joypad_left= Complementary.new(Joypad,"left",{ CIO  =>"highlighted"},:left)
+#l.addMapping(joypad_left)
+#
+#joypad_right= Complementary.new(Joypad,"right",{ CIO  =>"highlighted"},:right)
+#l.addMapping(joypad_right)
+
+#sync_highlight = Synchronize.new(CIO,"highlighted",AIO,:focus, :focused)
+#l.addMapping(sync_highlight)
+#
+#sync_unhighlight = Synchronize.new(CIO,"displayed",AIO, :defocus, :presented)
+#l.addMapping(sync_unhighlight)
+
+
+l.run
+

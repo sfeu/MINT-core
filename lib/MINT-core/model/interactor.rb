@@ -41,11 +41,11 @@ module MINT
     end
 
     def new_states
-if attribute_get(:new_states)
-      return attribute_get(:new_states).split("|").map &:to_sym if attribute_get(:new_states).class!=Array
-	return attribute_get(:new_states)
-else return []
-end
+      if attribute_get(:new_states)
+            return attribute_get(:new_states).split("|").map &:to_sym if attribute_get(:new_states).class!=Array
+        return attribute_get(:new_states)
+      else return []
+      end
     end
 
     def states= states

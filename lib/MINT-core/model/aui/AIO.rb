@@ -22,8 +22,9 @@ module MINT
 
     def initialize_statemachine
       if @statemachine.blank?
-
-        @statemachine = Statemachine.build do
+        parser = StatemachineParser.new
+        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aio.scxml"
+=begin        @statemachine = Statemachine.build do
 
           superstate :AIO do
             trans :initialized,:organize, :organized
@@ -52,6 +53,7 @@ module MINT
             end
           end
         end
+=end
         @statemachine.reset
         #else
         #@statemachine.reset

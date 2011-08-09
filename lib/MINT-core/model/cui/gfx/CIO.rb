@@ -350,7 +350,7 @@ module MINT
     def sync_aio_to_defocus
       aio =  MINT::AIO.first(:name=>self.name)
        if (aio and not aio.is_in? :defocused)
-        aio.sync_event(:defocus)
+         aio.sync_event(:defocus)
        end
       true
     end

@@ -14,10 +14,10 @@ module AUIControl
 
         last = organize(child,aio,layer+1) 
       end
-      aio.process_event!("organized")
+      aio.process_event!("organize")
       return last
     else
-      aio.process_event!("organized")
+      aio.process_event!("organize")
       return aio
     end
   end
@@ -42,9 +42,9 @@ module AUIControl
         organize2(copy,nil,layer+1)
         last = child
       end
-      aio.process_event!("organized")
+      aio.process_event!("organize")
     else
-      aio.process_event!("organized")
+      aio.process_event!("organize")
     end
     p "organized #{aio.name}"
   end

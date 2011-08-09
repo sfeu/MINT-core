@@ -69,14 +69,14 @@ describe 'CUI' do
         @right.states=[:displayed]
         @center.states=[:highlighted]
 
-        @a_left = MINT::AIO.new(:name => "left",:states =>[:presented])
+        @a_left = MINT::AIO.new(:name => "left",:states =>[:defocused])
         @a_left.save!
 
-        @a_right = MINT::AIO.new(:name => "right",:states =>[:presented])
+        @a_right = MINT::AIO.new(:name => "right",:states =>[:defocused])
         @a_right.save!
-        @a_up = MINT::AIO.new(:name => "up",:states =>[:presented])
+        @a_up = MINT::AIO.new(:name => "up",:states =>[:defocused])
         @a_up.save!
-        @a_down = MINT::AIO.new(:name => "down",:states =>[:presented])
+        @a_down = MINT::AIO.new(:name => "down",:states =>[:defocused])
         @a_down.save!
         @a_center = MINT::AIO.new(:name => "center",:states =>[:focused], :next =>@a_down)
         @a_center.save!
@@ -85,7 +85,7 @@ describe 'CUI' do
 
       it 'should sync highlight movements to AUI' do
         @center.process_event(:left).should ==[:displayed]
-        MINT::AIO.first(:name=>"center").states.should ==[:presented]
+        MINT::AIO.first(:name=>"center").states.should ==[:defocused]
         MINT::AIO.first(:name=>"left").states.should ==[:focused]
         @left.states.should ==[:highlighted]
       end
@@ -93,7 +93,7 @@ describe 'CUI' do
       it 'should sync AUI focus movements to CUI' do
         @center.save!
         @down.save!
-        @a_center.process_event("next").should ==[:presented]
+        @a_center.process_event("next").should ==[:defocused]
         @a_down.states.should ==[:focused]
         MINT::CIO.first(:name=>"center").states.should ==[:displayed]
         MINT::CIO.first(:name=>"down").states.should ==[:highlighted]

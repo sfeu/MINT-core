@@ -5,28 +5,28 @@ module MINT
         @statemachine = Statemachine.build do
 
 #          superstate :AIO do # TODO not supported so far!
-          trans :initialized,:organized, :organized
+          trans :initialized,:organize, :organized
           trans :organized, :present, :p
           superstate :p_t do
             parallel :p do
               statemachine :s1 do
                 superstate :presenting do
-                  state :presented do
+                  state :defocused do
                     on_entry :sync_cio_to_displayed
                   end
                   state :focused do
                     on_entry :sync_cio_to_highlighted
                   end
-                  trans :presented,:focus,:focused
-                  trans :focused, :defocus, :presented
-                  trans :focused, :next, :presented, :focus_next,  Proc.new { exists_next}
-                  trans :focused, :prev, :presented, :focus_previous, Proc.new { exists_prev}
-                  trans :focused, :parent, :presented, :focus_parent
-                  trans :hidden,:present, :presented    # hidden is inside the presenting state, as it still can be in dragging mode during it is switched to hidden
-                  state :hidden do
+                  trans :defocused,:focus,:focused
+                  trans :focused, :defocus, :defocused
+                  trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
+                  trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
+                  trans :focused, :parent, :defocused, :focus_parent
+                  trans :suspended,:present, :defocused    # suspended is inside the presenting state, as it still can be in dragging mode during it is switched to suspended
+                  state :suspended do
                     on_entry :sync_cio_to_hidden
                   end
-                  event :suspend, :hidden
+                  event :suspend, :suspended
 
                 end
               end

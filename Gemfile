@@ -2,7 +2,8 @@ source :rubygems
 source "http://gems.rubyforge.org"
 source "http://gems.github.com"
 
-gem "MINT-statemachine","1.2.2" #,  :path => ".."+File::SEPARATOR+"statemachine"
+gem "MINT-statemachine",:path => "../statemachine" #"1.2.2"
+gem "MINT-scxml", :path => "../scxml"
 gem "rspec", "1.3.1"
 gem "dm-core","0.10.2"
 gem "dm-rinda-adapter","0.1.0"

@@ -1,9 +1,19 @@
+PATH
+  remote: ../scxml
+  specs:
+    MINT-scxml (1.0.0)
+      MINT-statemachine (~> 1.2.2)
+
+PATH
+  remote: ../statemachine
+  specs:
+    MINT-statemachine (1.2.2)
+
 GEM
   remote: http://rubygems.org/
   remote: http://gems.rubyforge.org/
   remote: http://gems.github.com/
   specs:
-    MINT-statemachine (1.2.2)
     RedCloth (4.2.7)
     activesupport (2.3.12)
     addressable (2.2.4)
@@ -36,7 +46,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  MINT-statemachine (= 1.2.2)
+  MINT-scxml!
+  MINT-statemachine!
   cassowary (= 1.0.0)
   dm-core (= 0.10.2)
   dm-rinda-adapter (= 0.1.0)

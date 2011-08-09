@@ -22,46 +22,46 @@ describe 'AUI' do
     end
 
     it 'should transform to organizing state ' do
-      @a.process_event(:organized).should ==[:organized]
+      @a.process_event(:organize).should ==[:organized]
       @a.states.should == [:organized]
       @a.new_states.should == [:organized]
     end
 
-    it 'should transform first child to presented if presented and rest to hidden' do
+    it 'should transform first child to presented if presented and rest to suspended' do
       AUIControl.organize(@a,nil,0)
-      # @a.process_event(:organized).should ==[:organized]
+      # @a.process_event(:organize).should ==[:organized]
       @a.states.should == [:organized]
       @a.new_states.should == [:organized]
-      @a.process_event(:present).should ==[:presented,:listing]
+      @a.process_event(:present).should ==[:defocused,:listing]
       children = @a.childs
-      children[0].states.should == [:presented]
-      children[1].states.should == [:hidden]
-      children[2].states.should == [:hidden]
+      children[0].states.should == [:defocused]
+      children[1].states.should == [:suspended]
+      children[2].states.should == [:suspended]
     end
 
     it 'should hide the other elements if a child is presented' do
       AUIControl.organize(@a,nil,0)
-      @a.process_event(:present).should == [:presented,:listing]
+      @a.process_event(:present).should == [:defocused,:listing]
 
-      AIO.first(:name => "e1").states.should == [:presented]
-      AIO.first(:name => "e2").states.should == [:hidden]
-      AIO.first(:name => "e3").states.should == [:hidden]
+      AIO.first(:name => "e1").states.should == [:defocused]
+      AIO.first(:name => "e2").states.should == [:suspended]
+      AIO.first(:name => "e3").states.should == [:suspended]
 
       e3 = AIO.first(:name => "e3")
-      e3.states.should ==[:hidden]
-      e3.process_event(:present).should == [:presented]
+      e3.states.should ==[:suspended]
+      e3.process_event(:present).should == [:defocused]
 
-      AIO.first(:name => "e1").states.should == [:hidden]
-      AIO.first(:name => "e2").states.should == [:hidden]
-      AIO.first(:name => "e3").states.should == [:presented]
+      AIO.first(:name => "e1").states.should == [:suspended]
+      AIO.first(:name => "e2").states.should == [:suspended]
+      AIO.first(:name => "e3").states.should == [:defocused]
 
       e2 = AIO.first(:name => "e2")
-      e2.states.should ==[:hidden]
-      e2.process_event(:present).should == [:presented]
+      e2.states.should ==[:suspended]
+      e2.process_event(:present).should == [:defocused]
 
-      AIO.first(:name => "e1").states.should == [:hidden]
-      AIO.first(:name => "e2").states.should == [:presented]
-      AIO.first(:name => "e3").states.should == [:hidden]
+      AIO.first(:name => "e1").states.should == [:suspended]
+      AIO.first(:name => "e2").states.should == [:defocused]
+      AIO.first(:name => "e3").states.should == [:suspended]
 
     end
   end

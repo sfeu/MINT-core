@@ -47,8 +47,8 @@ describe 'SingleChoice' do
 
   describe "child relations" do
     before :each do
-      @sc.process_event(:present).should == [:presented, :listing]
-      @sc.states.should == [:presented, :listing]
+      @sc.process_event(:present).should == [:defocused, :listing]
+      @sc.states.should == [:defocused, :listing]
 
       @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
       @e2 = MINT::AISingleChoiceElement.first(:name => "element_2")
@@ -66,7 +66,7 @@ describe 'SingleChoice' do
       @e1.new_states.should == [:focused]
 
       @e1.process_event(:choose).should == [:focused, :chosen]
-      @e2.process_event(:choose).should == [:presented, :chosen]
+      @e2.process_event(:choose).should == [:defocused, :chosen]
 
       # TODO: state actualization should be done without re-querying?
       @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
@@ -75,19 +75,19 @@ describe 'SingleChoice' do
 
     it 'should hide child elements on suspend' do
       sc =MINT::AISingleChoice.first(:name => "choice")
-      sc.process_event(:suspend).should == [:hidden]
+      sc.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:hidden, :listed]
+      e1.states.should == [:suspended, :listed]
     end
 
     it 'should hide if suspend is called from parent AIC' do
       sc =MINT::AISingleChoice.first(:name => "choice")
 
-      aic = MINT::AIC.create(:name => "container", :states=>[:presented],:childs =>[sc])
+      aic = MINT::AIC.create(:name => "container", :states=>[:defocused],:childs =>[sc])
 
-      aic.process_event(:suspend).should == [:hidden]
+      aic.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:hidden,:listed]
+      e1.states.should == [:suspended,:listed]
     end
 
     it "should sync suspend to CUI"   do
@@ -100,11 +100,11 @@ describe 'SingleChoice' do
 
       sc =MINT::AISingleChoice.first(:name => "choice")
 
-      aic = MINT::AIC.create(:name => "container", :states=>[:presented],:childs =>[sc])
+      aic = MINT::AIC.create(:name => "container", :states=>[:defocused],:childs =>[sc])
 
-      aic.process_event(:suspend).should == [:hidden]
+      aic.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:hidden,:listed]
+      e1.states.should == [:suspended,:listed]
 
       s4=MINT::Selectable.first(:name =>"element_4")
       s4.states.should ==[:hidden]
@@ -118,7 +118,7 @@ describe 'SingleChoice' do
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
       e1.process_event(:drag)
       #e1.process_event(:drop)
-      dest =MINT::AISingleChoice.create(:name => "choice_dest",:states => [:presented,:listing])
+      dest =MINT::AISingleChoice.create(:name => "choice_dest",:states => [:defocused,:listing])
       dest.process_event(:drop)
       #dest.childs << e1
       #p dest.childs.save

@@ -17,7 +17,7 @@ describe 'AUI' do
 
 
     it 'should transform to organizing state for present action' do
-      @a.process_event(:organized).should ==[:organized]
+      @a.process_event(:organize).should ==[:organized]
       @a.states.should == [:organized]
       @a.new_states.should == [:organized]
     end
@@ -50,31 +50,31 @@ describe 'AUI' do
       
       callback = CallbackContext.new
 
-      @a.process_event(:organized,callback).should == [:organized]
+      @a.process_event(:organize,callback).should == [:organized]
       callback.called.should == false
       
-      @a.process_event(:present,callback).should == [:presented]
+      @a.process_event(:present,callback).should == [:defocused]
       callback.called.should == false
       
       @a.process_event(:focus,callback).should == [:focused]
       callback.called.should == false
 
-      @a.process_event(:next,callback).should == [:presented]
+      @a.process_event(:next,callback).should == [:defocused]
       callback.called.should == true
     end
     
     it 'should recover state after save and reload' do
-      @a.process_event(:organized).should == [:organized]
+      @a.process_event(:organize).should == [:organized]
       @a.save!
       b =  MINT::AIO.first(:name=>"test")
       b.states.should == [:organized]
-      b.process_event(:present).should == [:presented]
+      b.process_event(:present).should == [:defocused]
     end
 
     it 'should store the state' do
       a = MINT::AIINReference.create(:name=>"RecipeSelection_label",:label=>"Rezeptdetails")
       a.states.should == [:initialized]
-      a.process_event(:organized)
+      a.process_event(:organize)
       a.states.should == [:organized]
       a.save!
       MINT::AIINReference.first(:name=>"RecipeSelection_label").states.should == [:organized]
@@ -97,17 +97,17 @@ describe 'AUI' do
       @a.next = b
       b.previous =@a
       
-      @a.process_event(:organized)
-      b.process_event(:organized)
+      @a.process_event(:organize)
+      b.process_event(:organize)
       
       @a.process_event(:present)
       b.process_event(:present)
       
       @a.process_event(:focus).should == [:focused]
       
-      @a.process_event(:next).should == [:presented]
+      @a.process_event(:next).should == [:defocused]
       b.states.should ==[:focused]
-      @a.states.should ==[:presented]
+      @a.states.should ==[:defocused]
     end
     
     it 'should not defocus on next if there is no next element' do
@@ -123,36 +123,36 @@ describe 'AUI' do
     end
     
     it 'should handle previous' do
-      @a.states=[:presented]
+      @a.states=[:defocused]
       b =  MINT::AIO.new(:name=>"test", :previous =>@a)
       b.states= [:focused]
       b.process_event(:prev)
       
       @a.states.should ==[:focused]
-      b.states.should ==[:presented]
+      b.states.should ==[:defocused]
     end
     
     it 'should handle parent' do
       @a.states=[:focused]
       b =  MINT::AIC.new(:name=>"parent",:childs =>[@a])
-      b.states = [:presented]
+      b.states = [:defocused]
       @a.process_event(:parent)
       
-      @a.states.should ==[:presented]
+      @a.states.should ==[:defocused]
       b.states.should ==[:focused]
     end
   end
   describe 'AIC' do
     it 'should support navigation to child' do
       aio = MINT::AIO.new(:name=>"child")
-      aio.states=[:presented]
+      aio.states=[:defocused]
       aic =  MINT::AIC.new(:name=>"parent",
                            :childs =>[ aio ])
       aic.states = [:focused]
 
       aic.process_event(:child)
      
-      aic.states.should ==[:presented]
+      aic.states.should ==[:defocused]
       aio.states.should ==[:focused]
     end
   end

@@ -3,29 +3,29 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         @statemachine = Statemachine.build do
-          trans :initialized,:organized, :organized
+          trans :initialized,:organize, :organized
           trans :organized, :present, :p
-          trans :hidden,:present, :p, :present_children
-          state :hidden do
+          trans :suspended,:present, :p, :present_children
+          state :suspended do
             on_entry :sync_cio_to_hidden
           end
 
           superstate :p_t do     # TODO artificial superstate required to get following event working!
-            event :suspend, :hidden, :hide_children
+            event :suspend, :suspended, :hide_children
             parallel :p do
               statemachine :s1 do
                 superstate :presenting do
-                  state :presented do
+                  state :defocused do
                     on_entry :sync_cio_to_displayed
                   end
                   state :focused do
                     on_entry :sync_cio_to_highlighted
                   end
-                  trans :presented,:focus,:focused
+                  trans :defocused,:focus,:focused
                   trans :focused,:defocus, :presented
-                  trans :focused, :next, :presented, :focus_next,  Proc.new { exists_next}
-                  trans :focused, :prev, :presented, :focus_previous, Proc.new { exists_prev}
-                  trans :focused, :parent, :presented, :focus_parent
+                  trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
+                  trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
+                  trans :focused, :parent, :defocused, :focus_parent
 
                 end
               end

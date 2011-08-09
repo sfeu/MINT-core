@@ -11,7 +11,7 @@ module MINT
       true
     end
 
-    def sync_aio_to_hidden
+    def sync_aio_to_suspended
           true
         end
 
@@ -266,7 +266,7 @@ module MINT
             trans :hidden,:display, :presenting
 
             state :hidden do
-              on_entry :sync_aio_to_hidden
+              on_entry :sync_aio_to_suspended
             end
 
             superstate :presenting do
@@ -349,7 +349,7 @@ module MINT
 
     def sync_aio_to_defocus
       aio =  MINT::AIO.first(:name=>self.name)
-       if (aio and not aio.is_in? :presented)
+       if (aio and not aio.is_in? :defocused)
         aio.sync_event(:defocus)
        end
       true
@@ -363,9 +363,9 @@ module MINT
       true
     end
 
-    def sync_aio_to_hidden
+    def sync_aio_to_suspended
           aio =  MINT::AIO.first(:name=>self.name)
-           if (aio and not aio.is_in? :hidden)
+           if (aio and not aio.is_in? :suspended)
             aio.sync_event(:suspend)
            end
           true

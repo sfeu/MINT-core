@@ -3,28 +3,28 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         @statemachine = Statemachine.build do
-          trans :initialized,:organized, :organized
+          trans :initialized,:organize, :organized
           trans :organized, :present, :p
-          trans :hidden,:present, :p
-          state :hidden do
+          trans :suspended,:present, :p
+          state :suspended do
             on_entry :sync_cio_to_hidden
           end
 
           superstate :p_t do     # TODO artificial superstate required to get following event working!
-            event :suspend, :hidden, :hide_children
+            event :suspend, :suspended, :hide_children
             parallel :p do
               statemachine :s1 do
                 superstate :presenting do
-                  state :presented do
+                  state :defocused do
                     on_entry [:present_first_child, :sync_cio_to_displayed]
                   end
                   state :focused do
                     on_entry :sync_cio_to_highlighted
                   end
-                  trans :presented,:focus,:focused
-                  trans :focused,:defocus, :presented
-                   trans :focused, :prev, :presented, :focus_previous, Proc.new { exists_prev}
-                  trans :focused, :parent, :presented, :focus_parent
+                  trans :defocused,:focus,:focused
+                  trans :focused,:defocus, :defocused
+                   trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
+                  trans :focused, :parent, :defocused, :focus_parent
 
                 end
               end
@@ -44,7 +44,7 @@ module MINT
     # hook that is called from a child if it enters presenting state
     def child_to_presenting(child)
       childs.all.each do |e|
-        e.process_event(:suspend) if e.id != child.id and not e.is_in? :hidden
+        e.process_event(:suspend) if e.id != child.id and not e.is_in? :suspended
         end
     end
 

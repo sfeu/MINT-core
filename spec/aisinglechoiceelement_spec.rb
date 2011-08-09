@@ -12,7 +12,7 @@ describe 'SingleChoiceElement' do
   end
 
   it 'should transform to organizing state for present action' do
-    @a.process_event(:organized).should == [:organized]
+    @a.process_event(:organize).should == [:organized]
     @a.states.should == [:organized]
   end
 
@@ -43,56 +43,56 @@ describe 'SingleChoiceElement' do
     callback = CallbackContext.new
 
 
-    @a.process_event(:organized,callback).should == [:organized]
+    @a.process_event(:organize,callback).should == [:organized]
     callback.called.should == false
 
-    @a.process_event(:present,callback).should == [:presented, :listed]
-    @a.states.should == [:presented, :listed]
-    @a.new_states.should == [:presented, :listed]
+    @a.process_event(:present,callback).should == [:defocused, :listed]
+    @a.states.should == [:defocused, :listed]
+    @a.new_states.should == [:defocused, :listed]
     callback.called.should == false
 
     @a.process_event(:focus,callback).should == [:focused, :listed]
     @a.new_states.should == [:focused]
     callback.called.should == false
 
-    @a.process_event(:next,callback).should == [:presented, :listed]
-    @a.new_states.should == [:presented]
+    @a.process_event(:next,callback).should == [:defocused, :listed]
+    @a.new_states.should == [:defocused]
     callback.called.should == true
   end
 
   it 'should recover state after save and reload' do
-    @a.process_event(:organized).should == [:organized]
+    @a.process_event(:organize).should == [:organized]
     @a.save!
     b =  MINT::AIO.first(:name=>"test")
     b.states.should == [:organized]
     b.new_states.should == [:organized]
-    b.process_event(:present).should == [:presented, :listed]
-    b.new_states.should == [:presented, :listed]
+    b.process_event(:present).should == [:defocused, :listed]
+    b.new_states.should == [:defocused, :listed]
 
   end
 
   it 'should recover state after save and reload from inside parallel state' do
-    @a.process_event(:organized).should == [:organized]
-    @a.process_event(:present).should == [:presented, :listed]
+    @a.process_event(:organize).should == [:organized]
+    @a.process_event(:present).should == [:defocused, :listed]
     @a.process_event(:focus).should == [:focused, :listed]
     @a.save!
     b =  MINT::AIO.first(:name=>"test")
     b.states.should ==[:focused, :listed]
-    b.process_event(:defocus).should == [:presented, :listed]
+    b.process_event(:defocus).should == [:defocused, :listed]
     #b.process_event(:choose).should == [:presented, :choosing]
   end
   it 'should support for query-based selection' do
-    @a.process_event(:organized).should == [:organized]
-    @a.process_event(:present).should == [:presented, :listed]
+    @a.process_event(:organize).should == [:organized]
+    @a.process_event(:present).should == [:defocused, :listed]
     @a.save!
     b =  MINT::AIO.first(:states=>/listed/)
     b.name.should == "test"
-    c =  MINT::AIO.first(:states=>/presented/)
+    c =  MINT::AIO.first(:states=>/defocused/)
     c.name.should == "test"
   end
   it 'should support for querying for superstates' do
-    @a.process_event(:organized).should == [:organized]
-    @a.process_event(:present).should == [:presented, :listed]
+    @a.process_event(:organize).should == [:organized]
+    @a.process_event(:present).should == [:defocused, :listed]
     @a.save!
     puts @a.abstract_states
     b =  MINT::AIO.first(:abstract_states=>/presenting/)

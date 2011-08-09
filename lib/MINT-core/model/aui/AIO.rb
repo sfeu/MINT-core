@@ -26,28 +26,28 @@ module MINT
         @statemachine = Statemachine.build do
 
           superstate :AIO do
-            trans :initialized,:organized, :organized
+            trans :initialized,:organize, :organized
             trans :organized, :present, :presenting
-            trans :organized, :suspend, :hidden
-            trans :hidden,:present, :presenting
-            state :hidden do
+            trans :organized, :suspend, :suspended
+            trans :suspended,:present, :presenting
+            state :suspended do
                on_entry :sync_cio_to_hidden
               end
 
             superstate :presenting do
               on_entry :inform_parent_presenting
-              event :suspend, :hidden
-              state :presented do
+              event :suspend, :suspended
+              state :defocused do
                 on_entry :sync_cio_to_displayed
               end
               state :focused do
                 on_entry :sync_cio_to_highlighted
               end
-              trans :presented,:focus,:focused
-              trans :focused,:defocus, :presented
-              trans :focused, :next, :presented, :focus_next,  Proc.new { exists_next}
-              trans :focused, :prev, :presented, :focus_previous, Proc.new { exists_prev}
-              trans :focused, :parent, :presented, :focus_parent
+              trans :defocused,:focus,:focused
+              trans :focused,:defocus, :defocused
+              trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
+              trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
+              trans :focused, :parent, :defocused, :focus_parent
 
             end
           end
@@ -120,7 +120,7 @@ module MINT
     def sync_cio_to_displayed
       cio =  MINT::CIO.first(:name=>self.name)
       if (cio and not cio.is_in? :displayed)
-        if (cio.is_in? :hidden)
+        if (cio.is_in? :suspended)
           cio.sync_event(:display)
 
         else
@@ -151,7 +151,7 @@ module MINT
       true
     end
 
-    def sync_cio_to_hidden
+    def sync_cio_to_suspended
       true
     end
   end

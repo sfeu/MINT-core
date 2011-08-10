@@ -1,0 +1,53 @@
+<scxml initial="initialized" name="AIChoice" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=629.625 h=412.0  -->
+ <state id="initialized"><!--   node-size-and-position x=500.125 y=43.0 w=70.0 h=20.0  -->
+  <transition event="organize" target="organized"></transition>
+ </state>
+ <state id="organized"><!--   node-size-and-position x=505.125 y=113.0 w=60.0 h=20.0  -->
+  <transition event="present" target="p"></transition>
+ </state>
+ <state id="p_t"><!--   node-size-and-position x=20.0 y=113.0 w=418.25 h=279.0  -->
+  <transition event="suspend" target="suspended">
+   <invoke src="hide_children" type="x-mint"></invoke>
+  </transition>
+  <parallel id="p"><!--   node-size-and-position x=20.0 y=43.0 w=378.25 h=216.0  -->
+   <state id="presenting" initial="focused"><!--   node-size-and-position x=20.0 y=43.0 w=153.5 h=153.0  -->
+    <state id="focused"><!--   node-size-and-position x=53.5 y=43.0 w=50.0 h=20.0  -->
+     <onentry>
+      <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
+     </onentry>
+     <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=63.0 y=88.0  --></transition>
+     <transition event="parent" target="defocused">
+      <invoke src="focus_parent" type="x-mint"></invoke>
+<!--   edge-path [defocused]  x=43.0 y=88.0  --></transition>
+     <transition cond="exists_prev" event="prev" target="defocused">
+      <invoke src="focus_previous" type="x-mint"></invoke>
+<!--   edge-path [defocused]  x=83.0 y=88.0  --></transition>
+     <transition cond="exists_next" event="next" target="defocused">
+      <invoke src="focus_next" type="x-mint"></invoke>
+<!--   edge-path [defocused]  x=103.0 y=88.0  --></transition>
+    </state>
+    <state id="defocused"><!--   node-size-and-position x=48.5 y=113.0 w=60.0 h=20.0  -->
+     <onentry>
+      <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
+     </onentry>
+     <transition event="focus" target="focused"><!--   edge-path [focused]  x=23.0 y=88.0  --></transition>
+    </state>
+   </state>
+   <state id="l" initial="listing"><!--   node-size-and-position x=233.25 y=43.0 w=125.0 h=83.0  -->
+    <state id="listing"><!--   node-size-and-position x=20.0 y=43.0 w=50.0 h=20.0  -->
+     <transition cond="In(:focused)" event="drop" target="listing">
+      <invoke src="add_element" type="x-mint"></invoke>
+     </transition>
+    </state>
+   </state>
+  </parallel>
+ </state>
+ <state id="suspended"><!--   node-size-and-position x=199.125 y=43.0 w=60.0 h=20.0  -->
+  <onentry>
+   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
+  </onentry>
+  <transition event="present" target="p">
+   <invoke src="present_children" type="x-mint"></invoke>
+<!--   edge-path [p]  pointx=0.0 pointy=0.0 offsetx=0.0 offsety=-5.0  --></transition>
+ </state>
+</scxml>

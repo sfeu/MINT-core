@@ -2,7 +2,10 @@ module MINT
   class AIChoice < AIC
     def initialize_statemachine
       if @statemachine.blank?
-        @statemachine = Statemachine.build do
+        parser = StatemachineParser.new(self)
+        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aichoice.scxml"
+=begin
+ @statemachine = Statemachine.build do
           trans :initialized,:organize, :organized
           trans :organized, :present, :p
           trans :suspended,:present, :p, :present_children
@@ -31,13 +34,14 @@ module MINT
               end
               statemachine :s2 do
                 superstate :l do
-
-                  trans :listing, :drop, :listing, :add_element
+                  trans :listing, :drop, :listing, :add_element, Proc.new{In(:focus)}
                 end
               end
             end
           end
         end
+=end
+      @statemachine.reset
       end
     end
     def add_element
@@ -45,6 +49,8 @@ module MINT
       self.childs << f
       self.childs.save
       f.process_event(:drop)
+      f.process_event(:focus)
+      self.process_event(:defocus)
       f.destroy
     end
   end

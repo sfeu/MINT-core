@@ -15,7 +15,6 @@ describe 'AUI' do
       @a.new_states.should == [:initialized]
     end
 
-
     it 'should transform to organizing state for present action' do
       @a.process_event(:organize).should ==[:organized]
       @a.states.should == [:organized]

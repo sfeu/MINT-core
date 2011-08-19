@@ -22,7 +22,7 @@ module MINT
 
     def initialize_statemachine
       if @statemachine.blank?
-        parser = StatemachineParser.new
+        parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aio.scxml"
 =begin        @statemachine = Statemachine.build do
 

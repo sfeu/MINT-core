@@ -89,7 +89,7 @@ module MINT
       end
       begin
          old_states = @statemachine.states_id
-        @statemachine.process_event(event)
+         @statemachine.process_event(event)
          calc_new_states = @statemachine.states_id-old_states
          calc_new_states = @statemachine.states_id if calc_new_states.length==0
         attribute_set(:new_states, calc_new_states.join('|'))

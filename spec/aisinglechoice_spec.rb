@@ -68,7 +68,7 @@ describe 'SingleChoice' do
       @e1.process_event(:choose).should == [:focused, :chosen]
       @e2.process_event(:choose).should == [:defocused, :chosen]
 
-      # TODO: state actualization should be done without re-querying?
+      # TODO: state actualization should be done withnt :suspend, out re-querying?
       @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
       @e1.states.should == [:focused, :listed]
     end

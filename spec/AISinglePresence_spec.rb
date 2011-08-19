@@ -32,7 +32,7 @@ describe 'AUI' do
       # @a.process_event(:organize).should ==[:organized]
       @a.states.should == [:organized]
       @a.new_states.should == [:organized]
-      @a.process_event(:present).should ==[:defocused,:listing]
+      @a.process_event(:present).should ==[:defocused]
       children = @a.childs
       children[0].states.should == [:defocused]
       children[1].states.should == [:suspended]
@@ -41,7 +41,7 @@ describe 'AUI' do
 
     it 'should hide the other elements if a child is presented' do
       AUIControl.organize(@a,nil,0)
-      @a.process_event(:present).should == [:defocused,:listing]
+      @a.process_event(:present).should == [:defocused]
 
       AIO.first(:name => "e1").states.should == [:defocused]
       AIO.first(:name => "e2").states.should == [:suspended]
@@ -64,5 +64,31 @@ describe 'AUI' do
       AIO.first(:name => "e3").states.should == [:suspended]
 
     end
+
+    it 'should hide the other elements if a child is presented (using next and prev events)' do
+      AUIControl.organize(@a,nil,0)
+      @a.process_event(:present).should == [:defocused]
+
+      AIO.first(:name => "e1").states.should == [:defocused]
+      AIO.first(:name => "e2").states.should == [:suspended]
+      AIO.first(:name => "e3").states.should == [:suspended]
+
+      @a.process_event(:focus).should == [:waiting]
+      @a.process_event(:enter).should == [:entered]
+      @a.process_event(:next).should == [:entered]
+
+      AIO.first(:name => "e1").states.should == [:suspended]
+      AIO.first(:name => "e2").states.should == [:defocused]
+      AIO.first(:name => "e3").states.should == [:suspended]
+
+      @a.process_event(:prev).should == [:entered]
+
+      AIO.first(:name => "e1").states.should == [:defocused]
+      AIO.first(:name => "e2").states.should == [:suspended]
+      AIO.first(:name => "e3").states.should == [:suspended]
+    end
+
+
+
   end
 end

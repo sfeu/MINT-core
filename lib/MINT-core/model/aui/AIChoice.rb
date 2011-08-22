@@ -7,8 +7,8 @@ module MINT
 =begin
  @statemachine = Statemachine.build do
           trans :initialized,:organize, :organized
-          trans :organized, :present, :p
-          trans :suspended,:present, :p, :present_children
+          trans :organized, :present, :p_t
+          trans :suspended,:present, :p_t, :present_children
           state :suspended do
             on_entry :sync_cio_to_hidden
           end

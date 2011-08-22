@@ -2,7 +2,10 @@ module MINT
   class AISinglePresence < AIC
     def initialize_statemachine
       if @statemachine.blank?
-        @statemachine = Statemachine.build do
+        parser = StatemachineParser.new(self)
+        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aisinglepresence.scxml"
+=begin
+@statemachine = Statemachine.build do
           trans :initialized,:organize, :organized
           trans :organized, :present, :presenting
           trans :suspended, :present, :presenting
@@ -36,6 +39,7 @@ module MINT
             end
           end
         end
+=end
       end
     end
 

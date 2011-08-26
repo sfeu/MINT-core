@@ -31,6 +31,7 @@ module MINT
             trans :organized, :present, :presenting
             trans :organized, :suspend, :suspended
             trans :suspended,:present, :presenting
+            trans :suspended, :organize, :organized
             state :suspended do
                on_entry :sync_cio_to_hidden
               end

@@ -61,23 +61,24 @@ describe 'SingleChoice' do
       @e4.process_event(:present)
     end
     it 'should deactivate other chosen elements on choose' do
-
-      @e1.process_event(:focus).should == [:focused, :listed]
+      @e1.process_event(:focus).should == [:focused, :unchosen]
       @e1.new_states.should == [:focused]
 
       @e1.process_event(:choose).should == [:focused, :chosen]
       @e2.process_event(:choose).should == [:defocused, :chosen]
 
+
       # TODO: state actualization should be done withnt :suspend, out re-querying?
       @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      @e1.states.should == [:focused, :listed]
+      @e1.states.should == [:focused, :unchosen]
+
     end
 
     it 'should hide child elements on suspend' do
       sc =MINT::AISingleChoice.first(:name => "choice")
       sc.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:suspended, :listed]
+      e1.states.should == [:suspended]
     end
 
     it 'should hide if suspend is called from parent AIC' do
@@ -87,7 +88,7 @@ describe 'SingleChoice' do
 
       aic.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:suspended,:listed]
+      e1.states.should == [:suspended]
     end
 
     it "should sync suspend to CUI"   do
@@ -104,7 +105,7 @@ describe 'SingleChoice' do
 
       aic.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:suspended,:listed]
+      e1.states.should == [:suspended]
 
       s4=MINT::Selectable.first(:name =>"element_4")
       s4.states.should ==[:hidden]

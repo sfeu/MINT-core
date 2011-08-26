@@ -16,7 +16,7 @@ describe 'AUI' do
   end
 
   describe 'AISinglePresence' do
-    it 'should initialize with initiated' do
+it 'should initialize with initiated' do
       @a.states.should ==[:initialized]
       @a.new_states.should == [:initialized]
     end

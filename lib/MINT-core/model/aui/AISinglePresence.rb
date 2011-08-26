@@ -15,7 +15,8 @@ module MINT
 
           superstate :presenting do
             on_entry :present_first_child
-            event :suspend, :suspended, :hide_children
+            on_exit :hide_children
+            event :suspend, :suspended
 
             state :defocused do
               on_entry :sync_cio_to_displayed

@@ -2,22 +2,27 @@ module MINT
   class AIChoice < AIC
     def initialize_statemachine
       if @statemachine.blank?
+=begin
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aichoice.scxml"
-=begin
+=end
  @statemachine = Statemachine.build do
           trans :initialized,:organize, :organized
           trans :organized, :present, :p_t
-          trans :suspended,:present, :p_t, :present_children
+          trans :organized, :suspend, :suspended
+          trans :suspended, :present, :p_t
+          trans :suspended, :organize, :organized
           state :suspended do
             on_entry :sync_cio_to_hidden
           end
 
           superstate :p_t do     # TODO artificial superstate required to get following event working!
-            event :suspend, :suspended, :hide_children
+            event :suspend, :suspended
             parallel :p do
               statemachine :s1 do
                 superstate :presenting do
+                on_entry [:present_child, :inform_parent_presenting]
+                on_exit :hide_children
                   state :defocused do
                     on_entry :sync_cio_to_displayed
                   end
@@ -40,7 +45,6 @@ module MINT
             end
           end
         end
-=end
       @statemachine.reset
       end
     end

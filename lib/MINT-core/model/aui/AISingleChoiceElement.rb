@@ -2,6 +2,10 @@ module MINT
   class AISingleChoiceElement < AIINChoose
     def initialize_statemachine
       if @statemachine.blank?
+        parser = StatemachineParser.new(self)
+        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aisinglechoiceelement.scxml"
+
+=begin
         @statemachine = Statemachine.build do
 
 #          superstate :AIO do # TODO not supported so far!
@@ -30,8 +34,7 @@ module MINT
                   trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
                   trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
                   trans :focused, :parent, :defocused, :focus_parent
-                  trans :focused, :drag, :dragging, nil, Proc.new{ In(:chosen) }
-                  trans :focused, :drag, :dragging, :choose, Proc.new { In(:unchosen)}
+                  trans :focused, :drag, :dragging, :choose
                   trans :dragging, :drop, :defocused
                 end
               end
@@ -50,10 +53,18 @@ module MINT
             end
           end
         end
+=end
       end
     end
     def remove_from_origin
         self.parent.childs.get(self.id).destroy
     end
+
+    def choose
+      if self.is_in? :unchosen
+        self.process_event(:choose)
+      end
+    end
+
   end
 end

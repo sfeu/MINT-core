@@ -110,7 +110,6 @@ describe 'AUI' do
     end
     
     it 'should not defocus on next if there is no next element' do
-      
       @a.states=[:focused]
       @a.process_event(:next)
       @a.states.should == [:focused]

@@ -8,10 +8,9 @@ module MINT
 
     def initialize_statemachine
       super
-=begin
       parser = StatemachineParser.new(self)
       @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aic.scxml"
-=end
+=begin
 @statemachine = Statemachine.build do
         superstate :AIC do
           trans :initialized,:organize, :organized
@@ -26,7 +25,8 @@ module MINT
 
           superstate :presenting do
             on_entry :inform_parent_presenting
-            event :suspend, :suspended, :hide_children #TODO AIC will suspend children?
+            on_exit :hide_children
+            event :suspend, :suspended
 
             state :defocused do
               on_entry :sync_cio_to_displayed
@@ -44,6 +44,7 @@ module MINT
           end
         end
       end
+=end
     end
 
     def hide_children

@@ -60,6 +60,7 @@ describe 'SingleChoice' do
       @e3.process_event(:present)
       @e4.process_event(:present)
     end
+
     it 'should deactivate other chosen elements on choose' do
       @e1.process_event(:focus).should == [:focused, :unchosen]
       @e1.new_states.should == [:focused]
@@ -73,6 +74,23 @@ describe 'SingleChoice' do
       @e1.states.should == [:focused, :unchosen]
 
     end
+
+    it 'should accept drag event in unchosen or chosen' do
+      @e1.process_event(:focus).should == [:focused, :unchosen]
+      @e1.states.should == [:focused, :unchosen]
+
+      @e1.process_event(:drag).should == [:dragging, :chosen]
+      @e1.states.should == [:dragging, :chosen]
+
+      @e1.process_event(:drop).should == [:defocused, :chosen]
+      @e1.states.should == [:defocused, :chosen]
+
+      @e1.process_event(:focus).should == [:focused, :chosen]
+      @e1.states.should == [:focused, :chosen]
+
+      @e1.process_event(:drag).should == [:dragging, :chosen]
+      @e1.states.should == [:dragging, :chosen]
+  end
 
     it 'should hide child elements on suspend' do
       sc =MINT::AISingleChoice.first(:name => "choice")
@@ -119,7 +137,7 @@ describe 'SingleChoice' do
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
       e1.process_event(:drag)
       #e1.process_event(:drop)
-      dest =MINT::AISingleChoice.create(:name => "choice_dest",:states => [:defocused,:listing])
+      dest =MINT::AISingleChoice.create(:name => "choice_dest",:states => [:defocused,:unchosen])
       dest.process_event(:drop)
       #dest.childs << e1
       #p dest.childs.save

@@ -4,6 +4,7 @@
  </state>
  <state id="organized"><!--   node-size-and-position x=10.0 y=80.0 w=80.0 h=20.0  -->
   <transition event="present" target="p_t"><!--   edge-path [p_t]  x=60.0 y=160.0 pointx=0.0 pointy=0.0 offsetx=0.0 offsety=-5.0  --></transition>
+  <transition event="suspend" target="suspended"></transition>
  </state>
  <state id="p_t"><!--   node-size-and-position x=100.0 y=100.0 w=310.0 h=280.0  -->
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=170.0 y=100.0  --></transition>
@@ -51,5 +52,6 @@
    <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
   </onentry>
   <transition event="present" target="p_t"><!--   edge-path [p_t]  x=290.0 y=80.0  --></transition>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  x=130.0 y=40.0  --></transition>
  </state>
 </scxml>

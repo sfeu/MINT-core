@@ -33,6 +33,7 @@ module MINT
                   trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
                   trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
                   trans :focused, :parent, :defocused, :focus_parent
+                  trans :focused, :child, :defocused, :focus_child
 
                 end
               end

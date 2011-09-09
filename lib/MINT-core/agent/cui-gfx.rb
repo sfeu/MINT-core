@@ -125,7 +125,7 @@ class LayoutAgent < MINT::Agent
     cio = CIO.first(:name=>result.parent.name)
 
     p "got #{cio.inspect}"
-    Thread.new(cio.name,cio.x,cio.y,cio.width,cio.height) { |name,cx,cy,cw,ch|
+    t = Thread.new(cio.name,cio.x,cio.y,cio.width,cio.height) { |name,cx,cy,cw,ch|
 
       Redis.new.subscribe("juggernaut") do |on|
         on.message do |c,msg|
@@ -155,6 +155,7 @@ class LayoutAgent < MINT::Agent
       end
 
     }
+    t.abort_on_exception = true
   end
 
 end

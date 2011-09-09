@@ -222,8 +222,7 @@ module MINT
     def CIO.createCIOfromAIO(e,layer)
       p "creating CIO for #{e.class}"
       case e.class.name
-        when "MINT::AIC"
-        when "MINT::AISinglePresence"
+        when "MINT::AIC","MINT::AISinglePresence"
           aic = AIC.first(:name=>e.name)           # TODO: if its not retrieved again, childs.length returns 0!
 
           elements_count = aic.childs.length

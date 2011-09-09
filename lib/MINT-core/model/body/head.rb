@@ -1,33 +1,28 @@
 module MINT
   class Head < Element
+    attr_accessor :mode
     #property :angle, Integer, :default  => -1
     #property :distance, Integer, :default  => -1
 
+
     def initialize_statemachine
+
       if @statemachine.blank?
-        @statemachine = Statemachine.build do
 
-          trans :disconnected,:connect, :connected
-          trans :connected, :disconnect, :disconnected
+        @mode=:tilting
 
-          superstate :connected do
-            trans :centered, :left, :moving_left
-            trans :centered,:right,:moving_right
-            superstate :moving do
-                on_entry :start_publish_angle
-                on_exit :stop_publish_angle
-              trans :moving_left,:center, :centered
-              trans :moving_right,:center, :centered
-            end
-          end
-        end
+        parser = StatemachineParser.new(self)
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/head.scxml"
+        @statemachine.reset
       end
     end
 
+
+
     def angle=(angle)
-       if @publish_angle
+      if @publish_angle
         Juggernaut.publish("head/angle", "#{angle}")
-       end
+      end
     end
 
     def start_publish_angle
@@ -36,6 +31,22 @@ module MINT
 
     def stop_publish_angle
       @publish_angle=false
+    end
+
+
+    def in_nodding_mode
+      return true if @mode.eql? :nodding
+      false
+    end
+
+    def in_turning_mode
+      return true if @mode.eql? :turning
+      false
+    end
+
+    def in_tilting_mode
+      return true if @mode.eql? :tilting
+      false
     end
   end
 end

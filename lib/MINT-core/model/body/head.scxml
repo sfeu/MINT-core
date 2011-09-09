@@ -1,0 +1,28 @@
+<scxml initial="disconnected" name="Head" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=800.0 h=470.0  -->
+ <state id="disconnected"><!--   node-size-and-position x=380.0 y=30.0 w=100.0 h=50.0  -->
+  <transition event="connect" target="connected"><!--   edge-path [connected]  x=520.0 y=100.0 pointx=0.0 pointy=13.0 offsetx=24.0 offsety=12.0  --></transition>
+ </state>
+ <state id="connected"><!--   node-size-and-position x=20.0 y=140.0 w=760.0 h=310.0  -->
+  <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=340.0 y=100.0 pointx=0.0 pointy=37.0 offsetx=-24.0 offsety=33.0  --></transition>
+  <state id="nodding"><!--   node-size-and-position x=50.0 y=30.0 w=200.0 h=130.0  -->
+   <state id="looking_down"><!--   node-size-and-position x=60.0 y=40.0 w=100.0 h=50.0  -->
+    <transition event="center" target="centered"><!--   edge-path [centered]  pointx=0.0 pointy=-24.0 offsetx=-8.0 offsety=-5.0  --></transition>
+   </state>
+  </state>
+  <state id="tilting"><!--   node-size-and-position x=290.0 y=30.0 w=230.0 h=130.0  -->
+   <state id="tilting_right"><!--   node-size-and-position x=60.0 y=40.0 w=100.0 h=50.0  -->
+    <transition event="center" target="centered"><!--   edge-path [centered]  x=440.0 y=170.0 pointx=0.0 pointy=8.0 offsetx=15.0 offsety=13.0  --></transition>
+   </state>
+  </state>
+  <state id="centered"><!--   node-size-and-position x=350.0 y=230.0 w=100.0 h=60.0  -->
+   <transition cond="in_tilting_mode" event="tilt_right" target="tilting_right"><!--   edge-path [tilting_right]  x=70.0 y=140.0 pointx=0.0 pointy=19.0 offsetx=-14.0 offsety=-32.0  --></transition>
+   <transition cond="in_nodding_mode" event="look_down" target="looking_down"><!--   edge-path [looking_down]  x=160.0 y=260.0 pointx=0.0 pointy=-10.0 offsetx=10.0 offsety=0.0  --></transition>
+   <transition cond="in_turning_mode" event="turn_right" target="looking_right"><!--   edge-path [looking_right]  x=650.0 y=260.0 pointx=0.0 pointy=10.0 offsetx=-20.0 offsety=0.0  --></transition>
+  </state>
+  <state id="turning"><!--   node-size-and-position x=540.0 y=30.0 w=190.0 h=130.0  -->
+   <state id="looking_right"><!--   node-size-and-position x=60.0 y=40.0 w=100.0 h=50.0  -->
+    <transition event="center" target="centered"><!--   edge-path [centered]  pointx=0.0 pointy=24.0 offsetx=8.0 offsety=-5.0  --></transition>
+   </state>
+  </state>
+ </state>
+</scxml>

@@ -18,7 +18,7 @@ module MINT
           cio = CIO.first(:name=>e.name)
           elements << cio
           if (not cio)
-            cio = createCIOfromAIO(e,layer)
+            cio = CIO.createCIOfromAIO(e,layer)
           end
 
 
@@ -95,14 +95,14 @@ module MINT
         grid_hash= mda(self.rows,self.cols)
         #       p "hash #{ self.name} rows #{self.rows} cols #{self.cols}"
 
-        ai_childs =  aic.childs
+        ai_childs =  aic.childs.all(:states=> /#{Regexp.quote("presenting")}/)
         #       p aic.name
         elements=[]
         ai_childs.each_with_index do |e,i|
           cio = CIO.first(:name=>e.name)
 
           if (not cio)
-            cio = createCIOfromAIO(e,layer)
+            cio = CIO.createCIOfromAIO(e,layer)
           else
             cio.layer=layer+1
           end
@@ -169,7 +169,7 @@ module MINT
           cio = CIO.first(:name=>e.name)
           elements << cio
           if (not cio)
-            cio = createCIOfromAIO(e,layer)
+            cio = CIO.createCIOfromAIO(e,layer)
           end
 
           calculateColsAndRows(aic.childs.length)

@@ -9,7 +9,7 @@ module MINT
     def initialize_statemachine
       super
       parser = StatemachineParser.new(self)
-      @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aic.scxml"
+      @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aic.scxml"
 =begin
 @statemachine = Statemachine.build do
         superstate :AIC do

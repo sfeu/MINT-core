@@ -18,7 +18,12 @@ class LayoutAgent < MINT::Agent
 
     root_cio = CIO.first(:name=>result.root)
 
+    # create a CIO if no CIO has been defined or root element
 
+    if not root_cio
+      root_cio = CIO.createCIOfromAIO(AIO.first(:name=>result.root),0)
+      root_cio.save
+    end
     # p "#{root_le} root:#{root}"
     #p "minimumspace  = "+ calculateMinimumSquareSpace(root_le).to_s
 

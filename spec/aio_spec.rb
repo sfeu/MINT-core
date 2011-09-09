@@ -140,18 +140,5 @@ describe 'AUI' do
       b.states.should ==[:focused]
     end
   end
-  describe 'AIC' do
-    it 'should support navigation to child' do
-      aio = MINT::AIO.new(:name=>"child")
-      aio.states=[:defocused]
-      aic =  MINT::AIC.new(:name=>"parent",
-                           :childs =>[ aio ])
-      aic.states = [:focused]
 
-      aic.process_event(:child)
-     
-      aic.states.should ==[:defocused]
-      aio.states.should ==[:focused]
-    end
-  end
 end

@@ -8,11 +8,11 @@ end
 require 'rubygems'
 require "bundler/setup"
 require 'statemachine'
-require 'dm-core'
 require "cassowary"
 require 'RMagick'
 require "rinda/tuplespace"
 require 'drb/drb'
+require 'dm-core'
 
 
 require "MINT-core/agent/agent"

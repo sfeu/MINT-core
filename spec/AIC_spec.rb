@@ -5,18 +5,18 @@ describe 'AUI' do
   before :each do
     connection_options = { :adapter => "in_memory"}
     DataMapper.setup(:default, connection_options)
-    #    DataMapper.setup(:default, { :adapter => "rinda",:local =>Rinda::TupleSpace.new})
-    AISinglePresence.new(:name=>"a", :childs =>[
+      #    DataMapper.setup(:default, { :adapter => "rinda",:local =>Rinda::TupleSpace.new})
+    AIC.new(:name=>"a", :childs =>[
         AIO.new(:name => "e1"),
         AIO.new(:name => "e2"),
         AIO.new(:name => "e3")
     ]).save
 
-    @a = AISinglePresence.first
+    @a = AIC.first
   end
 
-  describe 'AISinglePresence' do
-it 'should initialize with initiated' do
+  describe 'AIC' do
+    it 'should initialize with initiated' do
       @a.states.should ==[:initialized]
       @a.new_states.should == [:initialized]
     end
@@ -27,65 +27,40 @@ it 'should initialize with initiated' do
       @a.new_states.should == [:organized]
     end
 
-    it 'should transform first child to presented if presented and rest to suspended' do
+    it 'should support navigation to child' do
+      aio = @a.childs.first
+      aio.states=[:defocused]
+
+      @a.states = [:focused]
+
+      @a.process_event(:child)
+
+      @a.states.should ==[:defocused]
+      aio.states.should ==[:focused]
+    end
+
+
+    it 'should transform all children to presented if presented' do
       AUIControl.organize(@a,nil,0)
-      # @a.process_event(:organize).should ==[:organized]
+        # @a.process_event(:organize).should ==[:organized]
       @a.states.should == [:organized]
       @a.new_states.should == [:organized]
       @a.process_event(:present).should ==[:defocused]
-      children = @a.childs
-      children[0].states.should == [:defocused]
-      children[1].states.should == [:suspended]
-      children[2].states.should == [:suspended]
+      @a.childs.each do |c|
+        c.states.should == [:defocused]
+      end
     end
 
-    it 'should hide the other elements if a child is presented' do
-      AUIControl.organize(@a,nil,0)
-      @a.process_event(:present).should == [:defocused]
+    it 'should transform all children to presented if presented' do
+      @a.childs.each do |c|
+        c.states = [:defocused]
+      end
+      @a.states = [:focused]
 
-      AIO.first(:name => "e1").states.should == [:defocused]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:suspended]
-
-      e3 = AIO.first(:name => "e3")
-      e3.states.should ==[:suspended]
-      e3.process_event(:present).should == [:defocused]
-
-      AIO.first(:name => "e1").states.should == [:suspended]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:defocused]
-
-      e2 = AIO.first(:name => "e2")
-      e2.states.should ==[:suspended]
-      e2.process_event(:present).should == [:defocused]
-
-      AIO.first(:name => "e1").states.should == [:suspended]
-      AIO.first(:name => "e2").states.should == [:defocused]
-      AIO.first(:name => "e3").states.should == [:suspended]
-
-    end
-
-    it 'should hide the other elements if a child is presented (using next and prev events)' do
-      AUIControl.organize(@a,nil,0)
-      @a.process_event(:present).should == [:defocused]
-
-      AIO.first(:name => "e1").states.should == [:defocused]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:suspended]
-
-      @a.process_event(:focus).should == [:waiting]
-      @a.process_event(:enter).should == [:entered]
-      @a.process_event(:next).should == [:entered]
-
-      AIO.first(:name => "e1").states.should == [:suspended]
-      AIO.first(:name => "e2").states.should == [:defocused]
-      AIO.first(:name => "e3").states.should == [:suspended]
-
-      @a.process_event(:prev).should == [:entered]
-
-      AIO.first(:name => "e1").states.should == [:defocused]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:suspended]
+      @a.process_event(:suspend).should ==[:suspended]
+      @a.childs.each do |c|
+        c.states.should == [:suspended]
+      end
     end
 
 

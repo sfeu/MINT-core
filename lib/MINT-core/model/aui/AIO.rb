@@ -23,7 +23,7 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aio.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aio.scxml"
 =begin        @statemachine = Statemachine.build do
 
           superstate :AIO do
@@ -155,6 +155,12 @@ module MINT
     end
 
     def sync_cio_to_suspended
+      true
+    end
+    def inform_parent_presenting
+          true
+        end
+    def present_first_child
       true
     end
   end

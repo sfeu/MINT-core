@@ -6,6 +6,7 @@
  <state id="presenting" initial="defocused"><!--   node-size-and-position x=80.0 y=130.0 w=280.0 h=130.0  -->
   <onentry>
    <invoke src="inform_parent_presenting" type="x-mint"></invoke>
+   <invoke src="present_children" type="x-mint"></invoke>
   </onentry>
   <onexit>
    <invoke src="hide_children" type="x-mint"></invoke>

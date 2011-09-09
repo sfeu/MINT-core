@@ -3,7 +3,7 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aisinglechoiceelement.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglechoiceelement.scxml"
 
 =begin
         @statemachine = Statemachine.build do

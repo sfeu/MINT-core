@@ -3,7 +3,7 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aisinglepresence.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglepresence.scxml"
 =begin
 @statemachine = Statemachine.build do
           trans :initialized,:organize, :organized

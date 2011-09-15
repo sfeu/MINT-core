@@ -1,15 +1,14 @@
+
 module MINT
   class Head < Element
     attr_accessor :mode
     #property :angle, Integer, :default  => -1
     #property :distance, Integer, :default  => -1
-
+     property :mode, Enum[ :nodding, :turning, :tilting ],  :default => :tilting
 
     def initialize_statemachine
 
       if @statemachine.blank?
-
-        @mode=:tilting
 
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/head.scxml"
@@ -35,17 +34,17 @@ module MINT
 
 
     def in_nodding_mode
-      return true if @mode.eql? :nodding
+      return true if self.mode.eql? :nodding
       false
     end
 
     def in_turning_mode
-      return true if @mode.eql? :turning
+      return true if self.mode.eql? :turning
       false
     end
 
     def in_tilting_mode
-      return true if @mode.eql? :tilting
+      return true if self.mode.eql? :tilting
       false
     end
   end

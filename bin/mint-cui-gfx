@@ -13,7 +13,7 @@ l.addMapping(mapping_external_recalculate)
 mapping_pointer_selecting = ExecuteOnStateChange.new(Pointer,[:stopped],CUIControl.method(:find_cio_from_coordinates))
 l.addMapping(mapping_pointer_selecting)
 
-mapping_cache = ExecuteOnStateChange.new(CIO,[:displayed],CUIControl.method(:fill_active_cio_cache))
+mapping_cache = ExecuteOnStateChange.new(CIO,[:presenting],CUIControl.method(:fill_active_cio_cache),CUIControl.method(:fill_active_cio_cache))
 l.addMapping(mapping_cache)
 
 mapping_cache1 = ExecuteOnStateChange.new(CIO,[:hidden],CUIControl.method(:fill_active_cio_cache))

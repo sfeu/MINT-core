@@ -1,11 +1,13 @@
 module MINT
   class AISingleChoiceElement < AIINChoose
     def initialize_statemachine
+      p "enter init"
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglechoiceelement.scxml"
+=begin        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglechoiceelement.scxml"
+                          p "after parsing"
+=end
 
-=begin
         @statemachine = Statemachine.build do
 
 #          superstate :AIO do # TODO not supported so far!
@@ -53,7 +55,6 @@ module MINT
             end
           end
         end
-=end
       end
     end
     def remove_from_origin

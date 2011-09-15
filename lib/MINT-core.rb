@@ -13,7 +13,8 @@ require 'RMagick'
 require "rinda/tuplespace"
 require 'drb/drb'
 require 'dm-core'
-
+require 'dm-types'
+require "MINT-scxml"
 
 require "MINT-core/agent/agent"
 require "MINT-core/mapping/mapping"

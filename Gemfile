@@ -2,7 +2,7 @@ source :rubygems
 source "http://gems.rubyforge.org"
 source "http://gems.github.com"
 
-gem "MINT-statemachine",:path => "../statemachine" #"1.2.2"
+gem "MINT-statemachine",:path => "../statemachine-scxml" #"1.2.2"
 gem "MINT-scxml", :path => "../scxml"
 gem "rspec", "1.3.1"
 gem "dm-core","0.10.2"
@@ -16,3 +16,4 @@ gem "newgem"
 gem "rdoc"
 gem "json"
 gem "redis"
+gem "dm-types","0.10.2"

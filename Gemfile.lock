@@ -5,7 +5,7 @@ PATH
       MINT-statemachine (~> 1.2.2)
 
 PATH
-  remote: ../statemachine
+  remote: ../statemachine-scxml
   specs:
     MINT-statemachine (1.2.2)
 
@@ -17,17 +17,28 @@ GEM
     RedCloth (4.2.8)
     activesupport (2.3.14)
     addressable (2.2.6)
+    bcrypt-ruby (2.1.4)
     cassowary (1.0.0)
     dm-core (0.10.2)
       addressable (~> 2.1)
       extlib (~> 0.9.14)
     dm-rinda-adapter (0.1.0)
+      dm-core (~> 0.10.2)
+    dm-types (0.10.2)
+      bcrypt-ruby (~> 2.1.2)
+      dm-core (~> 0.10.2)
+      fastercsv (~> 1.5.0)
+      json_pure (~> 1.2.0)
+      stringex (~> 1.1.0)
+      uuidtools (~> 2.1.1)
     eventmachine (0.12.10)
     extlib (0.9.15)
+    fastercsv (1.5.4)
     hoe (2.9.6)
       rake (~> 0.8)
     i18n (0.6.0)
     json (1.5.4)
+    json_pure (1.2.4)
     newgem (1.5.3)
       RedCloth (>= 4.1.1)
       activesupport (~> 2.3.4)
@@ -42,7 +53,9 @@ GEM
     rubigen (1.5.6)
       activesupport (>= 2.3.5)
       i18n
+    stringex (1.1.0)
     syntax (1.0.0)
+    uuidtools (2.1.2)
 
 PLATFORMS
   ruby
@@ -53,6 +66,7 @@ DEPENDENCIES
   cassowary (= 1.0.0)
   dm-core (= 0.10.2)
   dm-rinda-adapter (= 0.1.0)
+  dm-types (= 0.10.2)
   eventmachine (= 0.12.10)
   hoe (= 2.9.6)
   json

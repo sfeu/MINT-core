@@ -51,7 +51,7 @@ describe 'AUI' do
       end
     end
 
-    it 'should transform all children to presented if presented' do
+    it 'should transform all children to suspended if suspended' do
       @a.childs.each do |c|
         c.states = [:defocused]
       end

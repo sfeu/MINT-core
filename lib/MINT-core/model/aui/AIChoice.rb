@@ -29,7 +29,7 @@ module MINT
                     on_entry :sync_cio_to_highlighted
                   end
                   trans :defocused,:focus,:focused
-                  trans :focused,:defocus, :presented
+                  trans :focused,:defocus, :defocused
                   trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
                   trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
                   trans :focused, :parent, :defocused, :focus_parent

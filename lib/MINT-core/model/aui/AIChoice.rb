@@ -5,7 +5,7 @@ module MINT
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aichoice.scxml"
 =begin
- @statemachine = Statemachine.build do
+@statemachine = Statemachine.build do
           trans :initialized,:organize, :organized
           trans :organized, :present, :p_t
           trans :organized, :suspend, :suspended
@@ -20,7 +20,7 @@ module MINT
             parallel :p do
               statemachine :s1 do
                 superstate :presenting do
-                on_entry [:present_child, :inform_parent_presenting]
+                on_entry :present_children
                 on_exit :hide_children
                   state :defocused do
                     on_entry :sync_cio_to_displayed
@@ -39,7 +39,7 @@ module MINT
               end
               statemachine :s2 do
                 superstate :l do
-                  trans :listing, :drop, :listing, :add_element
+                  trans :listing, :drop, :listing, :add_element, "In(:focused)"
                 end
               end
             end
@@ -50,7 +50,7 @@ module MINT
       end
     end
     def add_element
-      if self.is_in? :focused
+      #if self.is_in? :focused
         f = AISingleChoiceElement.first(:new_states=> /#{Regexp.quote("dragging")}/)
         self.childs << f
         self.childs.save
@@ -58,7 +58,7 @@ module MINT
         f.process_event(:focus)
         self.process_event(:defocus)
         f.destroy
-      end
+      #end
     end
   end
 

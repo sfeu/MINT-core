@@ -12,98 +12,168 @@ describe 'AUI' do
         AISingleChoiceElement.new(:name=>"nodding",:label=>"Nodding"),
         AISingleChoiceElement.new(:name=>"tilting",:label=>"Tilting"),
         AISingleChoiceElement.new(:name=>"turning",:label=>"Turning")
-    ])
-]).save
+      ])
+    ]).save
 
-    @a = AIC.first
+    @interactive_sheet = AIC.first
+    AUIControl.organize(@interactive_sheet,nil,0)
+    @interactive_sheet.save!
+
+    @sheets = MINT::AIC.first(:name=>"sheets")
+    @option = MINT::AISingleChoice.first(:name=>"option")
   end
 
   describe 'music sheet' do
     it 'interactive_sheet should recover state after save and reload' do
-      @a.process_event(:organize).should == [:organized]
-      @a.save!
+      @interactive_sheet.states.should == [:organized]
+      @interactive_sheet.save!
       b =  MINT::AIC.first(:name=>"interactive_sheet")
       b.states.should == [:organized]
       b.process_event(:present).should == [:defocused]
     end
 
     it 'sheets should recover state after save and reload' do
-      @a = AIC.first(:name=>"sheets")
-      AUIControl.organize(@a,nil,0)
-        # @a.process_event(:organize).should ==[:organized]
-      @a.states.should == [:organized]
-      @a.new_states.should == [:organized]
-      @a.process_event(:present).should ==[:defocused]
-      @a.childs.each do |c|
-        c.states.should == [:defocused, :listing]
-      end
-      @a.save!
-      b =  MINT::AIC.first(:name=>"sheets")
-      b.states.should == [:defocused]
-      b.process_event(:focus).should == [:focused]
-      b.childs.each do |c|
-        c.states.should == [:defocused, :unchosen]
-      end
+      # @a.process_event(:organize).should ==[:organized]
+      @sheets.states.should == [:organized]
+      @sheets.new_states.should == [:organized]
+      @sheets.process_event(:present).should ==[:defocused]
+      @sheets.save!
+      sheets =  MINT::AIC.first(:name=>"sheets")
+      sheets.states.should == [:defocused]
+      sheets.process_event(:focus).should == [:focused]
     end
 
     it 'option list should recover state after save and reload' do
-      @a = AISingleChoice.first
-      AUIControl.organize(@a,nil,0)
-        # @a.process_event(:organize).should ==[:organized]
-      @a.states.should == [:organized]
-      @a.new_states.should == [:organized]
-      @a.process_event(:present).should ==[:defocused, :listing]
-      @a.childs.each do |c|
+      # @a.process_event(:organize).should ==[:organized]
+      @option.states.should == [:organized]
+      @option.new_states.should == [:organized]
+      @option.process_event(:present).should ==[:defocused, :listing]
+      @option.childs.each do |c|
         c.process_event(:focus)
         c.states.should == [:focused, :unchosen]
       end
-      @a.save!
-      b =  MINT::AISingleChoice.first(:name=>"option")
-      b.states.should == [:defocused, :listing]
-      b.process_event(:focus).should == [:focused, :listing]
-      b.childs.each do |c|
+      @option.save!
+      option =  MINT::AISingleChoice.first(:name=>"option")
+      option.states.should == [:defocused, :listing]
+      option.process_event(:focus).should == [:focused, :listing]
+      option.childs.each do |c|
         c.states.should == [:focused, :unchosen]
       end
     end
 
     it 'lists options should recover state after save and reload' do
-      #organize and present the whole list and its children
-      @a = AISingleChoice.first
-      AUIControl.organize(@a,nil,0)
-        # @a.process_event(:organize).should ==[:organized]
-      @a.states.should == [:organized]
-      @a.new_states.should == [:organized]
-      @a.process_event(:present).should ==[:defocused, :listing]
+      # @a.process_event(:organize).should ==[:organized]
+      @option.states.should == [:organized]
+      @option.new_states.should == [:organized]
+      @option.process_event(:present).should ==[:defocused, :listing]
       #save list
-      @a.save!
+      @option.save!
       #recover one of its children and alter its state
-      b =  MINT::AISingleChoiceElement.first(:name=>"nodding")
-      b.states.should == [:defocused, :unchosen]
-      b.process_event(:choose).should == [:defocused, :chosen]
+      nodding =  MINT::AISingleChoiceElement.first(:name=>"nodding")
+      nodding.states.should == [:defocused, :unchosen]
+      nodding.process_event(:choose).should == [:defocused, :chosen]
       #save child
-      b.save!
+      nodding.save!
       #recover child and check
-      b =  MINT::AISingleChoiceElement.first(:name=>"nodding")
-      b.states.should == [:defocused, :chosen]
+      nodding =  MINT::AISingleChoiceElement.first(:name=>"nodding")
+      nodding.states.should == [:defocused, :chosen]
       #recover another child and alter its state
-      c =  MINT::AISingleChoiceElement.first(:name=>"tilting")
-      c.process_event(:focus).should == [:focused, :unchosen]
+      tilting =  MINT::AISingleChoiceElement.first(:name=>"tilting")
+      tilting.process_event(:focus).should == [:focused, :unchosen]
       #save child
-      c.save!
+      tilting.save!
       #recover child and check
-      c = MINT::AISingleChoiceElement.first(:name=>"tilting")
-      c.states.should == [:focused, :unchosen]
+      tilting = MINT::AISingleChoiceElement.first(:name=>"tilting")
+      tilting.states.should == [:focused, :unchosen]
       # choose option tilting, thus unchoosing nodding
-      c.process_event(:choose)
-      c.states.should == [:focused, :chosen]
+      tilting.process_event(:choose)
+      tilting.states.should == [:focused, :chosen]
       # recover nodding to see the change made
-      b = MINT::AISingleChoiceElement.first(:name=>"nodding")
-      b.states.should == [:defocused, :unchosen]
+      nodding = MINT::AISingleChoiceElement.first(:name=>"nodding")
+      nodding.states.should == [:defocused, :unchosen]
       #save child
-      c.save!
+      tilting.save!
       #recover and check
-      c =  MINT::AISingleChoiceElement.first(:name=>"tilting")
-      c.states.should == [:focused, :chosen]
+      tilting =  MINT::AISingleChoiceElement.first(:name=>"tilting")
+      tilting.states.should == [:focused, :chosen]
     end
   end
+
+  describe "AUI/CUI synchronization" do
+    before :each do
+      MINT::CIC.create(:name =>"interactive_sheet",:x=>15, :y=>15, :width =>1280, :height => 1000,:layer=>0, :rows=>2, :cols=>1,:states=>[:positioned])
+      MINT::SingleHighlight.create(:name => "sheets", :width=>1198, :height => 820,:states=>[:positioned])
+
+      MINT::RadioButtonGroup.create(:name =>"option", :x=>30,:y=>840, :width=>1200, :height => 100,:rows=>1,:cols=>3,:states=>[:positioned])
+      MINT::RadioButton.create(:name => "nodding",:x=>40, :y=>850, :width=>200, :height => 80,:states=>[:positioned])
+      MINT::RadioButton.create(:name => "tilting",:x=>440, :y=>850,:width=>200, :height => 80,:states=>[:positioned])
+      MINT::RadioButton.create(:name => "turning",:x=>840, :y=>850,:width=>200, :height => 80,:states=>[:positioned])
+    end
+
+    it "should sync to displayed" do
+      @interactive_sheet.process_event(:present)
+      @interactive_sheet.states.should == [:defocused]
+      MINT::CIC.first(:name=>"interactive_sheet").states.should == [:displayed]
+      MINT::SingleHighlight.first(:name=>"sheets").states.should == [:displayed]
+      MINT::RadioButtonGroup.first(:name=>"option").states.should == [:displayed]
+      MINT::RadioButton.first(:name=>"nodding").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"tilting").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"turning").states.should == [:displayed, :listed]
+    end
+
+    it "should sync interactive_sheet to highlighted" do
+      @interactive_sheet.process_event(:present)
+      @interactive_sheet.process_event(:focus)
+      @interactive_sheet.states.should == [:focused]
+      MINT::CIC.first(:name=>"interactive_sheet").states.should == [:highlighted]
+      MINT::SingleHighlight.first(:name=>"sheets").states.should == [:displayed]
+      MINT::RadioButtonGroup.first(:name=>"option").states.should == [:displayed]
+      MINT::RadioButton.first(:name=>"nodding").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"tilting").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"turning").states.should == [:displayed, :listed]
+    end
+
+    it "should sync sheets to highlighted" do
+      @interactive_sheet.process_event(:present)
+      @sheets = MINT::AIC.first(:name=>"sheets")
+      @sheets.process_event(:focus)
+      @sheets.states.should == [:focused]
+      MINT::CIC.first(:name=>"interactive_sheet").states.should == [:displayed]
+      MINT::SingleHighlight.first(:name=>"sheets").states.should == [:highlighted]
+      MINT::RadioButtonGroup.first(:name=>"option").states.should == [:displayed]
+      MINT::RadioButton.first(:name=>"nodding").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"tilting").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"turning").states.should == [:displayed, :listed]
+    end
+
+    it "should sync option to highlighted" do
+      @interactive_sheet.process_event(:present)
+      @sheets = MINT::AIC.first(:name=>"sheets")
+      @option = MINT::AISingleChoice.first(:name=>"option")
+      @option.process_event(:focus)
+      @option.states.should == [:focused, :listing]
+      MINT::CIC.first(:name=>"interactive_sheet").states.should == [:displayed]
+      MINT::SingleHighlight.first(:name=>"sheets").states.should == [:displayed]
+      MINT::RadioButtonGroup.first(:name=>"option").states.should == [:highlighted]
+      MINT::RadioButton.first(:name=>"nodding").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"tilting").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"turning").states.should == [:displayed, :listed]
+    end
+
+    it "should sync only one RadioButton to selected at a time" do
+      @interactive_sheet.process_event(:present)
+
+      MINT::AISingleChoiceElement.first(:name=>"nodding").process_event(:choose)
+
+      MINT::AISingleChoiceElement.first(:name=>"nodding").states.should == [:defocused, :chosen]
+      MINT::AISingleChoiceElement.first(:name=>"tilting").states.should == [:defocused, :unchosen]
+      MINT::AISingleChoiceElement.first(:name=>"turning").states.should == [:defocused, :unchosen]
+
+      MINT::RadioButton.first(:name=>"nodding").states.should == [:displayed, :selected]
+      MINT::RadioButton.first(:name=>"tilting").states.should == [:displayed, :listed]
+      MINT::RadioButton.first(:name=>"turning").states.should == [:displayed, :listed]
+    end
+
+  end
+
 end

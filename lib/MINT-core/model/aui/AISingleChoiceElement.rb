@@ -4,10 +4,8 @@ module MINT
       p "enter init"
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
-=begin        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglechoiceelement.scxml"
                           p "after parsing"
-=end
-
+#        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglechoiceelement.scxml"
         @statemachine = Statemachine.build do
 
 #          superstate :AIO do # TODO not supported so far!

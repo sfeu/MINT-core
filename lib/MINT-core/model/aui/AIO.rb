@@ -163,5 +163,9 @@ module MINT
     def present_first_child
       true
     end
+
+     def present_children
+       true
+     end
   end
 end

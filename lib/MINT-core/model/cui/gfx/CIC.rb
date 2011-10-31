@@ -95,8 +95,8 @@ module MINT
         grid_hash= mda(self.rows,self.cols)
         #       p "hash #{ self.name} rows #{self.rows} cols #{self.cols}"
 
-        ai_childs =  aic.childs.all(:abstract_states=> /#{Regexp.quote("presenting")}/)
-        #       p aic.name
+        ai_childs =  aic.childs.all(:abstract_states=> /#{Regexp.quote("organized")}/)
+        #      p aic.name
         elements=[]
         ai_childs.each_with_index do |e,i|
           cio = CIO.first(:name=>e.name)

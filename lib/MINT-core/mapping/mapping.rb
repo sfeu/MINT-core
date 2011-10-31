@@ -32,7 +32,7 @@ module MINT
       events.each do |c,event|
         c.each do |model,state|
           state.each do |s|
-            result=model.first( :abstract_states=> /#{Regexp.quote(s)}/)
+            result=model.first( :abstract_states=> /(^|\|)#{Regexp.quote(s)}/)
             if not result.nil?
               p "Sending #{event} to #{result.name}"
               p result.inspect

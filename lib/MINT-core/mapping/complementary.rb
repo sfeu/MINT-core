@@ -14,7 +14,7 @@ module MINT
       p "in check AND cond #{@conditions.inspect}"
       result = nil
       @conditions.each do |model,state|
-        result=model.first( :abstract_states=> /#{Regexp.quote(state)}/)
+        result=model.first( :abstract_states=> /(^|\|)#{Regexp.quote(state)}/)
         if result.nil?
           puts "Received #{@state} notify for model #{@source_model} but condition state #{state} of model #{model} not true"
           return false
@@ -70,7 +70,7 @@ module MINT
       result = nil
       @conditions.each do |model,state|
         state.each do |s|
-          result=model.first( :abstract_states=> /#{Regexp.quote(s)}/)
+          result=model.first( :abstract_states=> /(^|\|)#{Regexp.quote(s)}/)
           if not result.nil?
             return result
           end

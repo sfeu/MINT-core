@@ -14,10 +14,10 @@ module AUIControl
 
         last = organize(child,aio,layer+1) 
       end
-      aio.process_event!("organize")
+      aio.process_event("organize")
       return last
     else
-      aio.process_event!("organize")
+      aio.process_event("organize")
       return aio
     end
   end

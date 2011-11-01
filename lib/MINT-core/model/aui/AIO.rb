@@ -24,7 +24,8 @@ module MINT
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aio.scxml"
-=begin        @statemachine = Statemachine.build do
+=begin
+@statemachine = Statemachine.build do
 
           superstate :AIO do
             trans :initialized,:organize, :organized
@@ -123,12 +124,10 @@ module MINT
     def sync_cio_to_displayed
       cio =  MINT::CIO.first(:name=>self.name)
       if (cio and not cio.is_in? :displayed)
-        if (cio.is_in? :suspended)
+        if (cio.is_in? :suspended or cio.is_in? :positioned)
           cio.sync_event(:display)
-
         else
           cio.sync_event(:unhighlight)
-
         end
         #cio.states=[:displayed]
       end

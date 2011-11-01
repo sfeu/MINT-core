@@ -18,12 +18,7 @@ class LayoutAgent < MINT::Agent
 
     root_cio = CIO.first(:name=>result.root)
 
-    # create a CIO if no CIO has been defined or root element
 
-    if not root_cio
-      root_cio = CIO.createCIOfromAIO(AIO.first(:name=>result.root),0)
-      root_cio.save
-    end
     # p "#{root_le} root:#{root}"
     #p "minimumspace  = "+ calculateMinimumSquareSpace(root_le).to_s
 
@@ -31,7 +26,7 @@ class LayoutAgent < MINT::Agent
 
     root_cio.print
     # pts = result.interactionTasks.map &:name
-    #root = find_common_container(pts,true)  
+    #root = find_common_container(pts,true)
 #    c = Box.new(:name=>le.name, :x=>0,:y=>0, :width=>1200, :height=>800, :layer=>1)
     # c.save
 
@@ -54,7 +49,7 @@ class LayoutAgent < MINT::Agent
   #private
 
   # @param [String] taskname name of container
-  # @return [String] container name to recalculate  
+  # @return [String] container name to recalculate
 
   def find_container_to_recalculate(taskname)
     le = Layout.first(:name=>taskname)
@@ -63,7 +58,7 @@ class LayoutAgent < MINT::Agent
       # luis = Layout.all(:parent=>le.parent).map &:task
       #   luis.each do |name|
       #    cui = CUI.first(:task=>name)
-      #    if (cui != nil) 
+      #    if (cui != nil)
       #      cui.destroy!
       #    end
       #  end
@@ -130,7 +125,7 @@ class LayoutAgent < MINT::Agent
     cio = CIO.first(:name=>result.parent.name)
 
     p "got #{cio.inspect}"
-    t = Thread.new(cio.name,cio.x,cio.y,cio.width,cio.height) { |name,cx,cy,cw,ch|
+    Thread.new(cio.name,cio.x,cio.y,cio.width,cio.height) { |name,cx,cy,cw,ch|
 
       Redis.new.subscribe("juggernaut") do |on|
         on.message do |c,msg|
@@ -160,7 +155,6 @@ class LayoutAgent < MINT::Agent
       end
 
     }
-    t.abort_on_exception = true
   end
 
 end

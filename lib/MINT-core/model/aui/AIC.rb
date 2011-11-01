@@ -24,7 +24,7 @@ module MINT
           end
 
           superstate :presenting do
-            on_entry :inform_parent_presenting
+            on_entry [:inform_parent_presenting, :present_children]
             on_exit :hide_children
             event :suspend, :suspended
 

@@ -1,18 +1,28 @@
-PATH
-  remote: ../scxml
+GIT
+  remote: ssh://git@multi-access.de/dm-rinda-adapter.git
+  revision: 70ecca0ae3e08f7221b71a90d863b001b7a1e1f3
+  branch: master
+  specs:
+    dm-rinda-adapter (0.1.0)
+      dm-core (~> 0.10.2)
+
+GIT
+  remote: ssh://git@multi-access.de/scxml.git
+  revision: b4bd51b59e510770dfbf39fb6913bca3720685f2
+  branch: master
   specs:
     MINT-scxml (1.0.0)
       MINT-statemachine (~> 1.2.2)
 
-PATH
-  remote: ../statemachine-scxml
+GIT
+  remote: ssh://git@multi-access.de/statemachine.git
+  revision: e5313b61ca7296f4a21ea8d00caef5ee6b55743c
+  branch: master
   specs:
     MINT-statemachine (1.2.2)
 
 GEM
   remote: http://rubygems.org/
-  remote: http://gems.rubyforge.org/
-  remote: http://gems.github.com/
   specs:
     RedCloth (4.2.8)
     activesupport (2.3.14)
@@ -22,8 +32,6 @@ GEM
     dm-core (0.10.2)
       addressable (~> 2.1)
       extlib (~> 0.9.14)
-    dm-rinda-adapter (0.1.0)
-      dm-core (~> 0.10.2)
     dm-types (0.10.2)
       bcrypt-ruby (~> 2.1.2)
       dm-core (~> 0.10.2)
@@ -65,7 +73,7 @@ DEPENDENCIES
   MINT-statemachine!
   cassowary (= 1.0.0)
   dm-core (= 0.10.2)
-  dm-rinda-adapter (= 0.1.0)
+  dm-rinda-adapter!
   dm-types (= 0.10.2)
   eventmachine (= 0.12.10)
   hoe (= 2.9.6)

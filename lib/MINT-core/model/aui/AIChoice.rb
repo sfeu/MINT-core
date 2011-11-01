@@ -3,21 +3,25 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aichoice.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aichoice.scxml"
 =begin
  @statemachine = Statemachine.build do
           trans :initialized,:organize, :organized
-          trans :organized, :present, :p
-          trans :suspended,:present, :p, :present_children
+          trans :organized, :present, :p_t
+          trans :organized, :suspend, :suspended
+          trans :suspended, :present, :p_t
+          trans :suspended, :organize, :organized
           state :suspended do
             on_entry :sync_cio_to_hidden
           end
 
           superstate :p_t do     # TODO artificial superstate required to get following event working!
-            event :suspend, :suspended, :hide_children
+            event :suspend, :suspended
             parallel :p do
               statemachine :s1 do
                 superstate :presenting do
+                on_entry [:present_child, :inform_parent_presenting]
+                on_exit :hide_children
                   state :defocused do
                     on_entry :sync_cio_to_displayed
                   end
@@ -29,12 +33,13 @@ module MINT
                   trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
                   trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
                   trans :focused, :parent, :defocused, :focus_parent
+                  trans :focused, :child, :defocused, :focus_child
 
                 end
               end
               statemachine :s2 do
                 superstate :l do
-                  trans :listing, :drop, :listing, :add_element, Proc.new{In(:focus)}
+                  trans :listing, :drop, :listing, :add_element
                 end
               end
             end
@@ -45,13 +50,15 @@ module MINT
       end
     end
     def add_element
-      f = AISingleChoiceElement.first(:new_states=> /#{Regexp.quote("dragging")}/)
-      self.childs << f
-      self.childs.save
-      f.process_event(:drop)
-      f.process_event(:focus)
-      self.process_event(:defocus)
-      f.destroy
+      if self.is_in? :focused
+        f = AISingleChoiceElement.first(:new_states=> /#{Regexp.quote("dragging")}/)
+        self.childs << f
+        self.childs.save
+        f.process_event(:drop)
+        f.process_event(:focus)
+        self.process_event(:defocus)
+        f.destroy
+      end
     end
   end
 

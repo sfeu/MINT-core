@@ -18,7 +18,7 @@ module MINT
     end
 
     def execute
-      t1 = @source_model_1.notify("write", {  :new_states=> /#{Regexp.quote(@state_1)}/},self.method(:save_state_1_happened))
+      t1 = @source_model_1.notify("write", {  :new_states=> /(^|\|)#{Regexp.quote(@state_1)}/},self.method(:save_state_1_happened))
       p "registered for model #{@source_model_1} writes on state #{@state_1}"
       #    t2 = @source_model_2.notify("write", {  :abstract_states=> /#{Regexp.quote(@state_2)}/},self.method(:check_sequence))
       #   p "registered for model #{@source_model_2} writes on state #{@state_2}"
@@ -53,7 +53,7 @@ module MINT
       return true if not @state_2_conditions
       @state_2_conditions.each do |model,state|
 #        state.each do |s|
-        result=model.first( :abstract_states=> /#{Regexp.quote(state)}/)
+        result=model.first( :abstract_states=> /(^|\|)#{Regexp.quote(state)}/)
         if result.nil?
           return false
         end
@@ -68,10 +68,10 @@ module MINT
       @time_state_1_happened = Time.now
 #      p "State #{@state_1} of #{@source_model_1} occurred!"
       if @max_time >0
-        @source_model_2.wait("write", {  :new_states=> /#{Regexp.quote(@state_2)}/},self.method(:check_sequence))
+        @source_model_2.wait("write", {  :new_states=> /(^|\|)#{Regexp.quote(@state_2)}/},self.method(:check_sequence))
         p "registered for model #{@source_model_2} writes on state #{@state_2}"
       else
-        result = @source_model_2.first(:abstract_states=> /#{Regexp.quote(@state_2)}/)
+        result = @source_model_2.first(:abstract_states=> /(^|\|)#{Regexp.quote(@state_2)}/)
         if (result)
           p "check seq"
           check_sequence(result)

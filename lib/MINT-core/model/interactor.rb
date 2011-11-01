@@ -89,9 +89,11 @@ module MINT
       end
       begin
          old_states = @statemachine.states_id
+         old_abstract_states = @statemachine.abstract_states
          @statemachine.process_event(event)
          calc_new_states = @statemachine.states_id-old_states
-         calc_new_states = @statemachine.states_id if calc_new_states.length==0
+         calc_new_states = calc_new_states + (@statemachine.abstract_states - old_abstract_states)
+         calc_new_states = @statemachine.states_id  if calc_new_states.length==0
         attribute_set(:new_states, calc_new_states.join('|'))
       rescue Statemachine::TransitionMissingException
         p "#{self.name} is in state #{self.states} and could not handle #{event}"
@@ -105,7 +107,7 @@ module MINT
         initialize_statemachine
         recover_statemachine
        end
-        @statemachine.In(state)
+      @statemachine.In(state)
     end
     protected
     def initialize_statemachine

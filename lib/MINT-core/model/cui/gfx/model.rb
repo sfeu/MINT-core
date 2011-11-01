@@ -10,7 +10,7 @@ module MINT
   end
 
   class Selectable_sync_callback < CIO_sync_callback
-    def sync_aio_to_listed
+    def sync_aio_to_unchosen
       true
     end
 
@@ -65,7 +65,7 @@ module MINT
                   trans :selected, :select, :listed
 
                   state :listed do
-                    on_entry :sync_aio_to_listed
+                    on_entry :sync_aio_to_unchosen
                   end
 
                   state :selected  do
@@ -83,9 +83,9 @@ module MINT
       process_event(event, Selectable_sync_callback.new)
     end
 
-    def sync_aio_to_listed
+    def sync_aio_to_unchosen
       aio =  MINT::AIINChoose.first(:name=>self.name)
-      if (aio and not aio.is_in? :listed)
+      if (aio and not aio.is_in? :unchosen)
         aio.sync_event(:unchoose)
       end
       true
@@ -169,7 +169,7 @@ module MINT
                   trans :selected, :select, :listed
 
                   state :listed do
-                    on_entry :sync_aio_to_listed
+                    on_entry :sync_aio_to_unchosen
                   end
 
                   state :selected  do

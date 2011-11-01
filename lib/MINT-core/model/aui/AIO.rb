@@ -23,7 +23,7 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "lib/MINT-core/model/aui/aio.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aio.scxml"
 =begin        @statemachine = Statemachine.build do
 
           superstate :AIO do
@@ -31,6 +31,7 @@ module MINT
             trans :organized, :present, :presenting
             trans :organized, :suspend, :suspended
             trans :suspended,:present, :presenting
+            trans :suspended, :organize, :organized
             state :suspended do
                on_entry :sync_cio_to_hidden
               end
@@ -156,5 +157,15 @@ module MINT
     def sync_cio_to_suspended
       true
     end
+    def inform_parent_presenting
+          true
+        end
+    def present_first_child
+      true
+    end
+
+     def present_children
+       true
+     end
   end
 end

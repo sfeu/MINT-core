@@ -138,8 +138,8 @@ describe 'CUI' do
 
         it "should calculate sizes for nested CICs" do
           a_top = MINT::AIC.new(:name=>"top", :childs =>[
-              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right,@a_up,@a_down]),
-              MINT::AIC.new(:name=>"parent_right")
+              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right,@a_up,@a_down],:states =>[:defocused]),
+              MINT::AIC.new(:name=>"parent_right",:states =>[:defocused])
           ])
           a_top.save
 
@@ -162,8 +162,8 @@ describe 'CUI' do
         it "should consider CIC definitions without column or row definition to be positioned vertically" do
 
           a_top = MINT::AIC.new(:name=>"top", :childs =>[
-              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right]),
-              MINT::AIC.new(:name=>"parent_right")
+              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right],:states =>[:defocused]),
+              MINT::AIC.new(:name=>"parent_right",:states =>[:defocused])
           ])
           a_top.save!
 
@@ -184,8 +184,8 @@ describe 'CUI' do
         it "should create CIC definitions that are missing and position them vertically vertically" do
 
           a_top = MINT::AIC.new(:name=>"top", :childs =>[
-              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right]),
-              MINT::AIC.new(:name=>"parent_right")
+              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right],:states =>[:defocused]),
+              MINT::AIC.new(:name=>"parent_right",:states =>[:defocused])
           ])
           a_top.save!
 
@@ -203,16 +203,16 @@ describe 'CUI' do
 
         it "should handle nested AIC definitions" do
 
-          MINT::AIC.new(:name=>"RecipeFinder_content",
+          MINT::AIC.new(:name=>"RecipeFinder_content",:states =>[:defocused],
                         :childs =>[
-                            MINT::AIC.new(:name=>"RecipeFilter",
+                            MINT::AIC.new(:name=>"RecipeFilter",:states =>[:defocused],
                                           :childs => [
-                                              MINT::AIC.new(:name=>"RecipeFilter_description1",
+                                              MINT::AIC.new(:name=>"RecipeFilter_description1",:states =>[:defocused],
                                                             :childs =>[
-                                                                MINT::AIINReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien"),
-                                                                MINT::AIOUTContext.new(:name=>"RecipeFilter_description",:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
+                                                                MINT::AIINReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien",:states =>[:defocused]),
+                                                                MINT::AIOUTContext.new(:name=>"RecipeFilter_description",:states =>[:defocused],:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
                                                             ]),
-                                              MINT::AIC.new(:name=>"RecipeFilter_content")
+                                              MINT::AIC.new(:name=>"RecipeFilter_content",:states =>[:defocused])
                                           ])
                         ]).save!
 
@@ -228,16 +228,16 @@ describe 'CUI' do
 
         it "should calculate the layer  level for nested containers" do
 
-          MINT::AIC.new(:name=>"RecipeFinder_content",
+          MINT::AIC.new(:name=>"RecipeFinder_content",:states =>[:defocused],
                         :childs =>[
-                            MINT::AIC.new(:name=>"RecipeFilter",
+                            MINT::AIC.new(:name=>"RecipeFilter",:states =>[:defocused],
                                           :childs => [
-                                              MINT::AIC.new(:name=>"RecipeFilter_description1",
+                                              MINT::AIC.new(:name=>"RecipeFilter_description1",:states =>[:defocused],
                                                             :childs =>[
-                                                                MINT::AIINReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien"),
-                                                                MINT::AIOUTContext.new(:name=>"RecipeFilter_description",:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
+                                                                MINT::AIINReference.new(:name=>"RecipeFilter_label",:states =>[:defocused],:label=>"Suchkriterien"),
+                                                                MINT::AIOUTContext.new(:name=>"RecipeFilter_description",:states =>[:defocused],:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
                                                             ]),
-                                              MINT::AIC.new(:name=>"RecipeFilter_content")
+                                              MINT::AIC.new(:name=>"RecipeFilter_content",:states =>[:defocused])
                                           ])
                         ]).save!
 
@@ -255,9 +255,9 @@ describe 'CUI' do
 
         it "should end up with all cios set to state  >positioned< after layout calculation" do
           @solver = Cassowary::ClSimplexSolver.new
-          a_top = MINT::AIC.new(:name=>"top", :childs =>[
-              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right]),
-              MINT::AIC.new(:name=>"parent_right")
+          a_top = MINT::AIC.new(:name=>"top",:states =>[:defocused], :childs =>[
+              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right],:states =>[:defocused]),
+              MINT::AIC.new(:name=>"parent_right",:states =>[:defocused])
           ])
           a_top.save!
 
@@ -274,9 +274,9 @@ describe 'CUI' do
 
         it "should layout only elements that have not been calculated - case uncalculated leaf cios" do
           @solver = Cassowary::ClSimplexSolver.new
-          a_top = MINT::AIC.new(:name=>"top", :childs =>[
-              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right]),
-              MINT::AIC.new(:name=>"parent_right")
+          a_top = MINT::AIC.new(:name=>"top",:states =>[:defocused], :childs =>[
+              MINT::AIC.new(:name=>"parent_left",:states =>[:defocused], :childs =>[@a_left,@a_right]),
+              MINT::AIC.new(:name=>"parent_right",:states =>[:defocused])
           ])
           a_top.save!
 
@@ -298,9 +298,9 @@ describe 'CUI' do
         it "should layout uncalculated parental elements based on calculated leaf cios" do
          pending("get the right container calculation working that has no childs!")
           @solver = Cassowary::ClSimplexSolver.new
-          a_top = MINT::AIC.new(:name=>"top", :childs =>[
-              MINT::AIC.new(:name=>"parent_left", :childs =>[@a_left,@a_right]),
-              MINT::AIC.new(:name=>"parent_right")
+          a_top = MINT::AIC.new(:name=>"top",:states =>[:defocused], :childs =>[
+              MINT::AIC.new(:name=>"parent_left",:states =>[:defocused], :childs =>[@a_left,@a_right]),
+              MINT::AIC.new(:name=>"parent_right",:states =>[:defocused])
           ])
           a_top.save!
 

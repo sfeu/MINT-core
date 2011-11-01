@@ -18,7 +18,7 @@ module MINT
     def execute
       # query existing state
       if @initial
-        results = @source_model.all({ :abstract_states=> /#{Regexp.quote(@state.first)}/})
+        results = @source_model.all({ :abstract_states=> /(^|\|)#{Regexp.quote(@state.first)}/})
         p "Found results by read: #{results.inspect}"
         results.each do |result|
           call_if_result_matches result, @initial
@@ -28,7 +28,7 @@ module MINT
       #observer = agent.storage.notify 'write', {"_model_"=> @source_model.to_s} + @conditions
 
       p "registered for model #{@source_model} writes on state #{@state}"
-      @source_model.notify("write", {  :new_states=> /#{Regexp.quote(@state.first)}/},self.method(:check_cond))
+      @source_model.notify("write", {  :new_states=> /(^|\|)#{Regexp.quote(@state.first)}/},self.method(:check_cond))
 
     end
 
@@ -41,7 +41,7 @@ module MINT
       states_to_check = Array.new @state
       states_to_check.shift # we already hav checked for the first state
       states_to_check.each do |state|
-        return false if not result.abstract_states =~/#{Regexp.quote(state)}/
+        return false if not result.abstract_states =~/(^|\|)#{Regexp.quote(state)}/
       end
       method.call result
       true

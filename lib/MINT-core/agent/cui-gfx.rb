@@ -18,7 +18,12 @@ class LayoutAgent < MINT::Agent
 
     root_cio = CIO.first(:name=>result.root)
 
+    # create a CIO if no CIO has been defined or root element
 
+    if not root_cio
+      root_cio = CIO.createCIOfromAIO(AIO.first(:name=>result.root),0)
+      root_cio.save
+    end
     # p "#{root_le} root:#{root}"
     #p "minimumspace  = "+ calculateMinimumSquareSpace(root_le).to_s
 
@@ -125,7 +130,7 @@ class LayoutAgent < MINT::Agent
     cio = CIO.first(:name=>result.parent.name)
 
     p "got #{cio.inspect}"
-    Thread.new(cio.name,cio.x,cio.y,cio.width,cio.height) { |name,cx,cy,cw,ch|
+    t = Thread.new(cio.name,cio.x,cio.y,cio.width,cio.height) { |name,cx,cy,cw,ch|
 
       Redis.new.subscribe("juggernaut") do |on|
         on.message do |c,msg|
@@ -155,6 +160,7 @@ class LayoutAgent < MINT::Agent
       end
 
     }
+    t.abort_on_exception = true
   end
 
 end

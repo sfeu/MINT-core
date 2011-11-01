@@ -1,5 +1,4 @@
 
-include Magick
 
 module DataMapper
   class Collection

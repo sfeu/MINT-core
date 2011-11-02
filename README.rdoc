@@ -103,7 +103,7 @@ The following instructions work only with Ubuntu 10.04 - we have chosen this rel
 
 * install native library dependencies that some gems like eventmachine, SDL or Magick or our framework requires and a working C compiler to compile them
  
- sudo apt-get install build-essential libsdl-dev libsdl-mixer1.2-dev libmagickcore-dev libmagickwand-dev libwxbase2.8-0 libwxgtk2.8-0 libssl-dev
+ sudo apt-get install build-essential libsdl-dev libsdl-mixer1.2-dev libmagickcore-dev libmagickwand-dev libwxbase2.8-0 libwxgtk2.8-0 libssl-dev ibfreetype6-dev gsfonts libjpeg62-dev
 
 * prevent installation of docs for all dependend gems (optional - but this will save you a lot of time) 
 

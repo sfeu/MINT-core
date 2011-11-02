@@ -134,6 +134,14 @@ include into file .gemrc in home folder
  make
  sudo make install
 
+* To install Juggernaut 2 install node package manager "npm" after node.js has been installed
+
+ sudo curl http://npmjs.org/install.sh | sudo sh
+ 
+* install juggernaut using the package manager
+
+ sudo npm  install -g juggernaut
+
 * Install libcassowary by adding a new package repository to /etc/apt/sources.lst
 
  deb http://packages.multi-access.de lucid/

@@ -1,63 +1,217 @@
-= MINT-core
+= MINT Framework Core Platform
 
-* http://github.com/sfeu/MINT-core
+* http://www.multi-access.de
 
 == DESCRIPTION:
 
-Multimodal systems realizing a combination of speech, gesture and
-graphical-driven interaction are getting part of our everyday life.
+Multimodal systems realizing a combination of speech, gesture and graphical-driven interaction are getting part of our everyday life.
 
-Examples are in-car assistance systems or recent game consoles.
-Future interaction will be embedded into smart environments offering
-the user to choose and to combine a heterogeneous set of interaction
-devices and modalities based on his preferences realizing an ubiquitous
-and multimodal access.
+Examples are in-car assistance systems or recent game consoles. Future interaction will be embedded into smart environments offering the user to choose and to combine a heterogeneous set of interaction devices and modalities based on his preferences realizing an ubiquitous and multimodal access.
 
-The MINT Framework enables the design, creation, and execution of
-multimodal interfaces.
+This framework enables the modeling and execution of multimodal interaction interfaces for the web based on ruby and implements a server-sided synchronisation of all connected modes and media. Currenlty the framework considers gestures, head movements, multi touch and the mouse as principle input modes. The priciple output media is a web application based on a rails frontend as well as sound support based on the SDL libraries.
 
-The MINT core gem contains all basic AUI and CUI models as well as
-the basic  infrastructure to create interactors and mappings. Please
-not that you need at least a CUI adapter gem to be able to actually
-run a system, e.g. the MINT-rails gem.
+Building this framework is an ongoing effort and it has to be pointed out that it serves to demonstrate scientific research results and is not targeted to we applied to serve productive systems as they are several limitations that need to be solved (maybe with your help?) like for instance multi-user support and authentification.  
 
-== FEATURES/PROBLEMS:
+The MINT core gem contains all basic AUI and CUI models as well as the basic infrastructure to create interactors and mappings. Please note that you need at least a CUI adapter gem to be able to actually run a system, e.g. the MINT-rails gem. But for initial experiements ist enough to follow the installation instructions of this document.
 
-* still first alpha
+There is still no documentation for the framework, but a lot of articles about the concepts and theories of our approach have already been published and can be accessed from our project site http://www.multi-access.de .
+
+== FEATURES:
+
+* Interactor-based modeling (Widgets) of interface elements by using statemachines (see http://github.com/sfeu/MINT-statemachine )
+* Different to approaches like e.g. XHTML+Voice the mode and media synchronisation is implemented on the web server side, which enables interactions including several devices at the sam time and dynamically adding further media and modes during the interaction.
+* The srver side is implemented as a distributed system based on software agents and a tuple space that enables to distribute arbitrary parts of the system to different machines.  
+* Interactors can also be modelled using s basic subset of SCXML (in work, see http://github.com/sfeu/scxml )
+* A basic set of abstract (modality independent) interactors
+* A very limited set of concrete interactors for the web based on a rails frontend (see http://github.com/sfeu/MINT-rails )
+* Sound support (see http://github.com/sfeu/MINT-sdl )
+* A basic model inspector to observe the state of all interactors during runtime (see http://github.com/sfeu/MINT-debugger )
+* Automatic synchronisation of an abritary set of connected webbrowsers 
+* Basic constraint-driven automated ayouting on the server side that calculates pixel-exact coordinates for all interface elements based on the Cassowary constraint solver (see http://github.com/sfeu/cassowary )
+
+== LIMITATIONS:
+
+* No multi-user support or authentification, if another user connects to an application the presentation of the first user is mirrored to the second one.
+* The framework only runs on Ubuntu and installation has only be tested for version 10.04 LTS
+* We require ruby 1.8, the application threading model inside one agent is currently limited, but critical parts can be distributed to several agents instead.
+* we currenlty only support rails 2.3, because we rely on the execute action plugin that has no been ported to rails 3 so far. 
 
 == SYNOPSIS:
 
-run the agents
+For testing the framework please try first to run our example application! - See the install section for the instructions to get it running. 
+
+To start a new project: 
+
+* create a new rails application
+
+ rails sample_app
+
+* add the MINT-rails and the embedded-actions plugin
+
+ cd sample_app
+ ./script/plugin install https://github.com/sd/embedded-actions.git
+ ./script/plugin install https://github.com/sfeu/MINT-rails.git
+
+* copy the relevant javascript files and images to the rails app public folder
+ 
+ rake mint_rails:copy_assets
+
+* You need to add the following lines into your config/environment.rb file to disable active_record and to set your IP address. The former one disables active_record, which the MINT framework does not require (it also eliminates the sql-lite database requirement). The latter IP needs to be set to the IP from that you computer can be contacted from outside (if you want to offer the application to the internet) otherwise you can set it to the local 127.0.0.1 IP. 
+
+ config.frameworks -= [ :active_record ]
+ HOST_IP = '127.0.0.1' 
+
+* use the startup script to start the application
+
+ ./script/mint/startup.sh
+
+* Use Chrome our Chromium browser to access the application:
+
+ http://127.0.0.1:3000/mint
+ 
+* You should see the MINT-Logo as well as a working mouse pointer synchronisation (the green/red dot that follows the mouse pointer)
+
+* If your have troube, please contact us.
 
 == REQUIREMENTS:
 
-* MINT-statemachine
+* Ubuntu LTS 10.04 !! (we have not ported cassowary to newer versions!)
+* Ruby 1.8
+* WxWidgets (MINT-debugger)
+* libSDL (MINT-sdl for sound support)
+* libCassowary (for constraint solver)
+* libMagick (for layouting) 
+* several gems managed by bundler
 
 == INSTALL:
 
-sudo gem install MINT-core
+The following instructions work only with Ubuntu 10.04 - we have chosen this release because it is an officially long-term supported release (LTS).  
+
+* Install ruby 1.8 your Ubuntu 10.04 machine and set a symlink 
+  
+  sudo apt-get install ruby1.8 ruby1.8-dev libopenssl-ruby rake
+  sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
+
+* Install a recent ruby gems version from source and set a symlink (the 10.04 one is too old)
+
+ wget http://production.cf.rubygems.org/rubygems/rubygems-1.8.5.tgz
+ tar -xzvf rubygems-1.8.5.tgz
+ cd rubygems-1.8.5/
+ sudo ruby setup.rb
+ sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
+ sudo gem update --system
+
+* install native library dependencies that some gems like eventmachine, SDL or Magick or our framework requires and a working C compiler to compile them
+ 
+ sudo apt-get install build-essential libsdl-dev libsdl-mixer1.2-dev libmagickcore-dev libmagickwand-dev libwxbase2.8-0 libwxgtk2.8-0 libssl-dev
+
+* prevent installation of docs for all dependend gems (optional - but this will save you a lot of time) 
+
+include into file .gemrc in home folder  
+ 
+ gem: --no-ri --no-rdoc
+
+* install latest stable git for ubuntu 10.04 LTS (we require git with --recursive option support)
+ 
+ sudo apt-get install python-software-properties
+ sudo add-apt-repository ppa:git-core/ppa
+ sudo apt-get update
+ sudo apt-get install git-core
+
+* Install redis 2.2.4 from source (10.04 comes with redis v1 only)
+
+ wget http://redis.googlecode.com/files/redis-2.2.4.tar.gz
+ tar -xzvf redis-2.2.4.tar.gz
+ cd redis-2.2.4
+ make
+ sudo make install
+
+* Install node.js version 0.4.12 
+
+ wget http://nodejs.org/dist/node-v0.4.12.tar.gz
+ cd node-v0.4.14
+ ./configure
+ make
+ sudo make install
+
+* Install libcassowary by adding a new package repository to /etc/apt/sources.lst
+
+ deb http://packages.multi-access.de lucid/
+
+* update system to consider new repository
+
+ sudo aptitude update
+
+* install cassowary library
+
+ sudo apt-get install libcassowary0
+
+* Install bundler
+
+ sudo gem install bundler
+
+* checkout an example app (MINT-MoBe2011) and let bundle install all gem dependencies (this will take a while if you have not disabled doc generation - see above)
+
+ git clone git://github.com/sfeu/MINT-MoBe2011.git
+ cd MINT-MoBe2011
+ bundle install 
+
+* start the example app (this will start a new tabbed console terminal 
+
+ ./script/mint/startup.sh
+
+* wait 30 seconds the use the latest google chrome or chromium browser to access the platform:
+
+ http://localhost:3000/mint
+
+* This should show a table with a letter in each cell above the MINT framework logo. You should also realize the server-sided mouse synchronisation that prints a green/red dot under the current mouse pointer location. You can test the synchronisation by opening another browser window and access the same url. While you are moving the mouse in one window, that dot should be synced on both browsers.
+
+* If you just see the MINT-Logo without a table your computer you should wait a bit more an reload the url.
+
+* If it is stil not working - write us an email.
+
+* Now you can play around with the debugger ( see http://github.com/sfeu/MINT-debugger for source code ) to observe all interactors state changes during runtime within the tuple space
+
+ ./schript/mint/debugger.sh
+
+* Check if the sound is working ( see http://github.com/sfeu/MINT-sdl for source code ) - a clicking sound should be played while pointing to the different cells.
+
+* Buy colored gloves and try our gesture recognition app ( will be releasen soon ) to navigate through the cells using hand postures.
+
+* Browse the source code, read (and cite) our papers to get a basic understanding of the framework components.
+
+* You have further ideas? Email us and help us improving the framework.
 
 == LICENSE:
 
-(The MIT License)
+The MINT framework is  developed by Sebastian Feuerstack Copyright (C)
+2010 and 2011 Sebastian Feuerstack
 
-Copyright (c) 2011 Sebastian Feuerstack
+This program is  free software; you can redistribute  it and/or modify
+it under the terms of the  GNU Affero General Public License version 3
+as published by the Free Software Foundation.
+ 
+This program  is distributed in the  hope that it will  be useful, but
+WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
+MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
+General Public License for more details.
+ 
+You  should have  received a  copy of  the GNU  Affero  General Public
+License     along     with    this     program;     if    not,     see
+http://www.gnu.org/licenses or write  to the Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+You can contact Sebastian Feuerstack using the contact formular on his
+homepage http://www.feuerstack.org.
+ 
+The  modified source  and object  code versions  of this  program must
+display Appropriate Legal Notices, as  required under Section 5 of the
+GNU Affero General Public License version 3.
+ 
+ In  accordance with  Section 7(b)  of the  GNU Affero  General Public
+ License version  3, these Appropriate  Legal Notices must  retain the
+ display of  the "Powered by MINT Framework" logo. If  the display of
+ the  logo  is not  reasonably  feasible  for  technical reasons,  the
+ Appropriate  Legal  Notices must  display the  words  "Powered by the 
+ MINT Framework".
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

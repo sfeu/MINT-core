@@ -40,7 +40,11 @@ There is still no documentation for the framework, but a lot of articles about t
 
 For testing the framework please try first to run our example application! - See the install section for the instructions to get it running. 
 
-To start a new project: 
+To start a new project:
+
+* install the MINT core gem
+
+ sudo gem install MINT-core
 
 * create a new rails application
 

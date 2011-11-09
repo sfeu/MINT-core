@@ -1,3 +1,7 @@
+=== 1.0.1 2011-11-09
+
+* Included all dependencies stored in Gemfile into the Rakefile / gemspec
+
 === 1.0.0 2011-11-01
 
 * Initial release

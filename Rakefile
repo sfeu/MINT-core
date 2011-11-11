@@ -17,7 +17,7 @@ $hoe = Hoe.spec 'MINT-core' do
   self.extra_deps         = [['dm-rinda-adapter','~> 0.1.0'],
                              ['MINT-statemachine','~> 1.2.3'],
                              ['MINT-scxml','~> 1.0.0'],
-                             ['cassowary','~> 1.0.0'],
+                             ['cassowary','~> 1.0.1'],
                              ["dm-core","~>0.10.2" ],
                              ["dm-rinda-adapter", "~>0.1.2"],
                              ["cassowary","~>1.0.0"],

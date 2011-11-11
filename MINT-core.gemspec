@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{MINT-core}
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Sebastian Feuerstack}]
-  s.date = %q{2011-11-08}
+  s.date = %q{2011-11-11}
   s.description = %q{Multimodal systems realizing a combination of speech, gesture and graphical-driven interaction are getting part of our everyday life.
 
 Examples are in-car assistance systems or recent game consoles. Future interaction will be embedded into smart environments offering the user to choose and to combine a heterogeneous set of interaction devices and modalities based on his preferences realizing an ubiquitous and multimodal access.
@@ -48,7 +48,6 @@ There is still no documentation for the framework, but a lot of articles about t
       s.add_runtime_dependency(%q<redis>, ["~> 2.2.1"])
       s.add_runtime_dependency(%q<dm-types>, ["~> 0.10.2"])
       s.add_development_dependency(%q<rspec>, ["= 1.3.1"])
-      s.add_development_dependency(%q<hoe>, ["~> 2.9.6"])
       s.add_development_dependency(%q<newgem>, ["~> 1.5.3"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.11"])
       s.add_development_dependency(%q<hoe>, ["~> 2.9"])
@@ -67,7 +66,6 @@ There is still no documentation for the framework, but a lot of articles about t
       s.add_dependency(%q<redis>, ["~> 2.2.1"])
       s.add_dependency(%q<dm-types>, ["~> 0.10.2"])
       s.add_dependency(%q<rspec>, ["= 1.3.1"])
-      s.add_dependency(%q<hoe>, ["~> 2.9.6"])
       s.add_dependency(%q<newgem>, ["~> 1.5.3"])
       s.add_dependency(%q<rdoc>, ["~> 3.11"])
       s.add_dependency(%q<hoe>, ["~> 2.9"])
@@ -87,7 +85,6 @@ There is still no documentation for the framework, but a lot of articles about t
     s.add_dependency(%q<redis>, ["~> 2.2.1"])
     s.add_dependency(%q<dm-types>, ["~> 0.10.2"])
     s.add_dependency(%q<rspec>, ["= 1.3.1"])
-    s.add_dependency(%q<hoe>, ["~> 2.9.6"])
     s.add_dependency(%q<newgem>, ["~> 1.5.3"])
     s.add_dependency(%q<rdoc>, ["~> 3.11"])
     s.add_dependency(%q<hoe>, ["~> 2.9"])

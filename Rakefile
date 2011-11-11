@@ -28,7 +28,6 @@ $hoe = Hoe.spec 'MINT-core' do
                              ["redis","~>2.2.1"],
                              ["dm-types","~>0.10.2"]]
   self.extra_dev_deps   =    [["rspec","1.3.1"],
-                              ["hoe", "~>2.9.6"],
                               ["newgem","~>1.5.3"],
                               [ "rdoc","~>3.11"]  ]
 

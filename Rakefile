@@ -20,7 +20,7 @@ $hoe = Hoe.spec 'MINT-core' do
                              ['cassowary','~> 1.0.1'],
                              ["dm-core","~>0.10.2" ],
                              ["dm-rinda-adapter", "~>0.1.2"],
-                             ["cassowary","~>1.0.0"],
+                             ["cassowary","~>1.0.1"],
                              ["eventmachine", "~>0.12.10"],
                              ["rake","0.9.2.2"],
                              ["rmagick","~>2.12.2"],

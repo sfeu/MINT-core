@@ -93,8 +93,8 @@ The following instructions work only with Ubuntu 10.04 - we have chosen this rel
 
 * Install ruby 1.8 your Ubuntu 10.04 machine and set a symlink 
   
-  sudo apt-get install ruby1.8 ruby1.8-dev libopenssl-ruby rake
-  sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
+ sudo apt-get install ruby1.8 ruby1.8-dev libopenssl-ruby rake
+ sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
 
 * Install a recent ruby gems version from source and set a symlink (the 10.04 one is too old)
 
@@ -107,7 +107,7 @@ The following instructions work only with Ubuntu 10.04 - we have chosen this rel
 
 * install native library dependencies that some gems like eventmachine, SDL or Magick or our framework requires and a working C compiler to compile them
  
- sudo apt-get install build-essential libsdl-dev libsdl-mixer1.2-dev libmagickcore-dev libmagickwand-dev libwxbase2.8-0 libwxgtk2.8-0 libssl-dev ibfreetype6-dev gsfonts libjpeg62-dev
+ sudo apt-get install build-essential curl libsdl-dev libsdl-mixer1.2-dev libmagickcore-dev libmagickwand-dev libwxbase2.8-0 libwxgtk2.8-0 libssl-dev libfreetype6-dev gsfonts libjpeg62-dev
 
 * prevent installation of docs for all dependend gems (optional - but this will save you a lot of time) 
 
@@ -133,7 +133,8 @@ include into file .gemrc in home folder
 * Install node.js version 0.4.12 
 
  wget http://nodejs.org/dist/node-v0.4.12.tar.gz
- cd node-v0.4.14
+ tar -xzvf  node-v0.4.12.tar.gz
+ cd node-v0.4.12
  ./configure
  make
  sudo make install
@@ -164,7 +165,7 @@ include into file .gemrc in home folder
 
 * checkout an example app (MINT-MoBe2011) and let bundle install all gem dependencies (this will take a while if you have not disabled doc generation - see above)
 
- git clone git://github.com/sfeu/MINT-MoBe2011.git
+ git clone --recursive git://github.com/sfeu/MINT-MoBe2011.git
  cd MINT-MoBe2011
  bundle install 
 

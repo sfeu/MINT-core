@@ -26,7 +26,8 @@ $hoe = Hoe.spec 'MINT-core' do
                              ["rmagick","~>2.12.2"],
                              ["json","~>1.5.1"],
                              ["redis","~>2.2.1"],
-                             ["dm-types","~>0.10.2"]]
+                             ["dm-types","~>0.10.2"],
+                             ["dm-serializer","~>0.10.2"]]
   self.extra_dev_deps   =    [["rspec","1.3.1"],
                               ["newgem","~>1.5.3"],
                               [ "rdoc","~>3.11"]  ]

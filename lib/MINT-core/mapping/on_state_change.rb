@@ -28,7 +28,7 @@ module MINT
       #observer = agent.storage.notify 'write', {"_model_"=> @source_model.to_s} + @conditions
 
       p "registered for model #{@source_model} writes on state #{@state}"
-      @source_model.notify("write", {  :new_states=> /(^|\|)#{Regexp.quote(@state.first)}/},self.method(:check_cond))
+      @source_model.notify("write", {  :new_states=> @state.first},self.method(:check_cond))
 
     end
 

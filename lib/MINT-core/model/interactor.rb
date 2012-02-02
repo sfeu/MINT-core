@@ -5,7 +5,11 @@ module MINT
   #
   class Element
     include DataMapper::Resource
+
     private
+
+    @@redis = Redis.connect
+
     property :id, Serial
     property :classtype, Discriminator
 
@@ -21,15 +25,70 @@ module MINT
     #always contains the new atomic states that have been entered by the event that has been processed - especially useful for parallel states
     property :new_states, String
 
-   protected
+    protected
     before :save, :save_statemachine
 
     public
 
+    @@publish_attributes = [:name,:states,:abstract_states,:new_states]
+
+    def self.published_attributes
+      @@publish_attributes = [:name,:states,:abstract_states,:new_states]
+    end
+
+    def self.create_channel_name
+      a = [self]
+      a.unshift a.first.superclass while (a.first!=MINT::Element)
+      a.map!{|x| x.to_s.split('::').last}
+      a.join(".")
+    end
+
+    def publish_update
+      @@redis.publish self.class.create_channel_name, self.to_json(:only => @@publish_attributes)
+    end
+
+    def self.notify(action,query,callback,time = nil)
+
+      x = Thread.start do
+
+        @@redis.subscribe("#{self.create_channel_name}") do |on|
+          on.subscribe do |channel, subscriptions|
+            puts "Subscribed to ##{channel} (#{subscriptions} subscriptions)"
+          end
+
+          on.message do |channel, message|
+            found=JSON.parse message
+            puts query.inspect
+            query.keys.each do |k|
+              if found[k.to_s]
+                a = found[k.to_s]
+                query[k].each do |e|
+                  puts "found #{e} a:#{a.inspect}"
+                  if a.include? e
+                    callback.call found
+                    break
+                  end
+                end
+              end
+            end
+            p "end reached"
+          end
+        end
+        x
+      end
+
+      #  q = scoped_query(query)
+      #  q.repository.notify(action,query,callback,self,q,time)
+    end
+    def self.wait(action,query,callback,time = nil)
+      # q = scoped_query(query)
+      # q.repository.notify(action,query,callback,self,q, time)
+    end
+
     def to_dot(filename)
-       if not @statemachine
+      if not @statemachine
         initialize_statemachine
-       end
+      end
       @statemachine.to_dot(:output => filename)
     end
     def states
@@ -42,7 +101,7 @@ module MINT
 
     def new_states
       if attribute_get(:new_states)
-            return attribute_get(:new_states).split("|").map &:to_sym if attribute_get(:new_states).class!=Array
+        return attribute_get(:new_states).split("|").map &:to_sym if attribute_get(:new_states).class!=Array
         return attribute_get(:new_states)
       else return []
       end
@@ -58,6 +117,7 @@ module MINT
 
     def initialize(attributes = {}, &block)
       super(attributes, &block)
+
       recover_statemachine
     end
 
@@ -88,12 +148,12 @@ module MINT
         @statemachine.context = self
       end
       begin
-         old_states = @statemachine.states_id
-         old_abstract_states = @statemachine.abstract_states
-         @statemachine.process_event(event)
-         calc_new_states = @statemachine.states_id-old_states
-         calc_new_states = calc_new_states + (@statemachine.abstract_states - old_abstract_states)
-         calc_new_states = @statemachine.states_id  if calc_new_states.length==0
+        old_states = @statemachine.states_id
+        old_abstract_states = @statemachine.abstract_states
+        @statemachine.process_event(event)
+        calc_new_states = @statemachine.states_id-old_states
+        calc_new_states = calc_new_states + (@statemachine.abstract_states - old_abstract_states)
+        calc_new_states = @statemachine.states_id  if calc_new_states.length==0
         attribute_set(:new_states, calc_new_states.join('|'))
       rescue Statemachine::TransitionMissingException
         p "#{self.name} is in state #{self.states} and could not handle #{event}"
@@ -103,10 +163,10 @@ module MINT
     end
 
     def is_in?(state)
-       if not @statemachine
+      if not @statemachine
         initialize_statemachine
         recover_statemachine
-       end
+      end
       @statemachine.In(state)
     end
     protected
@@ -122,7 +182,7 @@ module MINT
     private
 
     def save_statemachine
-       if not @statemachine
+      if not @statemachine
         initialize_statemachine
         recover_statemachine
       end
@@ -130,7 +190,9 @@ module MINT
       attribute_set(:abstract_states, @statemachine.abstract_states.concat(@statemachine.states_id).join('|'))
       # attribute_set(:new_states,new_states) if new_states and new_states.length>0 # second condition to
       save!
+      publish_update
     end
+
 
     # @TODO check this for parallel states!
     def recover_statemachine
@@ -148,9 +210,9 @@ module MINT
         attribute_set(:states, @statemachine.states_id.join('|'))
         attribute_set(:abstract_states, @statemachine.abstract_states.concat(@statemachine.states_id).join('|'))
       end
-       if not attribute_get(:new_states)
-         attribute_set(:new_states, @statemachine.states_id.join('|'))
-       end
+      if not attribute_get(:new_states)
+        attribute_set(:new_states, @statemachine.states_id.join('|'))
+      end
     end
 
     def is_set(attribute)
@@ -159,7 +221,7 @@ module MINT
   end
 
   class IR <Element
- end
+  end
 
   class IN < IR
   end

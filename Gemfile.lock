@@ -7,7 +7,6 @@ PATH
       cassowary (~> 1.0.1)
       cassowary (~> 1.0.1)
       dm-core (~> 0.10.2)
-      dm-rinda-adapter (~> 0.1.0)
       dm-rinda-adapter (~> 0.1.2)
       dm-serializer (~> 0.10.2)
       dm-types (~> 0.10.2)

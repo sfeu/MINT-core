@@ -16,7 +16,7 @@ class LayoutAgent < MINT::Agent
     # }
 
 
-    root_cio = CIO.first(:name=>result.root)
+    root_cio = CIO.first(:name=>result['root'])
 
 
     # p "#{root_le} root:#{root}"
@@ -33,7 +33,7 @@ class LayoutAgent < MINT::Agent
     root_cio.calculate_container(@solver,20)
 
     CUIControl.fill_active_cio_cache
-
+    true
   end
 
 

@@ -58,6 +58,9 @@ module MINT
 
     before :update!, :initialize_points
     public
+
+    @@publish_attributes = Element.published_attributes + [:x,:y,:width,:height]
+
     def initialize_points
       @pos = Cassowary::ClPoint.new()
       if (self.x and self.y)

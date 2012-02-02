@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sebastian Feuerstack"]
-  s.date = "2012-01-30"
+  s.date = "2012-02-01"
   s.description = "Multimodal systems realizing a combination of speech, gesture and graphical-driven interaction are getting part of our everyday life.\n\nExamples are in-car assistance systems or recent game consoles. Future interaction will be embedded into smart environments offering the user to choose and to combine a heterogeneous set of interaction devices and modalities based on his preferences realizing an ubiquitous and multimodal access.\n\nThis framework enables the modeling and execution of multimodal interaction interfaces for the web based on ruby and implements a server-sided synchronisation of all connected modes and media. Currenlty the framework considers gestures, head movements, multi touch and the mouse as principle input modes. The priciple output media is a web application based on a rails frontend as well as sound support based on the SDL libraries.\n\nBuilding this framework is an ongoing effort and it has to be pointed out that it serves to demonstrate scientific research results and is not targeted to we applied to serve productive systems as they are several limitations that need to be solved (maybe with your help?) like for instance multi-user support and authentification.  \n\nThe MINT core gem contains all basic AUI and CUI models as well as the basic infrastructure to create interactors and mappings. Please note that you need at least a CUI adapter gem to be able to actually run a system, e.g. the MINT-rails gem. But for initial experiements ist enough to follow the installation instructions of this document.\n\nThere is still no documentation for the framework, but a lot of articles about the concepts and theories of our approach have already been published and can be accessed from our project site http://www.multi-access.de ."
   s.email = ["Sebastian@Feuerstack.org"]
   s.executables = ["mint-aui", "mint-cui-gfx", "mint-juggernaut.sh", "mint-tuplespace"]
@@ -24,12 +24,11 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<dm-rinda-adapter>, ["~> 0.1.0"])
+      s.add_runtime_dependency(%q<dm-rinda-adapter>, ["~> 0.1.2"])
       s.add_runtime_dependency(%q<MINT-statemachine>, ["~> 1.2.3"])
       s.add_runtime_dependency(%q<MINT-scxml>, ["~> 1.0.0"])
       s.add_runtime_dependency(%q<cassowary>, ["~> 1.0.1"])
       s.add_runtime_dependency(%q<dm-core>, ["~> 0.10.2"])
-      s.add_runtime_dependency(%q<dm-rinda-adapter>, ["~> 0.1.2"])
       s.add_runtime_dependency(%q<cassowary>, ["~> 1.0.1"])
       s.add_runtime_dependency(%q<eventmachine>, ["~> 0.12.10"])
       s.add_runtime_dependency(%q<rake>, ["= 0.9.2.2"])
@@ -43,12 +42,11 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>, ["~> 3.11"])
       s.add_development_dependency(%q<hoe>, ["~> 2.9"])
     else
-      s.add_dependency(%q<dm-rinda-adapter>, ["~> 0.1.0"])
+      s.add_dependency(%q<dm-rinda-adapter>, ["~> 0.1.2"])
       s.add_dependency(%q<MINT-statemachine>, ["~> 1.2.3"])
       s.add_dependency(%q<MINT-scxml>, ["~> 1.0.0"])
       s.add_dependency(%q<cassowary>, ["~> 1.0.1"])
       s.add_dependency(%q<dm-core>, ["~> 0.10.2"])
-      s.add_dependency(%q<dm-rinda-adapter>, ["~> 0.1.2"])
       s.add_dependency(%q<cassowary>, ["~> 1.0.1"])
       s.add_dependency(%q<eventmachine>, ["~> 0.12.10"])
       s.add_dependency(%q<rake>, ["= 0.9.2.2"])
@@ -63,12 +61,11 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe>, ["~> 2.9"])
     end
   else
-    s.add_dependency(%q<dm-rinda-adapter>, ["~> 0.1.0"])
+    s.add_dependency(%q<dm-rinda-adapter>, ["~> 0.1.2"])
     s.add_dependency(%q<MINT-statemachine>, ["~> 1.2.3"])
     s.add_dependency(%q<MINT-scxml>, ["~> 1.0.0"])
     s.add_dependency(%q<cassowary>, ["~> 1.0.1"])
     s.add_dependency(%q<dm-core>, ["~> 0.10.2"])
-    s.add_dependency(%q<dm-rinda-adapter>, ["~> 0.1.2"])
     s.add_dependency(%q<cassowary>, ["~> 1.0.1"])
     s.add_dependency(%q<eventmachine>, ["~> 0.12.10"])
     s.add_dependency(%q<rake>, ["= 0.9.2.2"])

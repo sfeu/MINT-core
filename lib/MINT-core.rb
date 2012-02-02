@@ -12,7 +12,9 @@ require "cassowary"
 require 'RMagick'
 require "rinda/tuplespace"
 require 'drb/drb'
+require 'redis'
 require 'dm-core'
+require 'dm-serializer'
 require 'dm-types'
 require "MINT-scxml"
 

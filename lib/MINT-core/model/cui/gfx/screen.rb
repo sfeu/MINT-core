@@ -2,6 +2,8 @@ module MINT
   class Screen < Element
     property :root, String
 
+    @@publish_attributes = Element.published_attributes + [:root
+    ]
 
     protected
     def initialize_statemachine

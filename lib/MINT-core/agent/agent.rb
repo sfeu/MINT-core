@@ -3,7 +3,7 @@ module MINT
   class Agent
     attr_reader :running_mappings
 
-    def initialize(connection_options = { :adapter => "rinda", :host =>"localhost",:port=>4000})
+    def initialize(connection_options = { :adapter => "redis", :host =>"localhost",:port=>6379})
       DataMapper.setup(:default, connection_options)
       DRb.start_service
       @running_mappings = []

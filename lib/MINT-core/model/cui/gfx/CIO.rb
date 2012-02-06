@@ -257,7 +257,7 @@ module MINT
     end
 
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
 
         @statemachine = Statemachine.build do
 

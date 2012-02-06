@@ -4,7 +4,7 @@ module MINT
     property :y, Integer, :default  => -1
 
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         @statemachine = Statemachine.build do
 
           trans :disconnected,:connect, :connected

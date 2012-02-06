@@ -10,7 +10,7 @@ module MINT
     property :description, Text
 
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
 
         @statemachine = Statemachine.build do
           trans :initialized, :run, :running
@@ -60,7 +60,7 @@ module MINT
 #
   class PTS < Element
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         @statemachine = Statemachine.build do
           trans :initialized, :calculate, :calculating
           trans :calculating, :done, :finished

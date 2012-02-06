@@ -1,7 +1,7 @@
 module MINT
   class AIChoice < AIC
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aichoice.scxml"
 =begin

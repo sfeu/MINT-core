@@ -115,8 +115,8 @@ module MINT
       save_statemachine
     end
 
-    def initialize(attributes = {}, &block)
-      super(attributes, &block)
+    def initialize(attributes = nil)
+      super(attributes)
 
       recover_statemachine
     end
@@ -171,7 +171,7 @@ module MINT
     end
     protected
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         @statemachine = Statemachine.build do
           trans :initialized, :run, :running
           trans :running, :done, :finished
@@ -196,7 +196,7 @@ module MINT
 
     # @TODO check this for parallel states!
     def recover_statemachine
-      if (@statemachine.blank?)
+      if (@statemachine.nil?)
         initialize_statemachine
       end
       if attribute_get(:states)

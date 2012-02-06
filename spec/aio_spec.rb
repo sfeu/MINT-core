@@ -2,10 +2,17 @@ require "spec_helper"
 
 describe 'AUI' do
   before :each do
-    connection_options = { :adapter => "in_memory"}
+    connection_options = { :adapter => "redis"}
     DataMapper.setup(:default, connection_options)
     #    DataMapper.setup(:default, { :adapter => "rinda",:local =>Rinda::TupleSpace.new})
-    @a = MINT::AIO.create(:name => "test")
+    require "MINT-core"
+    redis = Redis.connect
+    redis.flushdb
+
+
+    DataMapper.finalize
+
+    @a = MINT2::AIO.create(:name => "test")
 
   end
 
@@ -64,19 +71,19 @@ describe 'AUI' do
 
     it 'should recover state after save and reload' do
       @a.process_event(:organize).should == [:organized]
-      @a.save!
-      b =  MINT::AIO.first(:name=>"test")
+      @a.save
+      b =  MINT2::AIO.first(:name=>"test")
       b.states.should == [:organized]
       b.process_event(:present).should == [:defocused]
     end
 
     it 'should store the state' do
-      a = MINT::AIINReference.create(:name=>"RecipeSelection_label",:label=>"Rezeptdetails")
+      a = MINT2::AIO.create(:name=>"RecipeSelection_label",:label=>"Rezeptdetails")
       a.states.should == [:initialized]
       a.process_event(:organize)
       a.states.should == [:organized]
       a.save!
-      MINT::AIINReference.first(:name=>"RecipeSelection_label").states.should == [:organized]
+      MINT2::AIO.first(:name=>"RecipeSelection_label").states.should == [:organized]
     end
 
     #TODO Bug first sets states to array  not sure ahy
@@ -92,7 +99,7 @@ describe 'AUI' do
 
 
     it 'should focus to next element' do
-      b =  MINT::AIO.create(:name=>"next")
+      b =  MINT2::AIO.create(:name=>"next")
       @a.next = b
       b.previous =@a
 
@@ -122,22 +129,12 @@ describe 'AUI' do
 
     it 'should handle previous' do
       @a.states=[:defocused]
-      b =  MINT::AIO.new(:name=>"test", :previous =>@a)
+      b =  MINT2::AIO.new(:name=>"test", :previous =>@a)
       b.states= [:focused]
       b.process_event(:prev)
 
       @a.states.should ==[:focused]
       b.states.should ==[:defocused]
-    end
-
-    it 'should handle parent' do
-      @a.states=[:focused]
-      b =  MINT::AIC.new(:name=>"parent",:childs =>[@a])
-      b.states = [:defocused]
-      @a.process_event(:parent)
-
-      @a.states.should ==[:defocused]
-      b.states.should ==[:focused]
     end
 
 

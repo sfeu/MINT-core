@@ -1,19 +1,5 @@
 
 
-module DataMapper
-  class Collection
-    def each
-      super do |resource|
-        begin
-        # original, resource.collection = resource.collection, self
-          yield resource
-        ensure
-          # resource.collection = original
-        end
-      end
-    end
-  end
-end
 
 class AUIAgent < MINT::Agent
   include AUIControl

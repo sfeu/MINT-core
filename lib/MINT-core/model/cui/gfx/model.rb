@@ -21,7 +21,7 @@ module MINT
   # Abstract class to handle objects that can be selected
   class Selectable < CIO
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
 
         @statemachine = Statemachine.build do
 
@@ -126,7 +126,7 @@ module MINT
 
   class MarkableRadioButton < RadioButton
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
 
         @statemachine = Statemachine.build do
 

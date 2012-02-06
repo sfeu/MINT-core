@@ -10,7 +10,6 @@ require "bundler/setup"
 require 'statemachine'
 require "cassowary"
 require 'RMagick'
-require "rinda/tuplespace"
 require 'drb/drb'
 require 'redis'
 require 'dm-core'

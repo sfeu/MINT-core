@@ -2,7 +2,7 @@ module MINT
 
   class AIOUTDiscrete < AIOUT
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         @statemachine = Statemachine.build do
           trans :initialized,:organize, :organized
           trans :organized, :present, :p

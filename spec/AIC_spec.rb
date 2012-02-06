@@ -1,18 +1,23 @@
 require "spec_helper"
 
-include MINT
 describe 'AUI' do
   before :each do
-    connection_options = { :adapter => "in_memory"}
+    connection_options = { :adapter => "redis"}
     DataMapper.setup(:default, connection_options)
       #    DataMapper.setup(:default, { :adapter => "rinda",:local =>Rinda::TupleSpace.new})
-    AIC.new(:name=>"a", :childs =>[
-        AIO.new(:name => "e1"),
-        AIO.new(:name => "e2"),
-        AIO.new(:name => "e3")
-    ]).save
+     require "MINT-core"
+    redis = Redis.connect
+    redis.flushdb
 
-    @a = AIC.first
+
+    DataMapper.finalize
+
+    MINT2::AIC.new(:name=>"a", :children =>[
+            MINT2::AIO.new(:name => "e1"),
+            MINT2::AIO.new(:name => "e2"),
+            MINT2::AIO.new(:name => "e3")
+    ]).save
+    @a = MINT2::AIC.first
   end
 
   describe 'AIC' do
@@ -28,7 +33,7 @@ describe 'AUI' do
     end
 
     it 'should support navigation to child' do
-      aio = @a.childs.first
+      aio = @a.children.first
       aio.states=[:defocused]
 
       @a.states = [:focused]
@@ -63,6 +68,16 @@ describe 'AUI' do
       end
     end
 
+
+    it 'AIO should handle parent' do
+      @a.states=[:focused]
+      b =  MINT2::AIC.new(:name=>"parent",:childs =>[@a])
+      b.states = [:defocused]
+      @a.process_event(:parent)
+
+      @a.states.should ==[:defocused]
+      b.states.should ==[:focused]
+    end
 
 
   end

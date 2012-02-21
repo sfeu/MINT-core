@@ -1,0 +1,61 @@
+<scxml initial="initialized" name="AIOUTContinous" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=466.78452691732446 h=762.0  -->
+ <state id="initialized"><!--   node-size-and-position x=193.39226345866223 y=43.0 w=80.0 h=20.0  -->
+  <transition event="organize" target="organized"></transition>
+ </state>
+ <state id="organized"><!--   node-size-and-position x=198.39226345866223 y=113.0 w=70.0 h=20.0  -->
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=298.3922634586622 y=193.0 pointx=0.0 pointy=0.0 offsetx=3.0 offsety=0.0  --></transition>
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=243.39226345866223 y=158.0  --></transition>
+ </state>
+ <state id="suspended"><!--   node-size-and-position x=198.39226345866223 y=183.0 w=70.0 h=20.0  -->
+  <onentry>
+   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
+  </onentry>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  x=223.39226345866223 y=158.0  --></transition>
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=243.39226345866223 y=228.0 pointx=0.0 pointy=15.0 offsetx=2.0 offsety=7.0  --></transition>
+ </state>
+ <parallel id="presenting"><!--   node-size-and-position x=20.0 y=253.0 w=426.78452691732446 h=489.0  -->
+  <onentry>
+   <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
+  </onentry>
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=223.39226345866223 y=228.0  --></transition>
+  <state id="p" initial="defocused"><!--   node-size-and-position x=295.28452691732446 y=43.0 w=111.5 h=153.0  -->
+   <state id="defocused"><!--   node-size-and-position x=21.5 y=43.0 w=70.0 h=20.0  -->
+    <onentry>
+     <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
+    </onentry>
+    <transition event="focus" target="focused"><!--   edge-path [focused]  x=70.0 y=88.0  --></transition>
+   </state>
+   <state id="focused"><!--   node-size-and-position x=26.5 y=113.0 w=60.0 h=20.0  -->
+    <onentry>
+     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
+    </onentry>
+    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=50.0 y=88.0  --></transition>
+   </state>
+  </state>
+  <state id="c" initial="waiting"><!--   node-size-and-position x=20.0 y=43.0 w=216.06905383464897 h=426.0  -->
+   <state id="moving" initial="progressing"><!--   node-size-and-position x=10.0 y=110.0 w=190.0 h=300.0  -->
+    <onentry>
+     <log expr="data=consume(id)"></log>
+    </onentry>
+    <transition event="halt" target="waiting"><!--   edge-path [waiting]  x=88.65816676026304 y=86.22847001684735  --></transition>
+    <state id="progressing"><!--   node-size-and-position x=37.0 y=43.0 w=80.0 h=20.0  -->
+     <transition cond="data==max" target="max"></transition>
+     <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=74.37696138674997 y=124.56385221956874 pointx=0.0 pointy=0.0 offsetx=0.0 offsety=16.0  --></transition>
+    </state>
+    <state id="regressing"><!--   node-size-and-position x=20.0 y=183.0 w=70.0 h=20.0  -->
+     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=54.62303861325003 y=121.43614778043126 pointx=0.0 pointy=0.0 offsetx=0.0 offsety=-17.0  --></transition>
+     <transition cond="data == min" target="min"></transition>
+    </state>
+    <state id="max"><!--   node-size-and-position x=0.0 y=101.0 w=30.0 h=20.0  -->
+     <transition event="regress" target="regressing"></transition>
+    </state>
+    <state id="min"><!--   node-size-and-position x=73.0 y=253.0 w=30.0 h=20.0  -->
+     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=121.0 y=193.0 x=130.0 y=123.0  --></transition>
+    </state>
+   </state>
+   <state id="waiting"><!--   node-size-and-position x=83.03452691732448 y=43.0 w=50.0 h=20.0  -->
+    <transition event="move" target="moving"><!--   edge-path [moving]  x=130.34183323973696 y=90.77152998315266  --></transition>
+   </state>
+  </state>
+ </parallel>
+</scxml>

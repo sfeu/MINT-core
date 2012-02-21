@@ -12,6 +12,7 @@ describe 'AUI' do
 
     DataMapper.finalize
 
+    DataMapper::Model.raise_on_save_failure = true
     @a = MINT2::AIO.create(:name => "test")
 
   end
@@ -97,6 +98,17 @@ describe 'AUI' do
     #
     #    end
 
+
+    it "should save prev/next links" do
+      b =  MINT2::AIO.create(:name=>"next")
+     # @a.next = b
+      b.previous =@a
+      b.save.should == true
+      @a.save.should == true
+
+      n = MINT2::AIO.first(:name=>"next")
+      n.previous.should == @a
+    end
 
     it 'should focus to next element' do
       b =  MINT2::AIO.create(:name=>"next")

@@ -1,16 +1,25 @@
 module MINT2
+   DataMapper::Model.raise_on_save_failure = true
+
   class AIO < MINT::Element
     property :label, String
     property :description, Text,   :lazy => false
 
-    has 1, :neighbour_parent, :child_key =>[:source_id]
-    has 1, :parent, self, :through => :neighbour_parent, :via => :target
+    #has 1, :neighbour_parent, :child_key =>[:source_id]
+    #has 1, :parent, 'MINT2::AIC', :through => :neighbour_parent, :via => :target
 
-    has 1, :neighbour_next, :child_key =>[:source_id]
-    has 1, :next, self, :through => :neighbour_next, :via => :target
+    belongs_to :parent, "MINT2::AIC",
+                   :parent_key => [ :id ],
+                   :child_key  => [ :aic_id ],
+                   :required   => false
 
-    has 1, :neighbour_previous, :child_key =>[:source_id]
-    has 1, :previous, self, :through => :neighbour_previous, :via => :target
+
+
+    has 1, :link, :child_key =>[:source_id]
+    has 1, :previous, self, :through => :link, :via => :target
+
+   # has 1, :neighbour_previous, :child_key =>[:source_id]
+   # has 1, :previous, self, :through => :neighbour_previous, :via => :target
 
 
     def initialize_statemachine
@@ -64,6 +73,14 @@ module MINT2
       true
     end
 
+     def sync_cio_to_hidden
+      cio =  MINT::CIO.first(:name=>self.name)
+      if (cio and not cio.is_in? :hidden)
+        cio.sync_event(:hide)
+        end
+      true
+     end
+
     def focus_previous
       if (self.previous)
         self.previous.process_event("focus")
@@ -96,17 +113,20 @@ module MINT2
 
   end
 
-  class NeighbourParent
+  class AicAio
     include DataMapper::Resource
 
-    belongs_to :source, 'AIO', :key => true
-    belongs_to :target, 'AIO', :key => true
+    property :id,   Serial
+
+    belongs_to :AIC,'MINT2::AIC'
+    belongs_to :AIO ,'MINT2::AIO'
+
   end
-  class NeighbourNext
+  class Link
     include DataMapper::Resource
 
-    belongs_to :source, 'AIO', :key => true
-    belongs_to :target, 'AIO', :key => true
+    belongs_to :source, 'MINT2::AIO', :key => true
+    belongs_to :target, 'MINT2::AIO', :key => true
   end
   class NeighbourPrevious
     include DataMapper::Resource

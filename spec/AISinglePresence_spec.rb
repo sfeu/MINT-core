@@ -1,18 +1,27 @@
 require "spec_helper"
 
-include MINT
+
+
 describe 'AUI' do
   before :each do
-    connection_options = { :adapter => "in_memory"}
+    connection_options = { :adapter => "redis"}
     DataMapper.setup(:default, connection_options)
     #    DataMapper.setup(:default, { :adapter => "rinda",:local =>Rinda::TupleSpace.new})
-    AISinglePresence.new(:name=>"a", :childs =>[
-        AIO.new(:name => "e1"),
-        AIO.new(:name => "e2"),
-        AIO.new(:name => "e3")
+
+    require "MINT-core"
+        redis = Redis.connect
+        redis.flushdb
+
+
+        DataMapper.finalize
+
+    MINT2::AISinglePresence.new(:name=>"a", :children =>[
+        MINT2::AIO.new(:name => "e1"),
+        MINT2::AIO.new(:name => "e2"),
+        MINT2::AIO.new(:name => "e3")
     ]).save
 
-    @a = AISinglePresence.first
+    @a = MINT2::AISinglePresence.first
   end
 
   describe 'AISinglePresence' do
@@ -28,12 +37,13 @@ it 'should initialize with initiated' do
     end
 
     it 'should transform first child to presented if presented and rest to suspended' do
+
       AUIControl.organize(@a,nil,0)
       # @a.process_event(:organize).should ==[:organized]
       @a.states.should == [:organized]
       @a.new_states.should == [:organized]
       @a.process_event(:present).should ==[:defocused]
-      children = @a.childs
+      children = @a.children
       children[0].states.should == [:defocused]
       children[1].states.should == [:suspended]
       children[2].states.should == [:suspended]
@@ -43,25 +53,25 @@ it 'should initialize with initiated' do
       AUIControl.organize(@a,nil,0)
       @a.process_event(:present).should == [:defocused]
 
-      AIO.first(:name => "e1").states.should == [:defocused]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e1").states.should == [:defocused]
+      MINT2::AIO.first(:name => "e2").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e3").states.should == [:suspended]
 
-      e3 = AIO.first(:name => "e3")
+      e3 = MINT2::AIO.first(:name => "e3")
       e3.states.should ==[:suspended]
       e3.process_event(:present).should == [:defocused]
 
-      AIO.first(:name => "e1").states.should == [:suspended]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:defocused]
+      MINT2::AIO.first(:name => "e1").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e2").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e3").states.should == [:defocused]
 
-      e2 = AIO.first(:name => "e2")
+      e2 = MINT2::AIO.first(:name => "e2")
       e2.states.should ==[:suspended]
       e2.process_event(:present).should == [:defocused]
 
-      AIO.first(:name => "e1").states.should == [:suspended]
-      AIO.first(:name => "e2").states.should == [:defocused]
-      AIO.first(:name => "e3").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e1").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e2").states.should == [:defocused]
+      MINT2::AIO.first(:name => "e3").states.should == [:suspended]
 
     end
 
@@ -69,23 +79,23 @@ it 'should initialize with initiated' do
       AUIControl.organize(@a,nil,0)
       @a.process_event(:present).should == [:defocused]
 
-      AIO.first(:name => "e1").states.should == [:defocused]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e1").states.should == [:defocused]
+      MINT2::AIO.first(:name => "e2").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e3").states.should == [:suspended]
 
       @a.process_event(:focus).should == [:waiting]
       @a.process_event(:enter).should == [:entered]
       @a.process_event(:next).should == [:entered]
 
-      AIO.first(:name => "e1").states.should == [:suspended]
-      AIO.first(:name => "e2").states.should == [:defocused]
-      AIO.first(:name => "e3").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e1").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e2").states.should == [:defocused]
+      MINT2::AIO.first(:name => "e3").states.should == [:suspended]
 
       @a.process_event(:prev).should == [:entered]
 
-      AIO.first(:name => "e1").states.should == [:defocused]
-      AIO.first(:name => "e2").states.should == [:suspended]
-      AIO.first(:name => "e3").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e1").states.should == [:defocused]
+      MINT2::AIO.first(:name => "e2").states.should == [:suspended]
+      MINT2::AIO.first(:name => "e3").states.should == [:suspended]
     end
 
 

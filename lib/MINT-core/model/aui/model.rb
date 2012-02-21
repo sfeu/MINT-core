@@ -42,7 +42,7 @@ module MINT
 
   class AIOUTContinous < AIOUT
   end
-
+  require "MINT-core/model/new/aui/AIOUTContinous"
 
 end
 
@@ -54,4 +54,5 @@ require "MINT-core/model/aui/AISingleChoice"
 require "MINT-core/model/aui/AIMultiChoiceElement"
 require "MINT-core/model/aui/AIMultiChoice"
 
-require "MINT-core/model/aui/AISinglePresence"
+# require "MINT-core/model/aui/AISinglePresence"
+  require "MINT-core/model/new/aui/AISinglePresence"

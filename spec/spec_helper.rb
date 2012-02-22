@@ -11,4 +11,6 @@ require 'redis'
 require 'dm-core'
 require 'dm-serializer'
 require 'dm-types'
+require 'eventmachine'
+require 'em-redis'
 

@@ -12,12 +12,26 @@ PATH
       hiredis (~> 0.3.0)
       redis (~> 2.2)
 
-GEM
-  remote: http://rubygems.org/
+PATH
+  remote: ../em-redis
+  specs:
+    em-redis (0.3.0)
+      eventmachine
+
+PATH
+  remote: ../scxml
   specs:
     MINT-scxml (1.0.0)
       MINT-statemachine (~> 1.2.3)
+
+PATH
+  remote: ../statemachine
+  specs:
     MINT-statemachine (1.2.3)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
     actionmailer (2.3.12)
       actionpack (= 2.3.12)
     actionpack (2.3.12)
@@ -47,6 +61,7 @@ GEM
       multi_json (~> 1.0.3)
       stringex (~> 1.3.0)
       uuidtools (~> 2.1.2)
+    em-spec (0.2.1)
     eventmachine (0.12.10)
     fastercsv (1.5.4)
     hiredis (0.3.2)
@@ -74,14 +89,16 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  MINT-scxml (~> 1.0.0)
+  MINT-scxml!
   MINT-sdl!
-  MINT-statemachine (~> 1.2.3)
+  MINT-statemachine!
   cassowary (~> 1.0.1)
   dm-core (~> 1.2.0)
   dm-redis-adapter!
   dm-serializer (~> 1.2.0)
   dm-types (~> 1.2.0)
+  em-redis!
+  em-spec
   eventmachine (~> 0.12.10)
   json (~> 1.5.4)
   rails (= 2.3.12)

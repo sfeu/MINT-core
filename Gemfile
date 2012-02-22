@@ -2,8 +2,8 @@ source :rubygems
 
 
 gem "dm-redis-adapter", :path => "../dm-redis-adapter"
-gem "MINT-statemachine", "~> 1.2.3"
-gem "MINT-scxml", "~> 1.0.0"
+gem "MINT-statemachine", :path => "../statemachine" # "~> 1.2.3"
+gem "MINT-scxml", :path => "../scxml" # "~> 1.0.0"
 gem "cassowary", "~> 1.0.1"
 gem "dm-core","~>1.2.0"
 gem "eventmachine", "~> 0.12.10"
@@ -15,7 +15,9 @@ gem "dm-types","~>1.2.0"
 gem "dm-serializer","~>1.2.0"
 gem "MINT-sdl", :path => "../MINT-sdl"
 # gem "MINT-debugger", :path => "../MINT-debugger" #"1.0.0"
-gem "rspec", "1.3.1"
+gem "rspec","1.3.1"
 gem "rails", "2.3.12"
+gem "em-spec"
+gem "em-redis",:path => "../em-redis"
 
 # gemspec

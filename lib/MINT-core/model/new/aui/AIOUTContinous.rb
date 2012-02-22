@@ -17,8 +17,10 @@ module MINT2
 
     # functions called from scxml
 
-    def move(id)
-      @@redis.subscribe(self.class.create_channel_name+".#{id}") do |on|
+    def consume(id)
+      @r = EM::Protocols::Redis.connect
+
+      p = Proc.new {|on|
         on.message do |channel, message|
 
           d = attribute_get(:data)
@@ -28,12 +30,16 @@ module MINT2
             elsif message.to_i < d and %w(regressing min).include?(state)
               @statemachine.process_event("regress")
             end
-            else
-              @statemachine.process_event("progress") # default progress TODO improve default handling for first data
-            end
-            attribute_set(:data,message.to_i)
+          else
+            @statemachine.process_event("progress") # default progress TODO improve default handling for first data
+          end
+          attribute_set(:data,message.to_i)
         end
-      end
+
+      }
+
+      @r.subscribe(self.class.create_channel_name+".#{id}",p)
+
     end
 
     def halt(id)

@@ -18,32 +18,29 @@ module MINT2
     # functions called from scxml
 
     def consume(id)
-      @r = EM::Protocols::Redis.connect
 
-      p = Proc.new {|on|
-        on.message do |channel, message|
+      @@subscriber.subscribe(self.class.create_channel_name+".#{id}")
+      @@subscriber.on(:message) { |channel, message|
 
-          d = attribute_get(:data)
-          if d
-            if message.to_i > d and %w(progressing max).include?(state)     # state comparison just for performance
-              @statemachine.process_event("progress")
-            elsif message.to_i < d and %w(regressing min).include?(state)
-              @statemachine.process_event("regress")
-            end
-          else
-            @statemachine.process_event("progress") # default progress TODO improve default handling for first data
+        d = attribute_get(:data)
+        if d
+          if message.to_i > d and not (is_in?(:progressing) or is_in?(:max))# state comparison just for performance
+            process_event("progress")
+          elsif message.to_i < d and not (is_in?(:regressing) or is_in?(:min))
+            process_event("regress")
           end
-          attribute_set(:data,message.to_i)
+        else
+          #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
         end
+        attribute_set(:data,message.to_i)
 
       }
 
-      @r.subscribe(self.class.create_channel_name+".#{id}",p)
 
     end
 
     def halt(id)
-      @@redis.unsubscribe(self.class.create_channel_name+".#{id}")
+      @@subscriber.unsubscribe(self.class.create_channel_name+".#{id}")
     end
   end
 

@@ -15,9 +15,9 @@ gem "dm-types","~>1.2.0"
 gem "dm-serializer","~>1.2.0"
 gem "MINT-sdl", :path => "../MINT-sdl"
 # gem "MINT-debugger", :path => "../MINT-debugger" #"1.0.0"
-gem "rspec","1.3.1"
+gem "rspec","2.6.0"
 gem "rails", "2.3.12"
-gem "em-spec"
-gem "em-redis",:path => "../em-redis"
+gem "em-spec", "~> 0.2.5"
+gem "em-hiredis"
 
 # gemspec

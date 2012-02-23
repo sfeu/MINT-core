@@ -6,9 +6,12 @@ module MINT
   class Element
     include DataMapper::Resource
 
+
     private
 
-    @@redis = Redis.connect
+    @@redis = EM::Hiredis.connect
+    @@subscriber= EM::Hiredis.connect
+
 
     property :id, Serial
     property :classtype, Discriminator
@@ -30,6 +33,14 @@ module MINT
 
     public
 
+    def self.redis(r)
+      @@redis = r
+    end
+
+    def self.subscriber(s)
+      @@subscriber = s
+    end
+
     @@publish_attributes = [:name,:states,:abstract_states,:new_states]
 
     def self.published_attributes
@@ -49,37 +60,28 @@ module MINT
 
     def self.notify(action,query,callback,time = nil)
 
-      x = Thread.start do
 
-        @@redis.subscribe("#{self.create_channel_name}") do |on|
-          on.subscribe do |channel, subscriptions|
-            puts "Subscribed to ##{channel} (#{subscriptions} subscriptions)"
-          end
+      @@subscriber.subscribe("#{self.create_channel_name}")
 
-          on.message do |channel, message|
-            found=JSON.parse message
-            puts query.inspect
-            query.keys.each do |k|
-              if found[k.to_s]
-                a = found[k.to_s]
-                query[k].each do |e|
-                  puts "found #{e} a:#{a.inspect}"
-                  if a.include? e
-                    callback.call found
-                    break
-                  end
-                end
+      @@subscriber.on(:message) { |channel, message|
+        found=JSON.parse message
+        puts query.inspect
+        query.keys.each do |k|
+          if found[k.to_s]
+            a = found[k.to_s]
+            query[k].each do |e|
+              puts "found #{e} a:#{a.inspect}"
+              if a.include? e
+                callback.call found
+                break
               end
             end
-            p "end reached"
           end
         end
-        x
-      end
-
-      #  q = scoped_query(query)
-      #  q.repository.notify(action,query,callback,self,q,time)
+      }
     end
+
+
     def self.wait(action,query,callback,time = nil)
       # q = scoped_query(query)
       # q.repository.notify(action,query,callback,self,q, time)

@@ -12,11 +12,12 @@ require "cassowary"
 require 'RMagick'
 require 'drb/drb'
 require 'redis'
-require 'hiredis'
 require 'dm-core'
 require 'dm-serializer'
 require 'dm-types'
 require "MINT-scxml"
+require "eventmachine"
+require 'em-hiredis'
 
 require "MINT-core/agent/agent"
 require "MINT-core/mapping/mapping"

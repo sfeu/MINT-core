@@ -33,7 +33,7 @@ module MINT2
           #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
         end
         attribute_set(:data,message.to_i)
-
+        @@redis.publish("ss:channels",{:event=>self.class.create_channel_name+".#{id}",:params=>{:data=>message.to_i},:destinations=>["user:test"]}.to_json)
       }
 
 

@@ -8,6 +8,7 @@ module MINT
 
   class AIIN < AIO
   end
+  require "MINT-core/model/new/aui/AIIN"
 
   class AIINContinous < AIIN
   end
@@ -43,6 +44,7 @@ module MINT
   class AIOUTContinous < AIOUT
   end
   require "MINT-core/model/new/aui/AIOUTContinous"
+  require "MINT-core/model/new/aui/AIINContinous"
 
 end
 

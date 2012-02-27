@@ -17,6 +17,8 @@ module MINT2
 
     # functions called from scxml
 
+
+
     def consume(id)
 
       @@subscriber.subscribe(self.class.create_channel_name+".#{id}")

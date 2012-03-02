@@ -1,0 +1,32 @@
+<scxml initial="initialized" name="AIReference" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=390.0 h=220.0  -->
+ <state id="initialized"><!--   node-size-and-position x=20.0 y=40.0 w=80.0 h=30.0  -->
+  <transition event="organize"></transition>
+ </state>
+ <state id="organized"><!--   node-size-and-position x=160.0 y=40.0 w=80.0 h=30.0  -->
+  <transition event="suspend"><!--   edge-path [suspended]  x=270.0 y=80.0  --></transition>
+  <transition event="present" target="presenting"></transition>
+ </state>
+ <state id="suspended"><!--   node-size-and-position x=300.0 y=40.0 w=80.0 h=30.0  -->
+  <onentry>
+   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
+  </onentry>
+  <transition event="present"></transition>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  x=257.0 y=56.0  --></transition>
+ </state>
+ <state id="presenting" initial="defocused"><!--   node-size-and-position x=60.0 y=120.0 w=270.0 h=90.0  -->
+  <onentry>
+   <invoke src="inform_parent_presenting" type="x-mint"></invoke>
+  </onentry>
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=360.0 y=100.0  --></transition>
+  <state id="defocused"><!--   node-size-and-position x=10.0 y=40.0 w=80.0 h=30.0  -->
+   <transition event="focus"></transition>
+  </state>
+  <state id="focused"><!--   node-size-and-position x=180.0 y=40.0 w=80.0 h=30.0  -->
+   <transition target="defocused">
+    <if cond="refers != null">
+     <log expr="refers.process_event(focus)"></log>
+    </if>
+<!--   edge-path [defocused]  x=130.0 y=80.0  --></transition>
+  </state>
+ </state>
+</scxml>

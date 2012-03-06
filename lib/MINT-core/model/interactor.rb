@@ -9,8 +9,6 @@ module MINT
 
     private
 
-    @@redis = EM::Hiredis.connect
-    @@subscriber= EM::Hiredis.connect
 
 
     property :id, Serial
@@ -33,13 +31,6 @@ module MINT
 
     public
 
-    def self.redis(r)
-      @@redis = r
-    end
-
-    def self.subscriber(s)
-      @@subscriber = s
-    end
 
     @@publish_attributes = [:name,:states,:abstract_states,:new_states]
 
@@ -54,16 +45,20 @@ module MINT
       a.join(".")
     end
 
+    def self.class_from_channel_name(channel)
+      Object.const_get("MINT2").const_get channel.split('.').last
+    end
+
     def publish_update
-      @@redis.publish self.class.create_channel_name, self.to_json(:only => @@publish_attributes)
+      RedisConnector.pub.publish self.class.create_channel_name, self.to_json(:only => @@publish_attributes)
     end
 
     def self.notify(action,query,callback,time = nil)
 
 
-      @@subscriber.subscribe("#{self.create_channel_name}")
+      RedisConnector.sub.subscribe("#{self.create_channel_name}")
 
-      @@subscriber.on(:message) { |channel, message|
+      RedisConnector.sub.on(:message) { |channel, message|
         found=JSON.parse message
         puts query.inspect
         query.keys.each do |k|

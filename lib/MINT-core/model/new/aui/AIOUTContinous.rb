@@ -21,8 +21,8 @@ module MINT2
 
     def consume(id)
 
-      @@subscriber.subscribe(self.class.create_channel_name+".#{id}")
-      @@subscriber.on(:message) { |channel, message|
+      RedisConnector.sub.subscribe(self.class.create_channel_name+".#{id}")
+      RedisConnector.sub.on(:message) { |channel, message|
 
         d = attribute_get(:data)
         if d
@@ -35,14 +35,14 @@ module MINT2
           #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
         end
         attribute_set(:data,message.to_i)
-        @@redis.publish("ss:channels",{:event=>self.class.create_channel_name+".#{id}",:params=>{:data=>message.to_i},:destinations=>["user:test"]}.to_json)
+        RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{id}",:params=>{:data=>message.to_i},:destinations=>["user:test"]}.to_json)
       }
 
 
     end
 
     def halt(id)
-      @@subscriber.unsubscribe(self.class.create_channel_name+".#{id}")
+      RedisConnector.sub.unsubscribe(self.class.create_channel_name+".#{id}")
     end
   end
 

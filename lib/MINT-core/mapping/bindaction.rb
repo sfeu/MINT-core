@@ -1,0 +1,60 @@
+class BindAction
+
+
+  def initialize(params)
+    @action = params
+    @initiated_callback=nil
+  end
+
+  def initiated_callback(cb)
+    @initiated_callback = cb
+  end
+
+  def elementIn
+    @action[:elementIn]
+  end
+
+  def nameIn
+    @action[:nameIn]
+  end
+
+  def channel
+    elementIn+"."+@action[:attrIn]+":"+@action[:attrIn]     #TODO
+  end
+
+  def start
+    RedisConnector.sub.subscribe(channel).callback do
+      @initiated_callback.call(elementIn) if @initiated_callback
+    end
+
+
+    # This does not work, because claues are not stored in data model unless the streaming is stopped
+    #e_class = MINT::Element.class_from_channel_name elementIn
+
+    # element = e_class.first(:name=>nameIn)
+    #d = element.attribute_get(@action[:attrIn])
+
+    #RedisConnector.pub.publish @action[:elementOut], {:name=>@action[:nameOut], @action[:attrOut] => d}.to_json
+
+
+    RedisConnector.sub.on(:message) do |channel, message|
+
+      found=JSON.parse message
+
+      if nameIn.eql? found['name']
+
+        if found.has_key? @action[:attrIn]
+          result =  found[@action[:attrIn]]
+          result = @action[:transform].call result if @action[:transform]
+          RedisConnector.pub.publish @action[:elementOut], {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
+
+        end
+      end
+    end
+
+  end
+
+  def unbind
+    RedisConnector.sub.unsubscribe(@action[:in])
+  end
+end

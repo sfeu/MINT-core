@@ -19,11 +19,17 @@ require "MINT-scxml"
 require "eventmachine"
 require 'em-hiredis'
 
+
+require "MINT-core/connector/redis_connector"
 require "MINT-core/agent/agent"
 require "MINT-core/mapping/mapping"
 require "MINT-core/mapping/on_state_change"
 require "MINT-core/mapping/complementary"
 require "MINT-core/mapping/sequential"
+
+
+require "MINT-core/mapping/complementary_mapping"
+require "MINT-core/mapping/observation"
 
 require "MINT-core/model/interactor"
 require "MINT-core/model/task"
@@ -43,3 +49,5 @@ require "MINT-core/model/device/mouse"
 require "MINT-core/model/body/gesture_button"
 require "MINT-core/model/body/handgesture"
 require "MINT-core/model/body/head"
+
+require "MINT-core/mapping/bindaction"

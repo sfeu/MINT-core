@@ -21,21 +21,16 @@ module MINT2
     # functions called from scxml
 
     def publish(id)
-
       @publish = id.to_s
-
     end
 
     def stop_publish(id)
-
       @publish = nil
-
     end
 
-
     def consume(id)
-      @@subscriber.psubscribe('Element.AIO.AIIN.AIINContinous.'+id.to_s+":*") # TODO all users
-      @@subscriber.on(:pmessage) { |key, channel, message|
+      RedisConnector.sub.psubscribe('Element.AIO.AIIN.AIINContinous.'+id.to_s+":*") # TODO all users
+      RedisConnector.sub.on(:pmessage) { |key, channel, message|
 
         if message.eql? "stop"
           process_event("halt")
@@ -50,16 +45,18 @@ module MINT2
             end
           else
             #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
+            process_event("progress")
           end
+
           attribute_set(:data,message.to_i)
-          @@redis.publish "Element.AIO.AIIN.AIINContinous.data:"+@publish,data if @publish
+          RedisConnector.pub.publish "Element.AIO.AIIN.AIINContinous.data:"+@publish,data if @publish
         end
       }
 
     end
 
     def halt(id)
-      @@subscriber.unsubscribe(self.class.create_channel_name+".#{id}")
+      RedisConnector.sub.unsubscribe(self.class.create_channel_name+".#{id}")
     end
   end
 

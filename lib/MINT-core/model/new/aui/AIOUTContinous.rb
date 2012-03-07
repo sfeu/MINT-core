@@ -43,7 +43,7 @@ module MINT2
                 #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
               end
               attribute_set(:data,value)
-              RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{id}",:params=>{:data=>value },:destinations=>["user:test"]}.to_json)
+              RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{self.name}",:params=>{:data=>value },:destinations=>["user:test"]}.to_json)
             end
           end
         end

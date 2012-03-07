@@ -49,7 +49,7 @@ module MINT2
           end
 
           attribute_set(:data,message.to_i)
-          RedisConnector.pub.publish "Element.AIO.AIIN.AIINContinous.data:"+@publish,data if @publish
+          RedisConnector.pub.publish "Element.AIO.AIIN.AIINContinous",{:name=>self.name,:data => data}.to_json if @publish
         end
       }
 

@@ -21,22 +21,34 @@ module MINT2
 
     def consume(id)
 
-      RedisConnector.sub.subscribe(self.class.create_channel_name+".#{id}")
+      RedisConnector.sub.subscribe(self.class.create_channel_name)
       RedisConnector.sub.on(:message) { |channel, message|
+        if channel.eql? self.class.create_channel_name
 
-        d = attribute_get(:data)
-        if d
-          if message.to_i > d and not (is_in?(:progressing) or is_in?(:max))# state comparison just for performance
-            process_event("progress")
-          elsif message.to_i < d and not (is_in?(:regressing) or is_in?(:min))
-            process_event("regress")
+          found=JSON.parse message
+
+          if self.name.eql? found['name']
+            if found['data']
+              value = found['data'].to_i
+
+
+              d = attribute_get(:data)
+              if d
+                if value > d and not (is_in?(:progressing) or is_in?(:max))# state comparison just for performance
+                  process_event("progress")
+                elsif value  < d and not (is_in?(:regressing) or is_in?(:min))
+                  process_event("regress")
+                end
+              else
+                #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
+              end
+              attribute_set(:data,value)
+              RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{id}",:params=>{:data=>value },:destinations=>["user:test"]}.to_json)
+            end
           end
-        else
-          #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
         end
-        attribute_set(:data,message.to_i)
-        RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{id}",:params=>{:data=>message.to_i},:destinations=>["user:test"]}.to_json)
       }
+
 
 
     end

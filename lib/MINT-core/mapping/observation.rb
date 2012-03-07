@@ -28,16 +28,18 @@ class Observation
     }
 
     RedisConnector.sub.on(:message) do |channel, message|
-      found=JSON.parse message
+      if channel.eql? element
+        found=JSON.parse message
 
-      if  name.eql? found["name"]
+        if  name.eql? found["name"]
 
-        if found.has_key? "new_states"
-          if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
-            cb.call element, true
-          else
-            if (found["states"] & states).length == 0
-              cb.call element, false
+          if found.has_key? "new_states"
+            if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
+              cb.call element, true
+            else
+              if (found["states"] & states).length == 0
+                cb.call element, false
+              end
             end
           end
         end

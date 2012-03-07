@@ -19,7 +19,7 @@ class BindAction
   end
 
   def channel
-    elementIn+"."+@action[:attrIn]+":"+@action[:attrIn]     #TODO
+    elementIn #+"."+@action[:attrIn]+":"+@action[:attrIn]     #TODO
   end
 
   def start
@@ -37,21 +37,23 @@ class BindAction
     #RedisConnector.pub.publish @action[:elementOut], {:name=>@action[:nameOut], @action[:attrOut] => d}.to_json
 
 
-    RedisConnector.sub.on(:message) do |channel, message|
+    RedisConnector.sub.on(:message) do |c, message|
+      if c.eql? channel
+        p c
 
-      found=JSON.parse message
+        found=JSON.parse message
 
-      if nameIn.eql? found['name']
+        if nameIn.eql? found['name']
 
-        if found.has_key? @action[:attrIn]
-          result =  found[@action[:attrIn]]
-          result = @action[:transform].call result if @action[:transform]
-          RedisConnector.pub.publish @action[:elementOut], {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
+          if found.has_key? @action[:attrIn]
+            result =  found[@action[:attrIn]]
+            result = @action[:transform].call result if @action[:transform]
+            RedisConnector.pub.publish @action[:elementOut], {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
 
+          end
         end
       end
     end
-
   end
 
   def unbind

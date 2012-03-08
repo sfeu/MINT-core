@@ -40,15 +40,12 @@
   <state id="dropping" initial="listing"><!--   node-size-and-position x=10.0 y=30.0 w=120.0 h=130.0  -->
    <state id="listing"><!--   node-size-and-position x=10.0 y=30.0 w=90.0 h=30.0  -->
     <transition cond="In(focused)" event="drop" target="dropped">
-     <log expr="aio=AIChoiceElement.all(dragging)"></log>
-     <log expr="add(aio)"></log>
-     <log expr="aio.process_event(drop)"></log>
+     <script> aio=AIChoiceElement.all(dragging); add(aio); aio.process_event(:drop)</script>
     </transition>
    </state>
    <state id="dropped"><!--   node-size-and-position x=20.0 y=90.0 w=80.0 h=30.0  -->
     <transition target="listing">
-     <log expr="self.process_event(unfocus)"></log>
-     <log expr="AIChoiceElement.process_event(focus)"></log>
+     <script> self.process_event(:unfocus); AIChoiceElement.process_event(:focus)</script>
 <!--   edge-path [listing]  x=90.0 y=70.0  --></transition>
    </state>
   </state>

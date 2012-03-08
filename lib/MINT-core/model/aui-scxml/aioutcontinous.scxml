@@ -35,7 +35,7 @@
    </state>
    <state id="moving"><!--   node-size-and-position x=80.0 y=30.0 w=240.0 h=150.0  -->
     <onentry>
-     <log expr="data=consume(id)"></log>
+     <script> data=consume(id) </script>
     </onentry>
     <transition event="halt" target="waiting"><!--   edge-path [waiting]  x=60.0 y=40.0 x=20.0 y=60.0  --></transition>
     <state id="progressing"><!--   node-size-and-position x=10.0 y=30.0 w=80.0 h=30.0  -->

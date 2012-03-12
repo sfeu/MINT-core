@@ -23,6 +23,15 @@ class Observation
 
   def start(cb)
 
+    # check if observation is already true at startup
+    model = MINT::Element.class_from_channel_name(element)
+    e = model.first(:name=>name)
+    if e
+      if ((e.states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
+        cb.call element, true
+      end
+    end
+
     RedisConnector.sub.subscribe("#{element}").callback {
       @initiated_callback.call(element) if @initiated_callback
     }

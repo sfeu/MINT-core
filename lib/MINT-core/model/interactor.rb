@@ -7,12 +7,18 @@ module MINT
     include DataMapper::Resource
 
 
-    private
 
+
+    def getModel
+      "core"
+    end
+
+    private
 
 
     property :id, Serial
     property :classtype, Discriminator
+    property :mint_model, String, :default => lambda { |r,p| r.getModel}
 
     # Each abstract  {Element} needs to have a name that we will use as the primary key for each model.
     property :name, String
@@ -32,10 +38,10 @@ module MINT
     public
 
 
-    @@publish_attributes = [:name,:states,:abstract_states,:new_states]
+    @@publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
 
     def self.published_attributes
-      @@publish_attributes = [:name,:states,:abstract_states,:new_states]
+      @@publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
     end
 
     def self.create_channel_name

@@ -1,7 +1,11 @@
 module MINT
   require "MINT-core/model/cui/gfx/CIO"
+  require "MINT-core/model/new/cui/gfx/CIO"
 
   require "MINT-core/model/cui/gfx/CIC"
+
+  require "MINT-core/model/new/cui/gfx/CIC"
+
   class Button < CIO
   end
 
@@ -200,5 +204,5 @@ module MINT
   end
 
   require "MINT-core/model/cui/gfx/screen"
-
+  require "MINT-core/model/new/cui/gfx/elements"
 end

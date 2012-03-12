@@ -32,22 +32,22 @@
     <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=50.0 y=88.0  --></transition>
    </state>
   </state>
-  <state id="c" initial="waiting"><!--   node-size-and-position x=20.0 y=43.0 w=225.81851043128495 h=426.0  -->
-   <state id="moving" initial="progressing"><!--   node-size-and-position x=20.0 y=113.0 w=185.81851043128492 h=293.0  -->
+  <state id="c" initial="waiting"><!--   node-size-and-position x=20.0 y=40.0 w=270.0 h=430.0  -->
+   <state id="moving" initial="progressing"><!--   node-size-and-position x=20.0 y=110.0 w=210.0 h=300.0  -->
     <transition event="halt" target="waiting"><!--   edge-path [waiting]  x=93.65816676026304 y=86.22847001684735  --></transition>
     <state id="progressing"><!--   node-size-and-position x=55.0 y=43.0 w=80.0 h=20.0  -->
      <transition cond="data==max" target="max"></transition>
-     <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=87.77323140026797 y=125.11753347005806  --></transition>
+     <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=150.0 y=117.0 pointx=0.0 pointy=13.0 offsetx=-4.0 offsety=-40.0  --></transition>
     </state>
-    <state id="regressing"><!--   node-size-and-position x=30.0 y=183.0 w=70.0 h=20.0  -->
-     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=68.22676859973203 y=120.88246652994194 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
+    <state id="regressing"><!--   node-size-and-position x=60.0 y=207.0 w=70.0 h=20.0  -->
+     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=100.0 y=117.0 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
      <transition cond="data == min" target="min"></transition>
     </state>
     <state id="max"><!--   node-size-and-position x=20.0 y=113.0 w=30.0 h=20.0  -->
      <transition event="regress" target="regressing"></transition>
     </state>
     <state id="min"><!--   node-size-and-position x=83.0 y=253.0 w=30.0 h=20.0  -->
-     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=131.0 y=193.0 x=140.0 y=123.0  --></transition>
+     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=190.0 y=267.0 x=190.0 y=77.0  --></transition>
     </state>
    </state>
    <state id="waiting"><!--   node-size-and-position x=90.0 y=34.0 w=70.0 h=40.0  -->

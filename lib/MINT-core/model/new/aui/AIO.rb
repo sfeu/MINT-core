@@ -21,6 +21,10 @@ module MINT2
    # has 1, :neighbour_previous, :child_key =>[:source_id]
    # has 1, :previous, self, :through => :neighbour_previous, :via => :target
 
+    def getModel
+      "aui"
+    end
+
 
     def initialize_statemachine
       if @statemachine.nil?
@@ -52,7 +56,7 @@ module MINT2
     end
 
     def sync_cio_to_displayed
-      cio =  MINT::CIO.first(:name=>self.name)
+      cio =  MINT2::CIO.first(:name=>self.name)
       if (cio and not cio.is_in? :displayed)
         if (cio.is_in? :suspended or cio.is_in? :positioned)
           cio.sync_event(:display)
@@ -65,7 +69,7 @@ module MINT2
     end
 
     def sync_cio_to_highlighted
-      cio =  MINT::CIO.first(:name=>self.name)
+      cio =  MINT2::CIO.first(:name=>self.name)
       if (cio and not cio.is_in? :highlighted)
         cio.sync_event(:highlight)
         # cio.states=[:highlighted]
@@ -74,7 +78,7 @@ module MINT2
     end
 
      def sync_cio_to_hidden
-      cio =  MINT::CIO.first(:name=>self.name)
+      cio =  MINT2::CIO.first(:name=>self.name)
       if (cio and not cio.is_in? :hidden)
         cio.sync_event(:hide)
         end

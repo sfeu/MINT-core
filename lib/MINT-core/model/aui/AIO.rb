@@ -1,11 +1,11 @@
 module MINT
 
-  class Neighbour
-    include DataMapper::Resource
+  #class Neighbour
+  #  include DataMapper::Resource
 
-    belongs_to :source, 'AIO', :key => true
-    belongs_to :target, 'AIO', :key => true
-  end
+  #  belongs_to :source, 'AIO', :key => true
+  #  belongs_to :target, 'AIO', :key => true
+  #end
 
 
   # An abstract
@@ -14,8 +14,8 @@ module MINT
     property :description, Text,   :lazy => false
 
 
-    has 1, :neighbour, :child_key =>[:source_id]
-    has 1, :parent, self, :through => :neighbour, :via => :target
+    #has 1, :neighbour, :child_key =>[:source_id]
+    #has 1, :parent, self, :through => :neighbour, :via => :target
 
 
 

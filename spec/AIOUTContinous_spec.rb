@@ -13,6 +13,8 @@ describe 'AUI' do
     DataMapper::Model.raise_on_save_failure = true
     redis = Redis.connect
     redis.flushdb
+
+
   end
 
   describe 'AIOUTContinous' do

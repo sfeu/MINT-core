@@ -5,21 +5,17 @@ module MINT2
     property :label, String
     property :description, Text,   :lazy => false
 
-    #has 1, :neighbour_parent, :child_key =>[:source_id]
-    #has 1, :parent, 'MINT2::AIC', :through => :neighbour_parent, :via => :target
 
-    belongs_to :parent, "MINT2::AIC",
-                   :parent_key => [ :id ],
-                   :child_key  => [ :aic_id ],
-                   :required   => false
+    #belongs_to :parent, "MINT2::AIC",
+    #               :parent_key => [ :id ],
+    #               :child_key  => [ :aic_id ],
+    #               :required   => false
 
 
 
-    has 1, :link, :child_key =>[:source_id]
-    has 1, :previous, self, :through => :link, :via => :target
+    #has 1, :link, :child_key =>[:source_id]
+    #has 1, :previous, self, :through => :link, :via => :target
 
-   # has 1, :neighbour_previous, :child_key =>[:source_id]
-   # has 1, :previous, self, :through => :neighbour_previous, :via => :target
 
     def getModel
       "aui"
@@ -37,7 +33,7 @@ module MINT2
     end
     # hook to inform parent about presenting state
     def inform_parent_presenting
-      self.parent.child_to_presenting(self) if (self.parent)
+      #self.parent.child_to_presenting(self) if (self.parent)
       true
     end
 
@@ -137,5 +133,29 @@ module MINT2
 
     belongs_to :source, 'AIO', :key => true
     belongs_to :target, 'AIO', :key => true
+  end
+
+   class AIO_sync_callback
+    def sync_cio_to_highlighted
+      true
+    end
+
+    def sync_cio_to_displayed
+      true
+    end
+
+    def sync_cio_to_suspended
+      true
+    end
+    def inform_parent_presenting
+          true
+        end
+    def present_first_child
+      true
+    end
+
+     def present_children
+       true
+     end
   end
 end

@@ -1,5 +1,5 @@
-module CUIControl
-  include MINT
+module CUIControl2
+
 
   @active_cios = nil
   
@@ -8,8 +8,8 @@ module CUIControl
     if result == nil or @active_cios == nil  # we have not finished cui poition calculation, but we already received a mouse stopped event
       return
     end
-    x = result.x
-    y = result.y
+    x = result["x"]
+    y = result["y"]
 
     highlighted_cio = CIO.first(:abstract_states=>/highlighted/)
 

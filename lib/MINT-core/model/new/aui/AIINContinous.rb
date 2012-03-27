@@ -13,7 +13,7 @@ module MINT2
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/AIINContinous.scxml"
 
-        @statemachine.reset
+        reset = @statemachine.reset
 
       end
     end

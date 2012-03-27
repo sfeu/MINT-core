@@ -1,13 +1,5 @@
 module MINT2
 
-  class NeighbourChildren
-      include DataMapper::Resource
-
-      belongs_to :source, 'MINT2::AIC', :key => true
-      belongs_to :target, 'MINT2::AIO', :key => true
-    end
-
-
   class AIC < AIOUTDiscrete
     #    belongs_to :task @TODO - Mappings unklar
 
@@ -15,7 +7,7 @@ module MINT2
     #has n, :neighbour_parent, :child_key =>[:target_id]
     #has n, :children, 'MINT2::AIO', :through => :neighbour_parent, :via => :source
 
-     has n, :children, "MINT2::AIO"
+  #   has n, :children, "MINT2::AIO"
 
     def initialize_statemachine
       if @statemachine.nil?

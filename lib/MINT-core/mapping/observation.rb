@@ -3,6 +3,7 @@ class Observation
   def initialize(parameters)
     @observation = parameters
     @initiated_callback = nil
+    @result = nil
   end
 
   def element
@@ -11,6 +12,18 @@ class Observation
 
   def states
     @observation[:states].map &:to_s
+  end
+
+  def resultName
+    @observation[:result]
+  end
+
+  def result(r)
+    if r
+      {resultName => r }
+    else
+      {}
+    end
   end
 
   def name
@@ -28,7 +41,7 @@ class Observation
     e = model.first(:name=>name)
     if e
       if ((e.states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
-        cb.call element, true
+        cb.call element, true, result(JSON.parse e.to_json)
       end
     end
 
@@ -44,10 +57,10 @@ class Observation
 
           if found.has_key? "new_states"
             if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
-              cb.call element, true
+              cb.call element, true , result(found)
             else
               if (found["states"] & states).length == 0
-                cb.call element, false
+                cb.call element, false, {}
               end
             end
           end

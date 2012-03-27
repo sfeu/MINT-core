@@ -18,9 +18,11 @@ module MINT
 
   class AIINReference < AIINDiscrete
   end
+  require "MINT-core/model/new/aui/AIINDiscrete"
 
   class AICommand <AIINDiscrete
   end
+  require "MINT-core/model/new/aui/AICommand"
 
 
  require "MINT-core/model/aui/AIINChoose"

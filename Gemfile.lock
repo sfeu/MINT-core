@@ -6,7 +6,7 @@ PATH
 PATH
   remote: ../dm-redis-adapter
   specs:
-    dm-redis-adapter (0.5.1)
+    dm-redis-adapter (0.6.0)
       dm-core (>= 1.2.0)
       dm-types (>= 1.2.0)
       hiredis (~> 0.3.0)

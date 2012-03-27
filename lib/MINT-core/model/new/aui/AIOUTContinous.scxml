@@ -52,7 +52,7 @@
    </state>
    <state id="waiting"><!--   node-size-and-position x=90.0 y=34.0 w=70.0 h=40.0  -->
     <onentry>
-     <log expr="data=consume(id)"></log>
+     <log expr="data=consume(name)"></log>
     </onentry>
     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=220.0 y=54.0 x=220.0 y=164.0 pointx=0.0 pointy=-30.0 offsetx=0.0 offsety=-18.0  --></transition>
     <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=10.0 y=54.0 x=10.0 y=304.0 pointx=-1.0 pointy=20.0 offsetx=-50.0 offsety=0.0  --></transition>

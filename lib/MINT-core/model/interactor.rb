@@ -16,12 +16,12 @@ module MINT
     private
 
 
-    property :id, Serial
     property :classtype, Discriminator
-    property :mint_model, String, :default => lambda { |r,p| r.getModel}
+    property :mint_model, String, :default => lambda { |r,p| r.getModel}, :key=>true
 
     # Each abstract  {Element} needs to have a name that we will use as the primary key for each model.
-    property :name, String
+    property :name, String, :key => true
+    #property :id, Serial
 
     # States of the {Element} Reflects the actual atomic states of the interactors state machine.
     property :states, String
@@ -38,10 +38,10 @@ module MINT
     public
 
 
-    @@publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
+    @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
 
     def self.published_attributes
-      @@publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
+      @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
     end
 
     def self.create_channel_name
@@ -56,13 +56,11 @@ module MINT
     end
 
     def publish_update
-      RedisConnector.pub.publish self.class.create_channel_name, self.to_json(:only => @@publish_attributes)
+      RedisConnector.pub.publish self.class.create_channel_name, self.to_json(:only => @publish_attributes)
     end
 
     def self.notify(action,query,callback,time = nil)
-
-
-      RedisConnector.sub.subscribe("#{self.create_channel_name}")
+     RedisConnector.sub.subscribe("#{self.create_channel_name}")
 
       RedisConnector.sub.on(:message) { |channel, message|
         found=JSON.parse message
@@ -129,9 +127,14 @@ module MINT
       process_event(event)
     end
 
-    def process_event(event, callback=nil)
+    #allows to set variables that will be passed as parameters to the actions
+    def process_event_vars(event, *vars)
+      process_event(event,nil,vars)
+    end
 
-      states = process_event!(event,callback)
+    def process_event(event, callback=nil, vars = nil)
+
+      states = process_event!(event,callback,vars)
       if states
         save_statemachine
         states
@@ -140,7 +143,7 @@ module MINT
       end
     end
 
-    def process_event!(event, callback=nil)
+    def process_event!(event, callback=nil,vars=nil)
       if not @statemachine
         initialize_statemachine
         recover_statemachine
@@ -153,7 +156,7 @@ module MINT
       begin
         old_states = @statemachine.states_id
         old_abstract_states = @statemachine.abstract_states
-        @statemachine.process_event(event)
+        @statemachine.process_event(event,*vars)
         calc_new_states = @statemachine.states_id-old_states
         calc_new_states = calc_new_states + (@statemachine.abstract_states - old_abstract_states)
         calc_new_states = @statemachine.states_id  if calc_new_states.length==0

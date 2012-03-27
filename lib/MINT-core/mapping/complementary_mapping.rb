@@ -10,6 +10,9 @@ class ComplementaryMapping
 
     @activated_callback = nil
     @action_activated = {}
+
+    # stores variables assigned by observations
+    @observation_results = {}
   end
 
   def start
@@ -47,24 +50,27 @@ class ComplementaryMapping
     end
   end
 
-  def callback(element,in_state)
+  def callback(element,in_state,result)
+
     @observation_state[element] = in_state
     if in_state
       p "observation true: #{element}"
+      @observation_results.merge! result
+
       # check if already all other observations have been matched
       if not @observation_state.values.include? false
-        startAction
+        startAction @observation_results
         resetObservations
       end
     end
   end
 
-  def startAction
+  def startAction(observation_results)
     p "action started"
     actions.each do |action|
-      @action_activated[action.elementIn] = false
+      @action_activated[action.identifier] = false
       action.initiated_callback(self.method :activated_cb)
-      action.start
+      action.start observation_results   # pass observation variables
     end
   end
 

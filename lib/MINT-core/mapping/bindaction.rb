@@ -1,4 +1,4 @@
-class BindAction
+class BindAction < Action
 
 
   def initialize(params)
@@ -14,6 +14,10 @@ class BindAction
     @action[:elementIn]
   end
 
+  def identifier
+    elementIn
+  end
+
   def nameIn
     @action[:nameIn]
   end
@@ -22,7 +26,7 @@ class BindAction
     elementIn #+"."+@action[:attrIn]+":"+@action[:attrIn]     #TODO
   end
 
-  def start
+  def start(observation_results)            # TODO handle observation_variables
     RedisConnector.sub.subscribe(channel).callback do
       @initiated_callback.call(elementIn) if @initiated_callback
     end

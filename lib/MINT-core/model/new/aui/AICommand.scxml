@@ -1,0 +1,52 @@
+<scxml initial="initialized" name="AICommand" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=480.0 h=380.0  -->
+ <state id="initialized"><!--   node-size-and-position x=10.0 y=30.0 w=90.0 h=30.0  -->
+  <transition event="organize" target="organized"></transition>
+ </state>
+ <state id="organized"><!--   node-size-and-position x=10.0 y=120.0 w=90.0 h=30.0  -->
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=60.0 y=240.0 pointx=0.0 pointy=-1.0 offsetx=5.0 offsety=3.0  --></transition>
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=130.0 y=70.0  --></transition>
+ </state>
+ <state id="suspended"><!--   node-size-and-position x=200.0 y=30.0 w=90.0 h=30.0  -->
+  <onentry>
+   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
+  </onentry>
+  <transition event="organize" target="organized"></transition>
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=310.0 y=80.0  --></transition>
+ </state>
+ <state id="presenting" initial="defocused"><!--   node-size-and-position x=120.0 y=120.0 w=350.0 h=250.0  -->
+  <onentry>
+   <invoke src="inform_parent_presenting" type="x-mint"></invoke>
+  </onentry>
+  <transition event="suspend" target="suspended"></transition>
+  <state id="focused" initial="deactivated"><!--   node-size-and-position x=10.0 y=30.0 w=320.0 h=110.0  -->
+   <onentry>
+    <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
+   </onentry>
+   <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=130.0 y=180.0  --></transition>
+   <transition cond="exists_next" event="next" target="defocused">
+    <invoke src="focus_next" type="x-mint"></invoke>
+<!--   edge-path [defocused]  x=220.0 y=180.0  --></transition>
+   <transition cond="exists_prev" event="prev" target="defocused">
+    <invoke src="focus_previous" type="x-mint"></invoke>
+<!--   edge-path [defocused]  x=260.0 y=180.0  --></transition>
+   <transition event="parent" target="defocused">
+    <invoke src="focus_parent" type="x-mint"></invoke>
+<!--   edge-path [defocused]  x=80.0 y=180.0  --></transition>
+   <state id="deactivated"><!--   node-size-and-position x=30.0 y=70.0 w=90.0 h=30.0  -->
+    <transition event="activate" target="activated"><!--   edge-path [activated]  x=160.0 y=40.0  --></transition>
+   </state>
+   <state id="activated"><!--   node-size-and-position x=200.0 y=70.0 w=90.0 h=30.0  -->
+    <transition event="deactivate" target="deactivated"></transition>
+   </state>
+   <history id="H" type="deep"><!--   node-size-and-position x=10.0 y=30.0 w=30.0 h=30.0  -->
+    <transition target="deactivated"></transition>
+   </history>
+  </state>
+  <state id="defocused"><!--   node-size-and-position x=120.0 y=210.0 w=100.0 h=30.0  -->
+   <onentry>
+    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
+   </onentry>
+   <transition event="focus" target="focused"></transition>
+  </state>
+ </state>
+</scxml>

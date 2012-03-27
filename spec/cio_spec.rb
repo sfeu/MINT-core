@@ -349,7 +349,7 @@ describe 'CUI' do
       b= MINT::CIO.create(:name=>"right_2x",:x=>400,:y =>2, :width=>389,:height =>799,:states => [:displayed])
 
       puts b.pos.Xvalue
-       
+
       CUIControl.fill_active_cio_cache
 
       Result = Struct.new(:x, :y)

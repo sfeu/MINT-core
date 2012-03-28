@@ -39,7 +39,7 @@ module MINT
               end
               statemachine :s2 do
                 superstate :l do
-                  trans :listing, :drop, :listing, :add_element, "In(:focused)"
+                  trans :listing, :drop, :listing, :add_element, "self.is_in?(:)focused)"
                 end
               end
             end

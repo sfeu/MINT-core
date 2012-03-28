@@ -132,17 +132,21 @@ describe 'SingleChoice' do
     end
 
     it "should remove elements that have been dropped elsewhere"   do
-      pending("get drop from drag n drop working")
-      sc =MINT::AISingleChoice.first(:name => "choice")
+      #pending("get drop from drag n drop working")
+      sc = MINT::AISingleChoice.first(:name => "choice")
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+      e1.process_event(:focus)
       e1.process_event(:drag)
       #e1.process_event(:drop)
-      dest =MINT::AISingleChoice.create(:name => "choice_dest",:states => [:defocused,:unchosen])
+      dest = MINT::AISingleChoice.new(:name => "choice_dest")
+      AUIControl.organize(dest,nil, 0)
+      dest.process_event(:present)
+      dest.process_event(:focus)
       dest.process_event(:drop)
       #dest.childs << e1
       #p dest.childs.save
-      sc.childs.length.should ==3
-      dest.childs.length.should ==1
+      sc.childs.length.should == 3
+      dest.childs.length.should == 1
       p sc.childs.inspect
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1").should_not == nil
 

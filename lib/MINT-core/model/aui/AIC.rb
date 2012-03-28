@@ -52,7 +52,6 @@ module MINT
         self.childs.each do |c|
           c.process_event("suspend")
         end
-
       end
     end
 
@@ -61,7 +60,6 @@ module MINT
         self.childs.each do |c|
           c.process_event("present")
         end
-
       end
     end
 

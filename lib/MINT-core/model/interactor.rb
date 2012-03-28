@@ -99,7 +99,7 @@ module MINT
         p "#{self.name} is in state #{self.states} and could not handle #{event}"
         return false
       end
-      @statemachine.states_id
+      return @statemachine.states_id
     end
 
     def is_in?(state)

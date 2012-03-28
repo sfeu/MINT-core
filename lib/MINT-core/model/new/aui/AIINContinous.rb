@@ -20,18 +20,12 @@ module MINT2
 
     # functions called from scxml
 
-    def publish(id)
-      @publish = id.to_s
-    end
+    def publish(attribute)
+      channel_name =  create_attribute_channel_name(attribute)
 
-    def stop_publish(id)
-      @publish = nil
-    end
-
-    def consume(id)
-      RedisConnector.sub.psubscribe('Element.AIO.AIIN.AIINContinous.'+id.to_s+":*") # TODO all users
+      RedisConnector.sub.psubscribe('Element.AIO.AIIN.AIINContinous.'+self.name.to_s+":*") # TODO all users
       RedisConnector.sub.on(:pmessage) { |key, channel, message|
-
+        if key.eql?  'Element.AIO.AIIN.AIINContinous.'+self.name.to_s+":*"
         if message.eql? "stop"
           process_event("halt")
         else
@@ -49,7 +43,8 @@ module MINT2
           end
 
           attribute_set(:data,message.to_i)
-          RedisConnector.pub.publish "Element.AIO.AIIN.AIINContinous",{:name=>self.name,:data => data}.to_json if @publish
+          RedisConnector.pub.publish channel_name,{:name=>self.name,:data => data}.to_json
+        end
         end
       }
 

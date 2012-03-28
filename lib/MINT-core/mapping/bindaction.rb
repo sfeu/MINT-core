@@ -14,6 +14,10 @@ class BindAction < Action
     @action[:elementIn]
   end
 
+  def elementOut
+      @action[:elementOut]
+  end
+
   def identifier
     elementIn
   end
@@ -22,12 +26,29 @@ class BindAction < Action
     @action[:nameIn]
   end
 
-  def channel
-    elementIn #+"."+@action[:attrIn]+":"+@action[:attrIn]     #TODO
+  def nameOut
+    @action[:nameOut]
   end
 
+  def attrIn
+    @action[:attrIn]
+  end
+
+  def attrOut
+    @action[:attrOut]
+  end
+
+  def channelIn
+    "#{elementIn}.#{attrIn}.#{nameIn}"
+  end
+
+  def channelOut
+    "#{elementOut}.#{attrOut}.#{nameOut}"
+  end
+
+
   def start(observation_results)            # TODO handle observation_variables
-    RedisConnector.sub.subscribe(channel).callback do
+    RedisConnector.sub.subscribe(channelIn).callback do
       @initiated_callback.call(elementIn) if @initiated_callback
     end
 
@@ -42,7 +63,7 @@ class BindAction < Action
 
 
     RedisConnector.sub.on(:message) do |c, message|
-      if c.eql? channel
+      if c.eql? channelIn
         p c
 
         found=JSON.parse message
@@ -52,7 +73,7 @@ class BindAction < Action
           if found.has_key? @action[:attrIn]
             result =  found[@action[:attrIn]]
             result = @action[:transform].call result if @action[:transform]
-            RedisConnector.pub.publish @action[:elementOut], {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
+            RedisConnector.pub.publish channelOut, {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
 
           end
         end

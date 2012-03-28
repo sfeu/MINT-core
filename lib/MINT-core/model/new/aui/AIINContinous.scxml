@@ -16,7 +16,7 @@
  <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=253.0 w=293.32563697269273 h=559.0  -->
   <onentry>
    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-   <log expr="data=consume(name)"></log>
+   <log expr="publish(&#039;data&#039;)"></log>
   </onentry>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=156.66281848634637 y=228.0  --></transition>
   <state id="defocused"><!--   node-size-and-position x=111.66281848634637 y=43.0 w=70.0 h=20.0  -->
@@ -33,22 +33,10 @@
    <state id="moving"><!--   node-size-and-position x=40.0 y=114.0 w=160.65127394538547 h=293.0  -->
     <transition event="halt" target="waiting"></transition>
     <state id="progressing"><!--   node-size-and-position x=25.0 y=113.0 w=80.0 h=20.0  -->
-     <onentry>
-      <log expr="publish(&#039;data&#039;)"></log>
-     </onentry>
-     <onexit>
-      <log expr="stop_publish(&#039;data&#039;)"></log>
-     </onexit>
      <transition cond="data==max" target="max"></transition>
      <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=88.28980419737606 y=190.96045745887997  --></transition>
     </state>
     <state id="regressing"><!--   node-size-and-position x=60.0 y=253.0 w=70.0 h=20.0  -->
-     <onentry>
-      <log expr="publish(&#039;data&#039;)"></log>
-     </onentry>
-     <onexit>
-      <log expr="stop_publish(&#039;data&#039;)"></log>
-     </onexit>
      <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=68.71019580262396 y=195.03954254112 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
      <transition cond="data == min" target="min"><!--   edge-path [min]  x=140.0 y=193.0 x=135.0 y=123.0  --></transition>
     </state>

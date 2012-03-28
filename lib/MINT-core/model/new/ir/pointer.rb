@@ -5,9 +5,9 @@ module MINT2
 
     @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model, :x, :y]
 
-        def self.published_attributes
-          @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model, :x, :y]
-        end
+    def self.published_attributes
+      @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model, :x, :y]
+    end
 
     def initialize_statemachine
       if @statemachine.nil?
@@ -21,12 +21,15 @@ module MINT2
 
     def consume(id)
       subscription = self.class.create_channel_name+"."+id.to_s+":*"
+      listen =   self.class.create_channel_name+"."+id.to_s
       RedisConnector.sub.psubscribe(subscription) # TODO all users
       RedisConnector.sub.on(:pmessage) { |key, channel, message|
-        x,y = JSON.parse message
-        cache_coordinates x,y
-        process_event("move") if not is_in? :moving
-        restart_timeout
+        if (key.eql? subscription)
+          x,y = JSON.parse message
+          cache_coordinates x,y
+          process_event("move") if not is_in? :moving
+          restart_timeout
+        end
       }
     end
 

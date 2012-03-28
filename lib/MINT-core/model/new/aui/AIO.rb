@@ -157,5 +157,9 @@ module MINT2
      def present_children
        true
      end
+
+    def stop_publish(data)
+           true
+         end
   end
 end

@@ -19,11 +19,11 @@ module MINT2
 
 
 
-    def consume(id)
-
-      RedisConnector.sub.subscribe(self.class.create_channel_name)
+    def consume(attribute)
+      channel_name = create_attribute_channel_name(attribute)
+      RedisConnector.sub.subscribe(channel_name)
       RedisConnector.sub.on(:message) { |channel, message|
-        if channel.eql? self.class.create_channel_name
+        if channel.eql? channel_name
 
           found=JSON.parse message
 
@@ -43,7 +43,7 @@ module MINT2
                 #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
               end
               attribute_set(:data,value)
-              RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{self.name}",:params=>{:data=>value },:destinations=>["user:testuser"]}.to_json)
+              RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{self.name}",:params=>{:name=>self.name,:data=>value },:destinations=>["user:testuser"]}.to_json)
             end
           end
         end

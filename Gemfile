@@ -19,5 +19,6 @@ gem "rspec","2.6.0"
 gem "rails", "2.3.12"
 gem "em-spec", "~> 0.2.5"
 gem "em-hiredis"
+gem "hoe"
 
 # gemspec

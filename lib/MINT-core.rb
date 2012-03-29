@@ -49,6 +49,7 @@ require "MINT-core/model/device/button"
 require "MINT-core/model/device/wheel"
 require "MINT-core/model/device/joypad"
 require "MINT-core/model/device/mouse"
+require "MINT-core/model/new/ir/mouse"
 
 require "MINT-core/model/body/gesture_button"
 require "MINT-core/model/body/handgesture"

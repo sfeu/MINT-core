@@ -9,6 +9,8 @@ module MINT
   class Button < CIO
   end
 
+  require "MINT-core/model/new/cui/gfx/button"
+
   class Image < CIO
      property :path, String
   end

@@ -32,6 +32,7 @@ require "MINT-core/mapping/complementary_mapping"
 require "MINT-core/mapping/observation"
 require "MINT-core/mapping/action"
 require "MINT-core/mapping/backend_action"
+require "MINT-core/mapping/event_action"
 
 require "MINT-core/model/interactor"
 require "MINT-core/model/task"

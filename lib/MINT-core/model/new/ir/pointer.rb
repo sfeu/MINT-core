@@ -21,7 +21,6 @@ module MINT2
 
     def consume(id)
       subscription = self.class.create_channel_name+"."+id.to_s+":*"
-      listen =   self.class.create_channel_name+"."+id.to_s
       RedisConnector.sub.psubscribe(subscription) # TODO all users
       RedisConnector.sub.on(:pmessage) { |key, channel, message|
         if (key.eql? subscription)
@@ -52,7 +51,7 @@ module MINT2
     end
     def stop_timeout
       if @timer
-        p "stopped timer"
+        # p "stopped timer"
         @timer.cancel
         @timer = nil
       end

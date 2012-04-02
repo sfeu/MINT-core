@@ -54,7 +54,7 @@ class ComplementaryMapping
 
     @observation_state[element] = in_state
     if in_state
-      p "observation true: #{element}"
+
       @observation_results.merge! result
 
       # check if already all other observations have been matched

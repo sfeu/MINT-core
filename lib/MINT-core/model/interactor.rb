@@ -174,6 +174,10 @@ module MINT
 
     def is_in?(state)
       if not @statemachine
+
+        #return true if (attribute_get(:states).split('|').map &:intern).include? state.intern
+        #return true if (attribute_get(:abstract_states).split('|').map &:intern).include? state.intern
+        #return false
         initialize_statemachine
         recover_statemachine
       end

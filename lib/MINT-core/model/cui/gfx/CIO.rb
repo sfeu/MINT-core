@@ -264,8 +264,7 @@ module MINT
         @statemachine = Statemachine.build do
 
           superstate :CIO do
-            trans :initialized,:position,:positioning, Proc.new {
-                |user = nil,device =nil|
+            trans :initialized,:position,:positioning, Proc.new { |user = nil,device =nil|
                 self.user =user if user;
                 self.device=device if device;
                 true

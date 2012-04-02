@@ -1,5 +1,5 @@
 module MINT
-  class AISingleChoice < AIChoice
+  class AISingleChoice < AIC
     def initialize_statemachine
       if @statemachine.blank?
         parser = StatemachineParser.new(self)

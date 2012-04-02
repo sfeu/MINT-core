@@ -21,7 +21,6 @@ lib/MINT-core/mapping/mapping.rb
 lib/MINT-core/mapping/on_state_change.rb
 lib/MINT-core/mapping/sequential.rb
 lib/MINT-core/model/aui/AIC.rb
-lib/MINT-core/model/aui/AIChoice.rb
 lib/MINT-core/model/aui/AIINChoose.rb
 lib/MINT-core/model/aui/AIMultiChoice.rb
 lib/MINT-core/model/aui/AIMultiChoiceElement.rb
@@ -33,7 +32,6 @@ lib/MINT-core/model/aui/AISinglePresence.rb
 lib/MINT-core/model/aui/aic.png
 lib/MINT-core/model/aui/aic.scxml
 lib/MINT-core/model/aui/aichoice.png
-lib/MINT-core/model/aui/aichoice.scxml
 lib/MINT-core/model/aui/aio.png
 lib/MINT-core/model/aui/aio.scxml
 lib/MINT-core/model/aui/aisinglechoiceelement.png

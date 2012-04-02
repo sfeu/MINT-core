@@ -1,5 +1,5 @@
 module MINT
-  class AIMultiChoice < AIChoice
+  class AIMultiChoice < AISingleChoice
   
   end
 end

@@ -39,8 +39,6 @@ module MINT
 
 end
 
-require "MINT-core/model/aui/AIChoice"
-
 require "MINT-core/model/aui/AISingleChoiceElement"
 require "MINT-core/model/aui/AISingleChoice"
 

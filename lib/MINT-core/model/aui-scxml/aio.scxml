@@ -1,43 +1,43 @@
-<scxml initial="initialized" name="AIO" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=370.0 h=270.0  -->
- <state id="organized"><!--   node-size-and-position x=10.0 y=100.0 w=70.0 h=20.0  -->
-  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=134.0 y=97.0  --></transition>
-  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=50.0 y=160.0  --></transition>
+<scxml initial="initialized" name="AIO" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=263.0 h=426.0  -->
+ <state id="organized"><!--   node-size-and-position x=173.0 y=113.0 w=70.0 h=20.0  -->
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=193.3175649035515 y=261.40142561373136 pointx=0.0 pointy=0.0 offsetx=11.0 offsety=0.0  --></transition>
+  <transition event="present" target="presenting"></transition>
  </state>
- <state id="presenting" initial="defocused"><!--   node-size-and-position x=80.0 y=130.0 w=280.0 h=130.0  -->
+ <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=183.0 w=160.0 h=153.0  -->
   <onentry>
    <invoke src="inform_parent_presenting" type="x-mint"></invoke>
   </onentry>
-  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=184.0 y=107.0  --></transition>
-  <state id="focused"><!--   node-size-and-position x=210.0 y=50.0 w=60.0 h=20.0  -->
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=150.2847669088526 y=357.28609323645895  --></transition>
+  <state id="focused"><!--   node-size-and-position x=51.5 y=113.0 w=60.0 h=20.0  -->
    <onentry>
     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
    </onentry>
-   <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=240.0 y=40.0 x=50.0 y=40.0 pointx=0.0 pointy=0.0 offsetx=-5.0 offsety=0.0  --></transition>
+   <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=93.0 y=88.0 pointx=0.0 pointy=0.0 offsetx=-5.0 offsety=0.0  --></transition>
    <transition cond="exists_next" event="next" target="defocused">
     <invoke src="focus_next" type="x-mint"></invoke>
-<!--   edge-path [defocused]  x=240.0 y=90.0 x=50.0 y=90.0  --></transition>
+<!--   edge-path [defocused]  x=73.0 y=88.0  --></transition>
    <transition cond="exists_prev" event="prev" target="defocused">
     <invoke src="focus_previous" type="x-mint"></invoke>
-<!--   edge-path [defocused]  x=240.0 y=100.0 x=50.0 y=100.0  --></transition>
+<!--   edge-path [defocused]  x=113.0 y=88.0  --></transition>
    <transition event="parent" target="defocused">
     <invoke src="focus_parent" type="x-mint"></invoke>
-<!--   edge-path [defocused]  x=240.0 y=120.0 x=50.0 y=120.0  --></transition>
+<!--   edge-path [defocused]  x=53.0 y=88.0  --></transition>
   </state>
-  <state id="defocused"><!--   node-size-and-position x=20.5 y=50.0 w=60.0 h=20.0  -->
+  <state id="defocused"><!--   node-size-and-position x=51.5 y=43.0 w=60.0 h=20.0  -->
    <onentry>
     <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
    </onentry>
-   <transition event="focus" target="focused"><!--   edge-path [focused]  x=140.0 y=60.0  --></transition>
+   <transition event="focus" target="focused"><!--   edge-path [focused]  x=133.0 y=88.0  --></transition>
   </state>
  </state>
- <state id="suspended"><!--   node-size-and-position x=194.5 y=47.0 w=60.0 h=20.0  -->
+ <state id="suspended"><!--   node-size-and-position x=125.0 y=386.0 w=60.0 h=20.0  -->
   <onentry>
    <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
   </onentry>
-  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=254.0 y=107.0  --></transition>
-  <transition event="organize" target="organized"><!--   edge-path [organized]  x=114.0 y=67.0  --></transition>
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=131.7152330911474 y=364.71390676354105  --></transition>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  x=173.68243509644847 y=257.5985743862687 pointx=0.0 pointy=0.0 offsetx=34.0 offsety=0.0  --></transition>
  </state>
- <state id="initialized"><!--   node-size-and-position x=10.5 y=30.0 w=70.0 h=20.0  -->
+ <state id="initialized"><!--   node-size-and-position x=173.0 y=43.0 w=70.0 h=20.0  -->
   <transition event="organize" target="organized"></transition>
  </state>
 </scxml>

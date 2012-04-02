@@ -4,6 +4,8 @@ module MINT2
   class AIOUTContinous < AIOUT
 
     property :data, Integer
+    property :min, Integer,:default  => 0
+    property :max, Integer,:default  => 100
 
     def initialize_statemachine
       if @statemachine.nil?

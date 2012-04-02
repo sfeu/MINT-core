@@ -215,7 +215,7 @@ describe 'CUI' do
                                           :childs => [
                                               MINT::AIC.new(:name=>"RecipeFilter_description1",:states =>[:organized],
                                                             :childs =>[
-                                                                MINT::AIINReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien",:states =>[:organized]),
+                                                                MINT::AIReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien",:states =>[:organized]),
                                                                 MINT::AIOUTContext.new(:name=>"RecipeFilter_description",:states =>[:organized],:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
                                                             ]),
                                               MINT::AIC.new(:name=>"RecipeFilter_content",:states =>[:organized])
@@ -240,7 +240,7 @@ describe 'CUI' do
                                           :childs => [
                                               MINT::AIC.new(:name=>"RecipeFilter_description1",:states =>[:organized],
                                                             :childs =>[
-                                                                MINT::AIINReference.new(:name=>"RecipeFilter_label",:states =>[:organized],:label=>"Suchkriterien"),
+                                                                MINT::AIReference.new(:name=>"RecipeFilter_label",:states =>[:organized],:label=>"Suchkriterien"),
                                                                 MINT::AIOUTContext.new(:name=>"RecipeFilter_description",:states =>[:organized],:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
                                                             ]),
                                               MINT::AIC.new(:name=>"RecipeFilter_content",:states =>[:organized])

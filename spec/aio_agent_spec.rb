@@ -10,15 +10,15 @@ connection_options = { :adapter => "in_memory"}
    # DataMapper::Logger.new("data.log", :debug)
     @aui = AIC.new(:name=>"RecipeFinder", 
         :childs =>[
-                   AIINReference.new(:name=>"RecipeFinder_label",:label=>"Willkommen"),
+                   AIReference.new(:name=>"RecipeFinder_label",:label=>"Willkommen"),
                    AIOUTContext.new(:name=>"RecipeFinder_description",:text=>"Willkommen beim 4 Sterne Koch Assistenten."),
                    AIC.new(:name=>"RecipeFilter",
                            :childs => [
-                                       AIINReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien"),
+                                       AIReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien"),
                                        AIOUTContext.new(:name=>"RecipeFilter_description",:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
                                        AIC.new(:name=>"RecipeCuisine", 
                                                :childs=>[
-                                                         AIINReference.new(:name=>"RecipeCuisine_label",:label=>"Nationale Küche"),
+                                                         AIReference.new(:name=>"RecipeCuisine_label",:label=>"Nationale Küche"),
                                                          AIOUTContext.new(:name=>"RecipeCuisine_description",:text=>"Welche nationale Küche wählen Sie? "),
                                                          AIMultiChoice.new(:name=>"RecipeCuisine_choice", 
                                                                            :childs =>[
@@ -31,7 +31,7 @@ connection_options = { :adapter => "in_memory"}
                                                         ]),
                                        AIC.new(:name=>"RecipeCategory",
                                                :childs=>[
-                                                         AIINReference.new(:name=>"RecipeCategory_label",:label=>"Menǘart "),
+                                                         AIReference.new(:name=>"RecipeCategory_label",:label=>"Menǘart "),
                                                          AIOUTContext.new(:name=>"RecipeCategory_description",:text=>" Welche Menǘart möchten Sie kochen? "),
                                                          AIMultiChoice.new(:name=>"RecipeCategory_choice", 
                                                                            :childs =>[
@@ -44,7 +44,7 @@ connection_options = { :adapter => "in_memory"}
                                                         ]),
                                        AIC.new(:name=>"RecipeCalories",
                                                :childs=>[
-                                                         AIINReference.new(:name=>"RecipeCalories_label",:label=>"gesundheitsbewusst "),
+                                                         AIReference.new(:name=>"RecipeCalories_label",:label=>"gesundheitsbewusst "),
                                                          AIOUTContext.new(:name=>"RecipeCalories_description",:text=>" Wollen Sie gesundheitsbewusst kochen? "),
                                                          AISingleChoice.new(:name=>"RecipeCalories_choice", 
                                                                            :childs =>[
@@ -57,7 +57,7 @@ connection_options = { :adapter => "in_memory"}
                                        ]),
                    AIC.new(:name =>"RecipeSelection",
                            :childs => [
-                                       AIINReference.new(:name=>"RecipeSelection_label",:label=>"Rezeptdetails"),
+                                       AIReference.new(:name=>"RecipeSelection_label",:label=>"Rezeptdetails"),
                                        AIOUTContext.new(:name=>"RecipeSelection_description",:text=>"Hier werden Ihre Rezeptvorschläge mit den Details angezeigt und Sie können bestimmen, für wieviele Personen das Rezept berechnet werden soll."),
                                        AISingleChoice.new(:name=>"FoundRecipes", 
                                                                            :childs =>[
@@ -119,7 +119,7 @@ connection_options = { :adapter => "in_memory"}
     it "should organize parental relations correctly 2" do
       AIC.new(:name=>"RecipeFinder", 
         :childs =>[
-                   AIINReference.new(:name=>"RecipeFinder_label",:label=>"Willkommen")]).save!
+                   AIReference.new(:name=>"RecipeFinder_label",:label=>"Willkommen")]).save!
        
       AIO.first(:name=>"RecipeFinder_label").parent.name.should == "RecipeFinder"
     end

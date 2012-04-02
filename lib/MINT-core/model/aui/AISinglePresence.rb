@@ -34,7 +34,7 @@ module MINT
               state :entered do
                 event :leave, :waiting
                 event :next, :entered, :present_next_child,  Proc.new { exists_next_child}
-                event :prev, :entered, :present_previous_child, Proc.new { exists_prev_child}
+                event :prev, :entered, :present_prev_child, Proc.new { exists_prev_child}
               end
 
             end

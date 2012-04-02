@@ -5,7 +5,7 @@ module MINT
       def initialize_statemachine
         super
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aio.scxml" # TODO change to aireference.sxml
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aireference.scxml"
 
       end
 

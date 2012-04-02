@@ -23,8 +23,8 @@
   </state>
   <state id="focused"><!--   node-size-and-position x=180.0 y=40.0 w=80.0 h=30.0  -->
    <transition target="defocused">
-    <if cond="refers != null">
-     <script>refers.process_event(focus)</script>
+    <if cond="refers != nil">
+     <script>refers.process_event(:focus)</script>
     </if>
 <!--   edge-path [defocused]  x=130.0 y=80.0  --></transition>
   </state>

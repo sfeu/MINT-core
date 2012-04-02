@@ -71,12 +71,12 @@ describe 'AUI' do
     end
 
     it 'should store the state' do
-      a = MINT::AIINReference.create(:name=>"RecipeSelection_label",:label=>"Rezeptdetails")
+      a = MINT::AIReference.create(:name=>"RecipeSelection_label",:label=>"Rezeptdetails")
       a.states.should == [:initialized]
       a.process_event(:organize)
       a.states.should == [:organized]
       a.save!
-      MINT::AIINReference.first(:name=>"RecipeSelection_label").states.should == [:organized]
+      MINT::AIReference.first(:name=>"RecipeSelection_label").states.should == [:organized]
    end   
 
     #TODO Bug first sets states to array  not sure ahy

@@ -55,6 +55,11 @@ module MINT
       self.class.create_channel_name+".#{attribute}.#{self.name}"
     end
 
+    def create_channel_w_name
+      self.class.create_channel_name+".#{self.name}"
+    end
+
+
     def self.class_from_channel_name(channel)
       Object.const_get("MINT2").const_get channel.split('.').last
     end

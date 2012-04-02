@@ -17,8 +17,24 @@ module MINT2
       end
     end
 
+
+    @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model,:data]
+
+    def self.published_attributes
+      @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model,:data]
+    end
+
+
     # functions called from scxml
 
+    def data=(value)
+       super  # use original method instead of accessing @ivar directly
+       publish_update_new
+    end
+
+    def publish_update_new
+       RedisConnector.pub.publish create_channel_w_name, self.to_json(:only => @publish_attributes)
+    end
 
 
     def consume(attribute)

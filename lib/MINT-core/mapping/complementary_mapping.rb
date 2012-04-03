@@ -15,6 +15,11 @@ class ComplementaryMapping
     @observation_results = {}
   end
 
+  def mapping_name
+    return @mapping[:name] if @mapping[:name]
+    "unnamed"
+  end
+
   def start
     observations.each do |observation|
       @observation_init[observation.element] = false
@@ -60,13 +65,13 @@ class ComplementaryMapping
       # check if already all other observations have been matched
       if not @observation_state.values.include? false
         startAction @observation_results
-        resetObservations
+        resetObservations true
       end
     end
   end
 
   def startAction(observation_results)
-    p "action started"
+    p "Mapping #{mapping_name} executed"
     actions.each do |action|
       @action_activated[action.identifier] = false
       action.initiated_callback(self.method :activated_cb)
@@ -74,10 +79,11 @@ class ComplementaryMapping
     end
   end
 
-  def resetObservations
+  def resetObservations(check=false)
     @observation_state = {}
     @mapping[:observations].each do |m|
       @observation_state[m.element] = false
+      m.check_true_at_startup self.method(:callback) if check and m.is_continuous?
     end
   end
 

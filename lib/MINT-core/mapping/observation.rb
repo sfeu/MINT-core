@@ -6,6 +6,10 @@ class Observation
     @result = nil
   end
 
+  def is_continuous?
+    @observation[:continuous]
+  end
+
   def element
     @observation[:element]
   end
@@ -34,8 +38,7 @@ class Observation
     @initiated_callback = cb
   end
 
-  def start(cb)
-
+  def check_true_at_startup(cb)
     # check if observation is already true at startup
     model = MINT::Element.class_from_channel_name(element)
     e = model.first(:name=>name)
@@ -44,6 +47,11 @@ class Observation
         cb.call element, true, result(JSON.parse e.to_json)
       end
     end
+  end
+
+  def start(cb)
+
+    check_true_at_startup(cb)
 
     RedisConnector.sub.subscribe("#{element}").callback {
       @initiated_callback.call(element) if @initiated_callback
@@ -57,7 +65,7 @@ class Observation
 
           if found.has_key? "new_states"
             if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
-              p "observation true: #{element}:#{name} in states #{states}"
+              #p "observation true: #{element}:#{name} in states #{states}"
               cb.call element, true , result(found)
             else
               if (found["states"] & states).length == 0

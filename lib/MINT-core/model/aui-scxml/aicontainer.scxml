@@ -1,61 +1,65 @@
-<scxml initial="initialized" name="AIContainer" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=604.25 h=602.0  -->
- <state id="initialized"><!--   node-size-and-position x=494.25 y=43.0 w=90.0 h=30.0  -->
+<scxml initial="initialized" name="AIContainer" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=570.305844108574 h=539.0  -->
+ <state id="initialized"><!--   node-size-and-position x=460.305844108574 y=43.0 w=90.0 h=30.0  -->
   <transition event="organize" target="organized"></transition>
  </state>
- <state id="organized"><!--   node-size-and-position x=494.25 y=123.0 w=90.0 h=30.0  -->
-  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=485.27894410100856 y=355.5330223078398 pointx=0.0 pointy=0.0 offsetx=50.0 offsety=0.0  --></transition>
-  <transition event="present" target="p_t"></transition>
+ <state id="organized"><!--   node-size-and-position x=460.305844108574 y=123.0 w=90.0 h=30.0  -->
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=456.23211636018607 y=324.33847142244593 pointx=0.0 pointy=0.0 offsetx=50.0 offsety=0.0  --></transition>
+  <transition event="present" target="p">
+   <invoke src="present_children" type="x-mint"></invoke>
+  </transition>
  </state>
- <state id="suspended"><!--   node-size-and-position x=357.25 y=552.0 w=90.0 h=30.0  -->
+ <state id="suspended"><!--   node-size-and-position x=332.305844108574 y=489.0 w=90.0 h=30.0  -->
   <onentry>
    <invoke src="sync_cio_to hidden" type="x-mint"></invoke>
   </onentry>
-  <transition event="organize" target="organized"><!--   edge-path [organized]  x=466.22105589899144 y=349.4669776921602 pointx=0.0 pointy=0.0 offsetx=72.0 offsety=0.0  --></transition>
-  <transition event="present" target="p_t"><!--   edge-path [p_t]  x=367.8272859933849 y=532.3905369642337  --></transition>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  x=437.37957185696195 y=317.66152857755407 pointx=0.0 pointy=0.0 offsetx=72.0 offsety=0.0  --></transition>
+  <transition event="present" target="p">
+   <invoke src="present_children" type="x-mint"></invoke>
+<!--   edge-path [p]  x=340.19050069405904 y=469.8430472584507  --></transition>
  </state>
- <state id="p_t"><!--   node-size-and-position x=20.0 y=203.0 w=490.5 h=299.0  -->
-  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=384.67271400661514 y=521.6094630357663  --></transition>
-  <parallel id="p"><!--   node-size-and-position x=20.0 y=43.0 w=450.5 h=236.0  -->
-   <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=43.0 w=179.5 h=173.0  -->
+ <parallel id="p"><!--   node-size-and-position x=20.0 y=203.0 w=456.61168821714796 h=235.99999999999997  -->
+  <transition event="suspend" target="suspended">
+   <invoke src="hide_children" type="x-mint"></invoke>
+<!--   edge-path [suspended]  x=356.4211875230889 y=458.1569527415492  --></transition>
+  <state id="presenting" initial="defocused"><!--   node-size-and-position x=250.8883117828521 y=42.999999999999986 w=185.72337643429583 h=173.0  -->
+   <onentry>
+    <invoke src="inform_parent_presenting" type="x-mint"></invoke>
+    <invoke src="present_children" type="x-mint"></invoke>
+   </onentry>
+   <onexit>
+    <invoke src="hide_children" type="x-mint"></invoke>
+   </onexit>
+   <state id="defocused"><!--   node-size-and-position x=49.23854645243784 y=43.00000000000003 w=90.0 h=30.0  -->
     <onentry>
-     <invoke src="inform_parent_presenting" type="x-mint"></invoke>
-     <invoke src="present_children" type="x-mint"></invoke>
+     <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
     </onentry>
-    <onexit>
-     <invoke src="hide_children" type="x-mint"></invoke>
-    </onexit>
-    <state id="defocused"><!--   node-size-and-position x=49.5 y=43.0 w=90.0 h=30.0  -->
-     <onentry>
-      <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-     </onentry>
-     <transition event="focus" target="focused"><!--   edge-path [focused]  x=132.0 y=98.0  --></transition>
-     <transition cond="exists_next" event="next" target="focused">
-      <invoke src="focus_next" type="x-mint"></invoke>
-<!--   edge-path [focused]  x=112.0 y=98.0 pointx=0.0 pointy=14.0 offsetx=2.0 offsety=-2.0  --></transition>
-     <transition cond="exists_prev" event="prev" target="focused">
-      <invoke src="focus_previous" type="x-mint"></invoke>
-<!--   edge-path [focused]  x=172.0 y=98.0  --></transition>
-     <transition event="parent" target="focused">
-      <invoke src="focus_parent" type="x-mint"></invoke>
-<!--   edge-path [focused]  x=152.0 y=98.0  --></transition>
-     <transition event="child" target="focused">
-      <invoke src="focus_child" type="x-mint"></invoke>
-<!--   edge-path [focused]  x=92.0 y=98.0 pointx=0.0 pointy=2.0 offsetx=2.0 offsety=16.0  --></transition>
-    </state>
-    <state id="focused"><!--   node-size-and-position x=49.5 y=123.0 w=90.0 h=30.0  -->
-     <onentry>
-      <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
-     </onentry>
-     <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=72.0 y=98.0  --></transition>
-    </state>
+    <transition event="focus" target="focused"><!--   edge-path [focused]  x=149.49423464970175 y=96.91187775196663  --></transition>
+    <transition cond="exists_next" event="next" target="focused">
+     <invoke src="focus_next" type="x-mint"></invoke>
+<!--   edge-path [focused]  x=109.50192178343276 y=97.69604074934445 pointx=0.0 pointy=14.0 offsetx=2.0 offsety=-2.0  --></transition>
+    <transition cond="exists_prev" event="prev" target="focused">
+     <invoke src="focus_previous" type="x-mint"></invoke>
+<!--   edge-path [focused]  x=89.50576535029828 y=98.08812224803336  --></transition>
+    <transition event="parent" target="focused">
+     <invoke src="focus_parent" type="x-mint"></invoke>
+<!--   edge-path [focused]  x=129.49807821656725 y=97.30395925065554  --></transition>
+    <transition event="child" target="focused">
+     <invoke src="focus_child" type="x-mint"></invoke>
+<!--   edge-path [focused]  x=169.49039108283623 y=96.51979625327772 pointx=0.0 pointy=2.0 offsetx=2.0 offsety=16.0  --></transition>
    </state>
-   <state id="l" initial="listing"><!--   node-size-and-position x=259.0 y=43.0 w=171.5 h=93.0  -->
-    <state id="listing"><!--   node-size-and-position x=20.0 y=43.0 w=90.0 h=30.0  -->
-     <transition event="update" target="listing">
-      <invoke src="sync_cio_to_updated" type="x-mint"></invoke>
-     </transition>
-    </state>
+   <state id="focused"><!--   node-size-and-position x=49.23854645243784 y=123.00000000000001 w=90.0 h=30.0  -->
+    <onentry>
+     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
+    </onentry>
+    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=69.50960891716379 y=98.48020374672227  --></transition>
    </state>
-  </parallel>
- </state>
+  </state>
+  <state id="l" initial="listing"><!--   node-size-and-position x=20.0 y=42.999999999999986 w=171.5 h=93.00000000000001  -->
+   <state id="listing"><!--   node-size-and-position x=20.000000000000004 y=43.00000000000003 w=90.0 h=30.0  -->
+    <transition event="update" target="listing">
+     <invoke src="sync_cio_to_updated" type="x-mint"></invoke>
+    </transition>
+   </state>
+  </state>
+ </parallel>
 </scxml>

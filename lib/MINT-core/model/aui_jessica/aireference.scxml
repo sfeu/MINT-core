@@ -22,11 +22,10 @@
    <transition event="focus" target="focused"></transition>
   </state>
   <state id="focused"><!--   node-size-and-position x=180.0 y=40.0 w=80.0 h=30.0  -->
-   <transition target="defocused">
-    <if cond="refers != nil">
-     <script>refers.process_event(:focus)</script>
-    </if>
-<!--   edge-path [defocused]  x=130.0 y=80.0  --></transition>
+   <transition cond="@refers == nil" target="defocused"><!--   edge-path [defocused]  x=130.0 y=80.0  --></transition>
+   <transition cond="@refers != nil" target="defocused">
+    <script> refers.process_event(:focus) </script>
+<!--   edge-path [defocused]  x=130.0 y=30.0  --></transition>
   </state>
  </state>
 </scxml>

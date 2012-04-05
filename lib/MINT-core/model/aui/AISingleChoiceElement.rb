@@ -2,7 +2,7 @@ module MINT
   class AISingleChoiceElement < AIINChoose
     def initialize_statemachine
       p "enter init"
-      if @statemachine.blank?
+      if @statemachine.nil?
         parser = StatemachineParser.new(self)
                           p "after parsing"
 #        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglechoiceelement.scxml"

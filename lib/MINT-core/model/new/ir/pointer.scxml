@@ -1,0 +1,19 @@
+<scxml initial="disconnected" name="Pointer" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=662.0 h=581.0  -->
+ <state id="disconnected"><!--   node-size-and-position x=280.0 y=60.0 w=100.0 h=50.0  -->
+  <transition event="connect" target="connected"></transition>
+ </state>
+ <state id="connected" initial="stopped"><!--   node-size-and-position x=160.0 y=190.0 w=190.0 h=220.0  -->
+  <onentry>
+   <log expr="consume(name)"></log>
+  </onentry>
+  <transition target="disconnected"></transition>
+  <transition target="disconnected"></transition>
+  <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=400.0 y=160.0  --></transition>
+  <state id="stopped"><!--   node-size-and-position x=40.0 y=50.0 w=100.0 h=40.0  -->
+   <transition event="move" target="moving"><!--   edge-path [moving]  x=130.0 y=110.0  --></transition>
+  </state>
+  <state id="moving"><!--   node-size-and-position x=20.0 y=140.0 w=100.0 h=40.0  -->
+   <transition event="stop" target="stopped"><!--   edge-path [stopped]  x=40.0 y=120.0 pointx=0.0 pointy=2.0 offsetx=-15.0 offsety=-2.0  --></transition>
+  </state>
+ </state>
+</scxml>

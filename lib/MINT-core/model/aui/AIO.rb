@@ -1,27 +1,27 @@
 module MINT
 
+  #class Neighbour
+  #  include DataMapper::Resource
+
+  #  belongs_to :source, 'AIO', :key => true
+  #  belongs_to :target, 'AIO', :key => true
+  #end
+
 
   # An abstract
   class AIO < Element
     property :label, String
     property :description, Text,   :lazy => false
-    has 1, :next, self,
-        :parent_key => [ :id ],       # in the remote model (Blog)
-        :child_key  => [ :next_id ]  # local to this model (Post)
-    has 1,  :previous, self,
-        :parent_key => [ :id ],       # in the remote model (Blog)
-        :child_key  => [ :prev_id ]  # local to this model (Post)
 
 
-    belongs_to  :parent, 'AIC', # BUG figure out how to declare AIC
-                :parent_key => [ :id ],       # in the remote model (Blog)
-                :child_key  => [ :aic_id ],  # local to this model (Post)
-                :required   => true
+    #has 1, :neighbour, :child_key =>[:source_id]
+    #has 1, :parent, self, :through => :neighbour, :via => :target
+
 
 
 
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aio.scxml"
 =begin

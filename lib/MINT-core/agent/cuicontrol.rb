@@ -39,7 +39,7 @@ module CUIControl
   end
 
   def CUIControl.fill_active_cio_cache(result=nil)
-    @active_cios = CIO.all.select{ |e| e.is_in?(:presenting) and not e.kind_of? MINT::CIC }
+    @active_cios = CIO.all.select{ |e| e.is_in?(:displaying) and not e.kind_of? MINT::CIC }
     puts "CIO cache initialized with #{@active_cios.length} elements"
   end 
   

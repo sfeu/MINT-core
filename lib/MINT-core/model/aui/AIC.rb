@@ -1,10 +1,10 @@
 module MINT
   class AIC < AIOUTDiscrete
     #    belongs_to :task @TODO - Mappings unklar
-    has n, :childs, 'AIO',
-        :parent_key => [ :id ],      # local to this model (Blog)
-        :child_key  => [ :aic_id ]  # in the remote model (Post)
-    has 1, :entry, 'AIO'
+   # has n, :childs, 'AIO',
+   #     :parent_key => [ :id ],      # local to this model (Blog)
+   #     :child_key  => [ :aic_id ]  # in the remote model (Post)
+   # has 1, :entry, 'AIO'
 
     def initialize_statemachine
       super

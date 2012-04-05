@@ -20,18 +20,18 @@ module MINT
   class CIO < Element
     include Cassowary
 
-    has 1, :up, self,
-        :parent_key => [ :id ],       # in the remote model (Blog)
-        :child_key  => [ :up_id ]  # local to this model (Post)
-    has 1,  :down, self,
-        :parent_key => [ :id ],       # in the remote model (Blog)
-        :child_key  => [ :down_id ]  # local to this model (Post)
-    has 1, :left, self,
-        :parent_key => [ :id ],       # in the remote model (Blog)
-        :child_key  => [ :left_id ]  # local to this model (Post)
-    has 1,  :right, self,
-        :parent_key => [ :id ],       # in the remote model (Blog)
-        :child_key  => [ :right_id ]  # local to this model (Post)
+#    has 1, :up, self,
+#        :parent_key => [ :id ],       # in the remote model (Blog)
+#        :child_key  => [ :up_id ]  # local to this model (Post)
+#    has 1,  :down, self,
+#        :parent_key => [ :id ],       # in the remote model (Blog)
+#        :child_key  => [ :down_id ]  # local to this model (Post)
+#    has 1, :left, self,
+#        :parent_key => [ :id ],       # in the remote model (Blog)
+#        :child_key  => [ :left_id ]  # local to this model (Post)
+#    has 1,  :right, self,
+#        :parent_key => [ :id ],       # in the remote model (Blog)
+#        :child_key  => [ :right_id ]  # local to this model (Post)
 
     property :text,     Text,   :lazy => false
     property :fontname,     String, :default  => "Helvetica"
@@ -47,6 +47,8 @@ module MINT
     property :layer, Integer
     property :row, Integer
     property :col,Integer
+    property :device, String
+    property :user, String
 
 
 #    before :create, :recover_statemachine
@@ -58,6 +60,9 @@ module MINT
 
     before :update!, :initialize_points
     public
+
+    @@publish_attributes = Element.published_attributes + [:x,:y,:width,:height]
+
     def initialize_points
       @pos = Cassowary::ClPoint.new()
       if (self.x and self.y)
@@ -254,12 +259,16 @@ module MINT
     end
 
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
 
         @statemachine = Statemachine.build do
 
           superstate :CIO do
-            trans :initialized,:position,:positioning
+            trans :initialized,:position,:positioning, Proc.new { |user = nil,device =nil|
+                self.user =user if user;
+                self.device=device if device;
+                true
+            }
             trans :positioning,:calculated,:positioned, :store_calculated_values_in_model
             trans :positioned, :display, :presenting
             trans :disabled, :hide, :hidden

@@ -55,7 +55,6 @@ lib/MINT-core/model/device/pointer.rb
 lib/MINT-core/model/device/wheel.rb
 lib/MINT-core/model/interactor.rb
 lib/MINT-core/model/task.rb
-lib/MINT-core/overrides/rinda.rb
 script/console
 script/destroy
 script/generate

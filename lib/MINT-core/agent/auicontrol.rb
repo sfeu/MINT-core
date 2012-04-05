@@ -5,12 +5,12 @@ module AUIControl
   # ensures that all prev/next relationships are setup properlyin one complete sequence
   def AUIControl.organize(aio,parent_aio = nil, layer = 0)
     
-    if (aio.kind_of? AIC)
-      aio.entry = aio.childs[0]
+    if (aio.kind_of? MINT2::AIC)
+     # aio.entry = aio.children[0]
       last = aio
-      aio.childs.each do |child|
-        last.next = child
-        child.previous = last
+      aio.children.each do |child|
+        #last.next = child
+        #child.previous = last
 
         last = organize(child,aio,layer+1) 
       end
@@ -29,11 +29,11 @@ module AUIControl
     #  aio.previous = aio
    # end
  
-    if (aio.kind_of? AIC)
-      first = aio.childs.first
+    if (aio.kind_of? MINT2::AIC)
+      first = aio.children.first
       last = nil
 
-      aio.childs.each do |child|
+      aio.children.each do |child|
         if last
         last.next = child
         end

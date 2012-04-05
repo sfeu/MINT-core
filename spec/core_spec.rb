@@ -1,6 +1,5 @@
 require "spec_helper"
 
-include MINT
 
 
 describe 'Interactor' do

@@ -1,9 +1,15 @@
 module MINT
   require "MINT-core/model/cui/gfx/CIO"
+  require "MINT-core/model/new/cui/gfx/CIO"
 
   require "MINT-core/model/cui/gfx/CIC"
+
+  require "MINT-core/model/new/cui/gfx/CIC"
+
   class Button < CIO
   end
+
+  require "MINT-core/model/new/cui/gfx/button"
 
   class Image < CIO
      property :path, String
@@ -21,7 +27,7 @@ module MINT
   # Abstract class to handle objects that can be selected
   class Selectable < CIO
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
 
         @statemachine = Statemachine.build do
 
@@ -126,7 +132,7 @@ module MINT
 
   class MarkableRadioButton < RadioButton
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
 
         @statemachine = Statemachine.build do
 
@@ -200,5 +206,5 @@ module MINT
   end
 
   require "MINT-core/model/cui/gfx/screen"
-
+  require "MINT-core/model/new/cui/gfx/elements"
 end

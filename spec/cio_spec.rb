@@ -21,6 +21,11 @@ describe 'CUI' do
       @right.left = @center
     end
 
+    it 'should serialize to JSON' do
+         require 'dm-serializer'
+                     # => { "id": 1, "name": "Berta" }
+       end
+
     it 'should initialize with initiated' do
       @center.states.should == [:initialized]
     end
@@ -30,6 +35,7 @@ describe 'CUI' do
       @center.process_event(:calculated).should ==[:positioned]
       @center.process_event(:display).should ==[:displayed]
       @center.states.should == [:displayed]
+       puts @center.to_json
     end
 
 
@@ -343,7 +349,7 @@ describe 'CUI' do
       b= MINT::CIO.create(:name=>"right_2x",:x=>400,:y =>2, :width=>389,:height =>799,:states => [:displayed])
 
       puts b.pos.Xvalue
-       
+
       CUIControl.fill_active_cio_cache
 
       Result = Struct.new(:x, :y)

@@ -3,7 +3,7 @@ require "spec_helper"
 
 describe 'AUI-Agent' do
   before :each do
-connection_options = { :adapter => "in_memory"}
+connection_options = { :adapter => "redis"}
  DataMapper.setup(:default, connection_options)
 #  DataMapper.setup(:default, { :adapter => "rinda", :host =>"localhost",:port=>4000})
     # ,:local =>Rinda::TupleSpace.new})

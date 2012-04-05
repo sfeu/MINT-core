@@ -4,6 +4,9 @@ describe 'SingleChoiceElement' do
   before :each do
     connection_options = { :adapter => "in_memory"}
     DataMapper.setup(:default, connection_options)
+    require "MINT-core"
+
+        DataMapper.finalize
     @a = MINT::AISingleChoiceElement.create(:name => "test")
   end
 

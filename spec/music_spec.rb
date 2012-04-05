@@ -1,6 +1,5 @@
 require "spec_helper"
 
-include MINT
 describe 'AUI' do
   before :each do
     connection_options = { :adapter => "in_memory"}

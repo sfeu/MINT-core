@@ -18,7 +18,7 @@ module MINT
     end
 
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         @statemachine = Statemachine.build do
           superstate :HandGesture do
             trans :NoHands, :two_hands, :TwoHands
@@ -257,7 +257,7 @@ module MINT
     property :value, Integer, :default  => -1
 
     def initialize_statemachine
-      if @statemachine.blank?
+      if @statemachine.nil?
         @statemachine = Statemachine.build do
           trans :set,:faster,:fast
           trans :set,:slower, :slow

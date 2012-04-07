@@ -1,4 +1,4 @@
-= MINT Framework Core Platform
+= MINT Framework Core Platform version 2012
 
 * http://www.multi-access.de
 
@@ -12,7 +12,7 @@ This framework enables the modeling and execution of multimodal interaction inte
 
 Building this framework is an ongoing effort and it has to be pointed out that it serves to demonstrate scientific research results and is not targeted to we applied to serve productive systems as they are several limitations that need to be solved (maybe with your help?) like for instance multi-user support and authentification.  
 
-The MINT core gem contains all basic AUI and CUI models as well as the basic infrastructure to create interactors and mappings. Please note that you need at least a CUI adapter gem to be able to actually run a system, e.g. the MINT-rails gem. But for initial experiements ist enough to follow the installation instructions of this document.
+The MINT core gem contains all basic AUI and CUI models as well as the basic infrastructure to create interactors and mappings. For presenting the user interface on a specific platform a "frontend framework" is required. For the first MINT version (2010) we used Rails 2.3 (See http://github.com/sfeu/MINT-rails). The current version uses nodeJS as the frontend framework (See http://github.com/sfeu/MINT-nodejs). But for initial experiements ist enough to follow the installation instructions of this document.
 
 There is still no documentation for the framework, but a lot of articles about the concepts and theories of our approach have already been published and can be accessed from our project site http://www.multi-access.de .
 
@@ -21,9 +21,9 @@ There is still no documentation for the framework, but a lot of articles about t
 * Interactor-based modeling (Widgets) of interface elements by using statemachines (see http://github.com/sfeu/MINT-statemachine )
 * Different to approaches like e.g. XHTML+Voice the mode and media synchronisation is implemented on the web server side, which enables interactions including several devices at the sam time and dynamically adding further media and modes during the interaction.
 * The srver side is implemented as a distributed system based on software agents and a tuple space that enables to distribute arbitrary parts of the system to different machines.  
-* Interactors can also be modelled using s basic subset of SCXML (in work, see http://github.com/sfeu/scxml )
+* Interactors are modelled using s basic subset of SCXML (see http://github.com/sfeu/scxml )
 * A basic set of abstract (modality independent) interactors
-* A very limited set of concrete interactors for the web based on a rails frontend (see http://github.com/sfeu/MINT-rails )
+* A very limited set of concrete interactors for the web based on a socketstream/jquery frontend (see http://github.com/sfeu/MINT-nodejs )
 * Sound support (see http://github.com/sfeu/MINT-sdl )
 * A basic model inspector to observe the state of all interactors during runtime (see http://github.com/sfeu/MINT-debugger )
 * Automatic synchronisation of an abritary set of connected webbrowsers 
@@ -36,9 +36,15 @@ There is still no documentation for the framework, but a lot of articles about t
 * We require ruby 1.8, the application threading model inside one agent is currently limited, but critical parts can be distributed to several agents instead.
 * we currenlty only support rails 2.3, because we rely on the execute action plugin that has no been ported to rails 3 so far. 
 
+== CHANGES to the initial MINT 2010 version
+
+* We switched from Rails 2.3 / Juggernaut to NodeJS / Socketstream 0.2 for the frontend framework since NodeJS allows a faster processing of the server-sided mode/media synchronization.
+* We can offer limited multi-user support. The devices of each user get synchronized separately.
+* We support Ubuntu 12.04 LTS instead of Ubuntu 10.04 LTS.
+
 == SYNOPSIS:
 
-For testing the framework please try first to run our example application! - See the install section for the instructions to get it running. 
+For testing the framework please try first to run our example application! - See the install section for the instructions to get it running. This section describes how to setup the basic structure of a new application.
 
 To start a new project:
 
@@ -46,32 +52,17 @@ To start a new project:
 
  sudo gem install MINT-core
 
-* create a new rails application
+* create a new socketstream application
 
- rails sample_app
-
-* add the MINT-rails and the embedded-actions plugin
-
- cd sample_app
- ./script/plugin install https://github.com/sd/embedded-actions.git
- ./script/plugin install https://github.com/sfeu/MINT-rails.git
-
-* copy the relevant javascript files and images to the rails app public folder
- 
- rake mint_rails:copy_assets
-
-* You need to add the following lines into your config/environment.rb file to disable active_record and to set your IP address. The former one disables active_record, which the MINT framework does not require (it also eliminates the sql-lite database requirement). The latter IP needs to be set to the IP from that you computer can be contacted from outside (if you want to offer the application to the internet) otherwise you can set it to the local 127.0.0.1 IP. 
-
- config.frameworks -= [ :active_record ]
- HOST_IP = '127.0.0.1' 
+ socketstream new <name_of_your_project>
 
 * use the startup script to start the application
 
- ./script/mint/startup.sh
+ socketstream start
 
 * Use Chrome our Chromium browser to access the application:
 
- http://127.0.0.1:3000/mint
+ http://127.0.0.1:3000
  
 * You should see the MINT-Logo as well as a working mouse pointer synchronisation (the green/red dot that follows the mouse pointer)
 
@@ -79,8 +70,8 @@ To start a new project:
 
 == REQUIREMENTS:
 
-* Ubuntu LTS 10.04 !! (we have not ported cassowary to newer versions!)
-* Ruby 1.8
+* Ubuntu LTS 12.04
+* Ruby 1.9
 * WxWidgets (MINT-debugger)
 * libSDL (MINT-sdl for sound support)
 * libCassowary (for constraint solver)
@@ -91,19 +82,13 @@ To start a new project:
 
 The following instructions work only with Ubuntu 10.04 - we have chosen this release because it is an officially long-term supported release (LTS).  
 
-* Install ruby 1.8 your Ubuntu 10.04 machine and set a symlink 
+* Install ruby 1.9, rubygems and bundler on your Ubuntu 12.04 machine and set a symlink
   
- sudo apt-get install ruby1.8 ruby1.8-dev libopenssl-ruby rake
- sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
+ sudo apt-get install ruby1.9 rubygems bundler
 
-* Install a recent ruby gems version from source and set a symlink (the 10.04 one is too old)
+* Install redis-server 2.2.11
 
- wget http://production.cf.rubygems.org/rubygems/rubygems-1.8.5.tgz
- tar -xzvf rubygems-1.8.5.tgz
- cd rubygems-1.8.5/
- sudo ruby setup.rb
- sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
- sudo gem update --system
+ sudo apt-get install redis-server
 
 * install native library dependencies that some gems like eventmachine, SDL or Magick or our framework requires and a working C compiler to compile them
  
@@ -115,37 +100,17 @@ include into file .gemrc in home folder
  
  gem: --no-ri --no-rdoc
 
-* install latest stable git for ubuntu 10.04 LTS (we require git with --recursive option support)
- 
- sudo apt-get install python-software-properties
- sudo add-apt-repository ppa:git-core/ppa
- sudo apt-get update
+* install latest stable git
+
  sudo apt-get install git-core
 
-* Install redis 2.2.4 from source (10.04 comes with redis v1 only)
+* Install node.js and the node package manager
 
- wget http://redis.googlecode.com/files/redis-2.2.4.tar.gz
- tar -xzvf redis-2.2.4.tar.gz
- cd redis-2.2.4
- make
- sudo make install
+ apt-get install nodejs npm
 
-* Install node.js version 0.4.12 
+* Install socketstream version 0.2 and dependencies using npm
 
- wget http://nodejs.org/dist/node-v0.4.12.tar.gz
- tar -xzvf  node-v0.4.12.tar.gz
- cd node-v0.4.12
- ./configure
- make
- sudo make install
-
-* To install Juggernaut 2 install node package manager "npm" after node.js has been installed
-
- sudo curl http://npmjs.org/install.sh | sudo sh
- 
-* install juggernaut using the package manager
-
- sudo npm  install -g juggernaut
+ sudo npm install socketstream@0.2 -g hiredis redis
 
 * Install libcassowary by adding a new package repository to /etc/apt/sources.lst
 
@@ -159,23 +124,16 @@ include into file .gemrc in home folder
 
  sudo apt-get install libcassowary0
 
-* Install bundler
 
- sudo gem install bundler
-
-* checkout an example app (MINT-MoBe2011) and let bundle install all gem dependencies (this will take a while if you have not disabled doc generation - see above)
-
- git clone --recursive git://github.com/sfeu/MINT-MoBe2011.git
- cd MINT-MoBe2011
- bundle install 
+* checkout an example app (TBD) and let bundle install all gem dependencies (this will take a while if you have not disabled doc generation - see above)
 
 * start the example app (this will start a new tabbed console terminal 
 
- ./script/mint/startup.sh
+ TBD...
 
-* wait 30 seconds the use the latest google chrome or chromium browser to access the platform:
+* wait some seconds then use the latest google chrome or chromium browser to access the platform:
 
- http://localhost:3000/mint
+ http://localhost:3000
 
 * This should show a table with a letter in each cell above the MINT framework logo. You should also realize the server-sided mouse synchronisation that prints a green/red dot under the current mouse pointer location. You can test the synchronisation by opening another browser window and access the same url. While you are moving the mouse in one window, that dot should be synced on both browsers.
 
@@ -198,7 +156,7 @@ include into file .gemrc in home folder
 == LICENSE:
 
 The MINT framework is  developed by Sebastian Feuerstack Copyright (C)
-2010 and 2011 Sebastian Feuerstack
+2010, 2011, 2012 Sebastian Feuerstack
 
 This program is  free software; you can redistribute  it and/or modify
 it under the terms of the  GNU Affero General Public License version 3

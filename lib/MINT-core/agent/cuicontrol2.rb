@@ -11,7 +11,7 @@ module CUIControl2
     x = result["x"]
     y = result["y"]
 
-    highlighted_cio = CIO.first(:abstract_states=>/highlighted/)
+    highlighted_cio = MINT::CIO.first(:abstract_states=>/highlighted/)
 
     if (highlighted_cio!=nil && highlighted_cio.x<=x && highlighted_cio.y<=y && highlighted_cio.x+highlighted_cio.width>=x && highlighted_cio.y+highlighted_cio.height>=y)
     #  puts "unchanged"
@@ -28,7 +28,7 @@ module CUIControl2
       end
       
       if (found.first)
-        highlighted_cio = CIO.first(:name=>found.first.name)
+        highlighted_cio = MINT::CIO.first(:name=>found.first.name)
         highlighted_cio.process_event("highlight")
  #       puts "highlighted:"+highlighted_cio.name
       else
@@ -39,7 +39,7 @@ module CUIControl2
   end
 
   def CUIControl.fill_active_cio_cache(result=nil)
-    @active_cios = CIO.all.select{ |e| e.is_in?(:displaying) and not e.kind_of? MINT::CIC }
+    @active_cios = MINT::CIO.all.select{ |e| e.is_in?(:displaying) and not e.kind_of? MINT::CIC }
     puts "CIO cache initialized with #{@active_cios.length} elements"
   end 
   

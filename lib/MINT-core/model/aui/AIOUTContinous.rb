@@ -16,12 +16,7 @@ module MINT
     end
 
 
-    @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model,:data]
-
-    def self.published_attributes
-      @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model,:data]
-    end
-
+    PUBLISH_ATTRIBUTES += [:data]
 
     # functions called from scxml
 
@@ -31,7 +26,7 @@ module MINT
     end
 
     def publish_update_new
-       RedisConnector.pub.publish create_channel_w_name, self.to_json(:only => @publish_attributes)
+       RedisConnector.pub.publish create_channel_w_name, self.to_json(:only => self.class::PUBLISH_ATTRIBUTES)
     end
 
 

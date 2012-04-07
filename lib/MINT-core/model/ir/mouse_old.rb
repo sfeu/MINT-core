@@ -1,5 +1,5 @@
 require "eventmachine"
-module MINT
+module MINTo
 
   class MouseMode < Interactor
     def initialize_statemachine

@@ -24,14 +24,14 @@ module MINT
     end
 
     def sync_cio_to_pressed
-      cio =  MINT2::Button.first(:name=>self.name)
+      cio =  Button.first(:name=>self.name)
       if (cio and not cio.is_in? :pressed)
         cio.sync_event(:press)
       end
       true
     end
     def sync_cio_to_released
-      cio =  MINT2::Button.first(:name=>self.name)
+      cio =  Button.first(:name=>self.name)
       if (cio and not cio.is_in? :released)
         cio.sync_event(:release)
       end

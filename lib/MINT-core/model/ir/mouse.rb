@@ -1,5 +1,5 @@
 
-module MINT2
+module MINT
   class Mouse  < Pointer
     def initialize_statemachine
       if @statemachine.nil?

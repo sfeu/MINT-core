@@ -58,39 +58,40 @@ describe 'AUI' do
 
 
 
-  describe 'AIReference' do
-    it 'should initialize with initiated and store reference correctly' do
-      connect(true) do |redis|
+    describe 'AIReference' do
+      it 'should initialize with initiated and store reference correctly' do
+        connect(true) do |redis|
 
-        test_state_flow redis,"Interactor.AIO" ,%w(initialized)
+          test_state_flow redis,"Interactor.AIO" ,%w(initialized)
 
-        @r = MINT::AIO.create(:name => "test")
-        @a = MINT::AIReference.create(:name=>"reference", :refers => "test")
+          @r = MINT::AIO.create(:name => "test")
+          @a = MINT::AIReference.create(:name=>"reference", :refers => "test")
 
-        @a.states.should ==[:initialized]
-        @a.new_states.should == [:initialized]
-        @a.refers.name.should=="test"
+          @a.states.should ==[:initialized]
+          @a.new_states.should == [:initialized]
+          @a.refers.name.should=="test"
+        end
+
       end
 
-    end
+      it 'should forward focus' do
+        connect(true) do |redis|
 
-    it 'should forward focus' do
-      connect(true) do |redis|
+          test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,%w(defocused defocused)
+          # test_state_flow redis,"Interactor.AIO" ,%w(focused focused)
 
-       test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,%w(defocused defocused)
-       # test_state_flow redis,"Interactor.AIO" ,%w(focused focused)
+          @r = MINT::AIO.create(:name => "test",:states=>[:defocused])
+          @a = MINT::AIReference.create(:name=>"reference", :refers => "test",:states=>[:defocused])
 
-        @r = MINT::AIO.create(:name => "test",:states=>[:defocused])
-        @a = MINT::AIReference.create(:name=>"reference", :refers => "test",:states=>[:defocused])
+          @a.process_event :focus
+          @a.states.should ==[:defocused]
+          MINT::AIO.get("aui","test").states.should ==[:focused]
 
-        @a.process_event :focus
-        @a.states.should ==[:defocused]
-        MINT::AIO.get("aui","test").states.should ==[:focused]
+        end
 
       end
 
     end
 
   end
-
 end

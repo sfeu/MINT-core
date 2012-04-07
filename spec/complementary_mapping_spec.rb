@@ -35,17 +35,17 @@ describe "Complementary mapping" do
       }
 
 
-      o1 = Observation.new(:element =>"Element.AIO.AIIN.AIINContinous",:name => "slider", :states =>[:progressing])
+      o1 = Observation.new(:element =>"Interactor.AIO.AIIN.AIINContinous",:name => "slider", :states =>[:progressing])
 
-      o2 = Observation.new(:element =>"Element.AIO.AIOUT.AIOUTContinous",:name=>"volume", :states =>[:presenting])
+      o2 = Observation.new(:element =>"Interactor.AIO.AIOUT.AIOUTContinous",:name=>"volume", :states =>[:presenting])
 
-      a1 = BindAction.new(:elementIn => "Element.AIO.AIIN.AIINContinous",:nameIn => "slider", :attrIn =>"data",:attrOut=>"data",
+      a1 = BindAction.new(:elementIn => "Interactor.AIO.AIIN.AIINContinous",:nameIn => "slider", :attrIn =>"data",:attrOut=>"data",
                           #:transform =>:manipulate,
-                          :elementOut =>"Element.AIO.AIOUT.AIOUTContinous", :nameOut=>"volume" )
+                          :elementOut =>"Interactor.AIO.AIOUT.AIOUTContinous", :nameOut=>"volume" )
       m = ComplementaryMapping.new(:observations => [o1,o2],:actions =>[a1])
       # m.initialized_callback(Proc.new {p "Hello World"})
       m.activated_callback(Proc.new {
-        RedisConnector.pub.publish  'Element.AIO.AIIN.AIINContinous.slider:test', 20
+        RedisConnector.pub.publish  'Interactor.AIO.AIIN.AIINContinous.slider:test', 20
       }
       )
       m.start
@@ -58,7 +58,7 @@ describe "Complementary mapping" do
       slider.process_event(:present).should ==[:defocused]
       slider.process_event(:focus).should ==[:waiting]
 
-      RedisConnector.pub.publish  'Element.AIO.AIIN.AIINContinous.slider:test', 10
+      RedisConnector.pub.publish  'Interactor.AIO.AIIN.AIINContinous.slider:test', 10
     end
   end
 end

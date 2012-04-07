@@ -19,20 +19,8 @@ require "MINT-scxml"
 require "eventmachine"
 require 'em-hiredis'
 
-
 require "MINT-core/connector/redis_connector"
 require "MINT-core/agent/agent"
-require "MINT-core/mapping/mapping"
-require "MINT-core/mapping/on_state_change"
-require "MINT-core/mapping/complementary"
-require "MINT-core/mapping/sequential"
-
-
-require "MINT-core/mapping/complementary_mapping"
-require "MINT-core/mapping/observation"
-require "MINT-core/mapping/action"
-require "MINT-core/mapping/backend_action"
-require "MINT-core/mapping/event_action"
 
 require "MINT-core/model/interactor"
 require "MINT-core/model/task"
@@ -56,4 +44,12 @@ require "MINT-core/model/body/gesture_button"
 require "MINT-core/model/body/handgesture"
 require "MINT-core/model/body/head"
 
-require "MINT-core/mapping/bindaction"
+require "MINT-core/mapping/mapping"
+require "MINT-core/mapping/sequential"
+require "MINT-core/mapping/complementary_mapping"
+require "MINT-core/mapping/observation/observation"
+require "MINT-core/mapping/action/action"
+require "MINT-core/mapping/action/backend_action"
+require "MINT-core/mapping/action/event_action"
+require "MINT-core/mapping/action/bind_action"
+

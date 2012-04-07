@@ -1,8 +1,8 @@
 module MINT
-  class Screen < Element
+  class Screen < Interactor
     property :root, String
 
-    @@publish_attributes = Element.published_attributes + [:root
+    @@publish_attributes = Interactor.published_attributes + [:root
     ]
 
     protected

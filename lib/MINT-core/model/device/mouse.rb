@@ -1,7 +1,7 @@
 require "eventmachine"
 module MINT
 
-  class MouseMode < Element
+  class MouseMode < Interactor
     def initialize_statemachine
       if @statemachine.blank?
         @statemachine = Statemachine.build do

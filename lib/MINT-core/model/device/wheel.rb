@@ -1,5 +1,5 @@
 module MINT
-  class Wheel < Element
+  class Wheel < Interactor
 
     def initialize_statemachine
       if @statemachine.blank?

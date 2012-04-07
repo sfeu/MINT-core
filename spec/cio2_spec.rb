@@ -23,7 +23,7 @@ describe 'CUI' do
 
         DataMapper.finalize
 
-        test_state_flow redis,"Element.CIO" ,%w(initialized positioning)
+        test_state_flow redis,"Interactor.CIO" ,%w(initialized positioning)
 
         MINT::CIO.create(:name => "center")
         @c = MINT::CIO.first

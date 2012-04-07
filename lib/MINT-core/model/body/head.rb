@@ -1,6 +1,6 @@
 
 module MINT
-  class Head < Element
+  class Head < Interactor
     attr_accessor :mode
     #property :angle, Integer, :default  => -1
     #property :distance, Integer, :default  => -1

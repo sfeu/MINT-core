@@ -17,7 +17,7 @@ module MINT2
 
   end
 
-  class CIO < MINT::Element
+  class CIO < MINT::Interactor
     include Cassowary
 
 
@@ -65,7 +65,7 @@ module MINT2
     before :update!, :initialize_points
     public
 
-    @@publish_attributes = MINT::Element.published_attributes + [:x,:y,:width,:height]
+    @@publish_attributes = MINT::Interactor.published_attributes + [:x,:y,:width,:height]
 
     def initialize_points
       @pos = Cassowary::ClPoint.new()

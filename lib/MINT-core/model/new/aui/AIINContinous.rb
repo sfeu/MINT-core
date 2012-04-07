@@ -23,9 +23,9 @@ module MINT2
     def publish(attribute)
       channel_name =  create_attribute_channel_name(attribute)
 
-      RedisConnector.sub.psubscribe('Element.AIO.AIIN.AIINContinous.'+self.name.to_s+":*") # TODO all users
+      RedisConnector.sub.psubscribe('Interactor.AIO.AIIN.AIINContinous.'+self.name.to_s+":*") # TODO all users
       RedisConnector.sub.on(:pmessage) { |key, channel, message|
-        if key.eql?  'Element.AIO.AIIN.AIINContinous.'+self.name.to_s+":*"
+        if key.eql?  'Interactor.AIO.AIIN.AIINContinous.'+self.name.to_s+":*"
         if message.eql? "stop"
           process_event("halt")
         else

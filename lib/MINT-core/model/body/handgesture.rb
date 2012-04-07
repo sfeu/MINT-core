@@ -253,7 +253,7 @@ module MINT
   class NoHands < HandGesture
   end
 
-  class Speed < Element
+  class Speed < Interactor
     property :value, Integer, :default  => -1
 
     def initialize_statemachine

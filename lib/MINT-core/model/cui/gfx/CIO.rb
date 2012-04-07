@@ -17,7 +17,7 @@ module MINT
 
   end
 
-  class CIO < Element
+  class CIO < Interactor
     include Cassowary
 
 #    has 1, :up, self,
@@ -61,7 +61,7 @@ module MINT
     before :update!, :initialize_points
     public
 
-    @@publish_attributes = Element.published_attributes + [:x,:y,:width,:height]
+    @@publish_attributes = Interactor.published_attributes + [:x,:y,:width,:height]
 
     def initialize_points
       @pos = Cassowary::ClPoint.new()

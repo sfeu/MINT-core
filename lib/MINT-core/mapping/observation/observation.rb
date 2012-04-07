@@ -40,7 +40,7 @@ class Observation
 
   def check_true_at_startup(cb)
     # check if observation is already true at startup
-    model = MINT::Element.class_from_channel_name(element)
+    model = MINT::Interactor.class_from_channel_name(element)
     e = model.first(:name=>name)
     if e
       if ((e.states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)

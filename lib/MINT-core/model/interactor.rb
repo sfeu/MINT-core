@@ -1,9 +1,9 @@
 module MINT
-  # An {Element} is the basic abstract element of the complete MINT markup language. Nearly all  other
-  # classes are derived  from {MINT::Element} since early everything can be activated by {#state} and has 
+  # An {Interactor} is the basic abstract element of the complete MINT markup language. Nearly all  other
+  # classes are derived  from {MINT::Interactor} since early everything can be activated by {#state} and has
   # a {#name}. 
   #
-  class Element
+  class Interactor
     include DataMapper::Resource
 
 
@@ -19,11 +19,11 @@ module MINT
     property :classtype, Discriminator
     property :mint_model, String, :default => lambda { |r,p| r.getModel}, :key=>true
 
-    # Each abstract  {Element} needs to have a name that we will use as the primary key for each model.
+    # Each abstract  {Interactor} needs to have a name that we will use as the primary key for each model.
     property :name, String, :key => true
     #property :id, Serial
 
-    # States of the {Element} Reflects the actual atomic states of the interactors state machine.
+    # States of the {Interactor} Reflects the actual atomic states of the interactors state machine.
     property :states, String
 
     # reflects all active states including abstract superstates of an interactor as a |-seperated state id list
@@ -46,7 +46,7 @@ module MINT
 
     def self.create_channel_name
       a = [self]
-      a.unshift a.first.superclass while (a.first!=MINT::Element)
+      a.unshift a.first.superclass while (a.first!=MINT::Interactor)
       a.map!{|x| x.to_s.split('::').last}
       a.join(".")
     end
@@ -239,7 +239,7 @@ module MINT
     end
   end
 
-  class IR <Element
+  class IR <Interactor
   end
 
   class IN < IR

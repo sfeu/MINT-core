@@ -9,7 +9,7 @@ module MINT
 
 
   # An abstract
-  class AIO < Element
+  class AIO < Interactor
     property :label, String
     property :description, Text,   :lazy => false
 

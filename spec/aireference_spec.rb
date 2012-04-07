@@ -62,7 +62,7 @@ describe 'AUI' do
     it 'should initialize with initiated and store reference correctly' do
       connect(true) do |redis|
 
-        test_state_flow redis,"Element.AIO" ,%w(initialized)
+        test_state_flow redis,"Interactor.AIO" ,%w(initialized)
 
         @r = MINT2::AIO.create(:name => "test")
         @a = MINT2::AIReference.create(:name=>"reference", :refers => "test")
@@ -77,8 +77,8 @@ describe 'AUI' do
     it 'should forward focus' do
       connect(true) do |redis|
 
-       test_state_flow redis,"Element.AIO.AIIN.AIINDiscrete.AIReference" ,%w(defocused defocused)
-       # test_state_flow redis,"Element.AIO" ,%w(focused focused)
+       test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,%w(defocused defocused)
+       # test_state_flow redis,"Interactor.AIO" ,%w(focused focused)
 
         @r = MINT2::AIO.create(:name => "test",:states=>[:defocused])
         @a = MINT2::AIReference.create(:name=>"reference", :refers => "test",:states=>[:defocused])

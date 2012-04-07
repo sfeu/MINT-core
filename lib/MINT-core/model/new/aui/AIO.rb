@@ -1,7 +1,7 @@
 module MINT2
    DataMapper::Model.raise_on_save_failure = true
 
-  class AIO < MINT::Element
+  class AIO < MINT::Interactor
     property :label, String
     property :description, Text,   :lazy => false
 

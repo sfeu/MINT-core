@@ -76,7 +76,7 @@ connection_options = { :adapter => "redis"}
   describe 'organizing' do
  
     it 'should save correctly' do
-      class P <Element
+      class P <Interactor
  
 #        belongs_to :c
         belongs_to  :parent, 'C',

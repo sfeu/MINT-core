@@ -24,7 +24,7 @@ describe 'AUI' do
     it 'should initialize with initiated' do
       connect do |redis|
 
-        test_state_flow redis,"Element.AIO" ,%w(initialized)
+        test_state_flow redis,"Interactor.AIO" ,%w(initialized)
 
         @a = MINT2::AIO.create(:name => "test")
         @a.states.should ==[:initialized]

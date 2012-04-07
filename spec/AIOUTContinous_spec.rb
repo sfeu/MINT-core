@@ -25,8 +25,8 @@ describe 'AUI' do
 
         DataMapper.finalize
 
-        test_state_flow redis,"Element.AIO.AIOUT.AIOUTContinous" ,%w(initialized)
-        #MINT::Element.redis redis
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous" ,%w(initialized)
+        #MINT::Interactor.redis redis
 
         MINT2::AIOUTContinous.new(:name=>"a").save
         @a = MINT2::AIOUTContinous.first
@@ -41,7 +41,7 @@ describe 'AUI' do
         require "MINT-core"
         DataMapper.finalize
 
-        test_state_flow redis,"Element.AIO.AIOUT.AIOUTContinous" ,%w(initialized organized)
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous" ,%w(initialized organized)
 
         MINT2::AIOUTContinous.new(:name=>"a").save
         @a = MINT2::AIOUTContinous.first
@@ -61,7 +61,7 @@ describe 'AUI' do
 
         MINT2::AIOUTContinous.new(:name=>"a").save
         @a = MINT2::AIOUTContinous.first
-        test_state_flow redis,"Element.AIO.AIOUT.AIOUTContinous",
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous",
                         ["initialized","organized",["defocused","waiting","p", "c"],["focused"],
                          ["progressing", "moving", "c"]]
         @a.process_event(:organize).should ==[:organized]
@@ -91,11 +91,11 @@ describe 'AUI' do
         @a.process_event(:move).should ==[:focused, :progressing]
 
         redis2 = EventMachine::Hiredis.connect
-        redis2.publish("Element.AIO.AIOUT.AIOUTContinous.1",10).callback { |c|
+        redis2.publish("Interactor.AIO.AIOUT.AIOUTContinous.1",10).callback { |c|
           @a.data.should==10
-          redis2.publish("Element.AIO.AIOUT.AIOUTContinous.1",20).callback { |c|
+          redis2.publish("Interactor.AIO.AIOUT.AIOUTContinous.1",20).callback { |c|
             @a.data.should==20
-            redis2.publish("Element.AIO.AIOUT.AIOUTContinous.1",10).callback { |c|
+            redis2.publish("Interactor.AIO.AIOUT.AIOUTContinous.1",10).callback { |c|
               @a.data.should==10
               @a.new_states.should==[:regressing]
               done

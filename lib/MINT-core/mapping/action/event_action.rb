@@ -15,7 +15,7 @@ class EventAction < Action
   def start(observation_results)
     interactor_data= observation_results[target]
 
-    interactor = MINT::Element.get(interactor_data["mint_model"],interactor_data["name"])
+    interactor = MINT::Interactor.get(interactor_data["mint_model"],interactor_data["name"])
     interactor.process_event event
 
   end

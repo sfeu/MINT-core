@@ -1,6 +1,6 @@
 module MINT
 
-    class HWButton < Element
+    class HWButton < Interactor
 
       def initialize_statemachine
         if @statemachine.blank?

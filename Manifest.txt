@@ -16,9 +16,7 @@ lib/MINT-core/agent/aui.rb
 lib/MINT-core/agent/auicontrol.rb
 lib/MINT-core/agent/cui-gfx.rb
 lib/MINT-core/agent/cuicontrol.rb
-lib/MINT-core/mapping/complementary.rb
 lib/MINT-core/mapping/mapping.rb
-lib/MINT-core/mapping/on_state_change.rb
 lib/MINT-core/mapping/sequential.rb
 lib/MINT-core/model/aui/AIC.rb
 lib/MINT-core/model/aui/AIINChoose.rb

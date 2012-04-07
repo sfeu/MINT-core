@@ -54,7 +54,7 @@ class BindAction < Action
 
 
     # This does not work, because claues are not stored in data model unless the streaming is stopped
-    #e_class = MINT::Element.class_from_channel_name elementIn
+    #e_class = MINT::Interactor.class_from_channel_name elementIn
 
     # element = e_class.first(:name=>nameIn)
     #d = element.attribute_get(@action[:attrIn])

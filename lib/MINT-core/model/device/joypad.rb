@@ -1,6 +1,6 @@
 module MINT
 
-   class Joypad < Element
+   class Joypad < Interactor
     def initialize_statemachine
       if @statemachine.blank?
         @statemachine = Statemachine.build do

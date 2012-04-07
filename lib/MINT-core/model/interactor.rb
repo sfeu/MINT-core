@@ -57,7 +57,7 @@ module MINT
 
 
     def self.class_from_channel_name(channel)
-      Object.const_get("MINT2").const_get channel.split('.').last
+      Object.const_get("MINT").const_get channel.split('.').last
     end
 
     def publish_update

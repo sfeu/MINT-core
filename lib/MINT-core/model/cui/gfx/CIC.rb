@@ -9,12 +9,12 @@ module MINT
       elements = []
 
 
-      if aic.childs && aic.childs.length>0
+      if aic.children && aic.children.length>0
 
-        calculateColsAndRows(aic.childs.length)
+        calculateColsAndRows(aic.children.length)
         grid_hash= mda(self.rows,self.cols)
 
-        aic.childs.each_with_index do |e,i|
+        aic.children.each_with_index do |e,i|
           cio = CIO.first(:name=>e.name)
           elements << cio
           if (not cio)
@@ -84,7 +84,7 @@ module MINT
         self.layer = layer
         aic = AIC.first(:name=>self.name)
 
-        elements_count = aic.childs.length
+        elements_count = aic.children.length
 
         calculateColsAndRows(elements_count)
 
@@ -95,10 +95,12 @@ module MINT
         grid_hash= mda(self.rows,self.cols)
         #       p "hash #{ self.name} rows #{self.rows} cols #{self.cols}"
 
-        ai_childs =  aic.childs.all(:abstract_states=> /#{Regexp.quote("organized")}/)
+        ai_childs =  aic.children
         #      p aic.name
         elements=[]
         ai_childs.each_with_index do |e,i|
+          if e.abstract_states =~ /organized/
+
           cio = CIO.first(:name=>e.name)
 
           if (not cio)
@@ -130,6 +132,7 @@ module MINT
 
           if (cio.kind_of? MINT::CIC)
             cio.calculate_container(solver,b,layer+1)
+          end
           end
 
         end
@@ -165,14 +168,14 @@ module MINT
       else
         aic = AIC.first(:name=>name)
         elements = []
-        aic.childs.each_with_index do |e,i|
+        aic.children.each_with_index do |e,i|
           cio = CIO.first(:name=>e.name)
           elements << cio
           if (not cio)
             cio = CIO.createCIOfromAIO(e,layer)
           end
 
-          calculateColsAndRows(aic.childs.length)
+          calculateColsAndRows(aic.children.length)
 
           # Save the actual row,column, and  layer to the element
           cio.col =  i % self.cols

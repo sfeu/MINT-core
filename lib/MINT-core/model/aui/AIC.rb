@@ -21,9 +21,9 @@ module MINT
         end
         return result
       else
-        nil
+        []
       end
-      nil
+      []
     end
 
     def initialize_statemachine

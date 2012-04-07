@@ -12,26 +12,17 @@ module MINT
     end
 
     def sync_aio_to_suspended
-          true
-        end
+      true
+    end
 
   end
 
   class CIO < Interactor
     include Cassowary
 
-#    has 1, :up, self,
-#        :parent_key => [ :id ],       # in the remote model (Blog)
-#        :child_key  => [ :up_id ]  # local to this model (Post)
-#    has 1,  :down, self,
-#        :parent_key => [ :id ],       # in the remote model (Blog)
-#        :child_key  => [ :down_id ]  # local to this model (Post)
-#    has 1, :left, self,
-#        :parent_key => [ :id ],       # in the remote model (Blog)
-#        :child_key  => [ :left_id ]  # local to this model (Post)
-#    has 1,  :right, self,
-#        :parent_key => [ :id ],       # in the remote model (Blog)
-#        :child_key  => [ :right_id ]  # local to this model (Post)
+    def getModel
+      "cui-gfx"
+    end
 
     property :text,     Text,   :lazy => false
     property :fontname,     String, :default  => "Helvetica"
@@ -47,8 +38,13 @@ module MINT
     property :layer, Integer
     property :row, Integer
     property :col,Integer
-    property :device, String
-    property :user, String
+
+    # TODO navigation does not user DataMapper because of problems with cycles and self referencing
+    property :left, String
+    property :right, String
+    property :up, String
+    property :down, String
+
 
 
 #    before :create, :recover_statemachine
@@ -61,7 +57,45 @@ module MINT
     before :update!, :initialize_points
     public
 
+
     PUBLISH_ATTRIBUTES += [:x,:y,:width,:height]
+
+    def left
+      p = super
+      if p
+        CIO.get(getModel,p)
+      else
+        nil
+      end
+    end
+
+    def right
+      p = super
+      if p
+        CIO.get(getModel,p)
+      else
+        nil
+      end
+    end
+
+    def up
+      p = super
+      if p
+        CIO.get(getModel,p)
+      else
+        nil
+      end
+    end
+
+    def down
+      p = super
+      if p
+        CIO.get(getModel,p)
+      else
+        nil
+      end
+    end
+
 
     def initialize_points
       @pos = Cassowary::ClPoint.new()
@@ -230,7 +264,7 @@ module MINT
         when "MINT::AIC","MINT::AISinglePresence"
           aic = AIC.first(:name=>e.name)           # TODO: if its not retrieved again, childs.length returns 0!
 
-          elements_count = aic.childs.length
+          elements_count = aic.children.length
           elements_count = 1 if elements_count== 0
           cio = CIC.create(:name=>e.name,:cols=>1,:rows=>elements_count,:layer =>layer+1)
 
@@ -260,57 +294,17 @@ module MINT
 
     def initialize_statemachine
       if @statemachine.nil?
+        parser = StatemachineParser.new(self)
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/cio.scxml"
 
-        @statemachine = Statemachine.build do
+        @statemachine.reset
 
-          superstate :CIO do
-            trans :initialized,:position,:positioning, Proc.new { |user = nil,device =nil|
-                self.user =user if user;
-                self.device=device if device;
-                true
-            }
-            trans :positioning,:calculated,:positioned, :store_calculated_values_in_model
-            trans :positioned, :display, :presenting
-            trans :disabled, :hide, :hidden
-            trans :hidden,:display, :presenting
-
-            state :hidden do
-              on_entry :sync_aio_to_suspended
-            end
-
-            superstate :presenting do
-              on_entry :sync_aio_to_presented
-
-              state :displayed do
-                on_entry :sync_aio_to_defocus
-              end
-
-              state :highlighted  do
-                on_entry :sync_aio_to_focused
-              end
-
-              trans :displayed, :highlight, :highlighted
-              #trans :displayed, :display, :displayed # a display request can be issued several times even if the object is already displayed (in case of refresh or multimple presentations
-              #trans :highlighted, :display, :highlighted # this is because display requests should not change the highlighting
-              trans :highlighted,:unhighlight, :displayed
-              trans :highlighted, :up, :displayed, :highlight_up
-              trans :highlighted, :down, :displayed, :highlight_down
-              trans :highlighted, :left, :displayed, :highlight_left
-              trans :highlighted, :right, :displayed, :highlight_right
-
-              event :disable, :disabled
-              event :hide, :hidden
-
-            end
-          end
-        end
       end
     end
 
-
-     def sync_event(event)
+    def sync_event(event)
       process_event(event, CIO_sync_callback.new)
-     end
+    end
 
     # callbacks
 
@@ -349,36 +343,36 @@ module MINT
 
     def sync_aio_to_presented
       aio =  MINT::AIO.first(:name=>self.name)
-       if (aio and not aio.is_in? :presenting)
+      if (aio and not aio.is_in? :presenting)
         aio.sync_event(:present)
-       end
+      end
       true
     end
 
 
     def sync_aio_to_defocus
       aio =  MINT::AIO.first(:name=>self.name)
-       if (aio and not aio.is_in? :defocused)
-         aio.sync_event(:defocus)
-       end
+      if (aio and not aio.is_in? :defocused)
+        aio.sync_event(:defocus)
+      end
       true
     end
 
     def sync_aio_to_focused
       aio =  MINT::AIO.first(:name=>self.name)
-       if (aio and not aio.is_in? :focused)
+      if (aio and not aio.is_in? :focused)
         aio.sync_event(:focus)
-       end
+      end
       true
     end
 
     def sync_aio_to_suspended
-          aio =  MINT::AIO.first(:name=>self.name)
-           if (aio and not aio.is_in? :suspended)
-            aio.sync_event(:suspend)
-           end
-          true
-        end
+      aio =  MINT::AIO.first(:name=>self.name)
+      if (aio and not aio.is_in? :suspended)
+        aio.sync_event(:suspend)
+      end
+      true
+    end
 
 
 

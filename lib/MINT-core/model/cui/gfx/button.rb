@@ -1,5 +1,5 @@
 
-module MINT2
+module MINT
 
   class Button_sync_callback < CIO_sync_callback
     def sync_aio_to_activated
@@ -16,7 +16,7 @@ module MINT2
     def initialize_statemachine
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/Button.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/button.scxml"
 
         @statemachine.reset
 

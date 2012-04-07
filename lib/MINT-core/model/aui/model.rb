@@ -9,6 +9,7 @@
   require "MINT-core/model/aui/AICommand"
 
   require "MINT-core/model/aui/AIOUT"
+  require "MINT-core/model/aui/AIContext"
 
   require "MINT-core/model/aui/AIOUTDiscrete"
 

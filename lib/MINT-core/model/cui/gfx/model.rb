@@ -1,18 +1,18 @@
+require "MINT-core/model/cui/gfx/CIO"
+require "MINT-core/model/cui/gfx/CIC"
+require "MINT-core/model/cui/gfx/button"
+
 module MINT
-  require "MINT-core/model/cui/gfx/CIO"
-  require "MINT-core/model/new/cui/gfx/CIO"
-
-  require "MINT-core/model/cui/gfx/CIC"
-
-  require "MINT-core/model/new/cui/gfx/CIC"
-
-  class Button < CIO
+  class Image < CIO
+    property :path, String
   end
 
-  require "MINT-core/model/new/cui/gfx/button"
+  class Slider < CIO
 
-  class Image < CIO
-     property :path, String
+  end
+
+  class ProgressBar < CIO
+
   end
 
   class Selectable_sync_callback < CIO_sync_callback
@@ -24,7 +24,7 @@ module MINT
       true
     end
   end
-  # Abstract class to handle objects that can be selected
+# Abstract class to handle objects that can be selected
   class Selectable < CIO
     def initialize_statemachine
       if @statemachine.nil?
@@ -114,7 +114,7 @@ module MINT
   end
 
   class SingleHighlight < CIC
-    end
+  end
 
 
   class ARFrame <  CIO
@@ -204,7 +204,7 @@ module MINT
 
   class Label <CIO
   end
-
-  require "MINT-core/model/cui/gfx/screen"
-  require "MINT-core/model/new/cui/gfx/elements"
 end
+
+require "MINT-core/model/cui/gfx/screen"
+

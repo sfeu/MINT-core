@@ -1,70 +1,60 @@
 module MINT
+  DataMapper::Model.raise_on_save_failure = true
 
-  #class Neighbour
-  #  include DataMapper::Resource
-
-  #  belongs_to :source, 'AIO', :key => true
-  #  belongs_to :target, 'AIO', :key => true
-  #end
-
-
-  # An abstract
   class AIO < Interactor
+
     property :label, String
     property :description, Text,   :lazy => false
 
+    # TODO Links are established without Datamapper's relations because of problems with cycles and self-references (AIC))
+    property :parent, String
+    property :previous, String
+    property :next, String
+    property :parent, String
 
-    #has 1, :neighbour, :child_key =>[:source_id]
-    #has 1, :parent, self, :through => :neighbour, :via => :target
+    def getModel
+      "aui"
+    end
 
+    def parent
+      p = super
+      if p
+        AIC.get("aui",p)
+      else
+        nil
+      end
+    end
 
+    def next
+      p = super
+      if p
+        AIO.get("aui",p)
+      else
+        nil
+      end
+    end
 
+    def previous
+      p = super
+      if p
+        AIO.get("aui",p)
+      else
+        nil
+      end
+    end
 
     def initialize_statemachine
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aio.scxml"
-=begin
-@statemachine = Statemachine.build do
 
-          superstate :AIO do
-            trans :initialized,:organize, :organized
-            trans :organized, :present, :presenting
-            trans :organized, :suspend, :suspended
-            trans :suspended,:present, :presenting
-            trans :suspended, :organize, :organized
-            state :suspended do
-               on_entry :sync_cio_to_hidden
-              end
-
-            superstate :presenting do
-              on_entry :inform_parent_presenting
-              event :suspend, :suspended
-              state :defocused do
-                on_entry :sync_cio_to_displayed
-              end
-              state :focused do
-                on_entry :sync_cio_to_highlighted
-              end
-              trans :defocused,:focus,:focused
-              trans :focused,:defocus, :defocused
-              trans :focused, :next, :defocused, :focus_next,  Proc.new { exists_next}
-              trans :focused, :prev, :defocused, :focus_previous, Proc.new { exists_prev}
-              trans :focused, :parent, :defocused, :focus_parent
-
-            end
-          end
-        end
-=end
         @statemachine.reset
-        #else
-        #@statemachine.reset
+
       end
     end
-
     # hook to inform parent about presenting state
     def inform_parent_presenting
-      self.parent.child_to_presenting(self) if (self.parent)
+      #self.parent.child_to_presenting(self) if (self.parent)
       true
     end
 
@@ -82,18 +72,34 @@ module MINT
       self.previous!=nil
     end
 
-    def focus_next
-      if (self.next)
-        if self.next.process_event("focus")
-          return true
+    def sync_cio_to_displayed
+      cio =  MINT::CIO.first(:name=>self.name)
+      if (cio and not cio.is_in? :displayed)
+        if (cio.is_in? :suspended or cio.is_in? :positioned)
+          cio.sync_event(:display)
         else
-          puts "ERRROR #{self.next.name} could not execute focus event"
-          return false
+          cio.sync_event(:unhighlight)
         end
-      else
-        puts "WARNING!! > no next element found!"
-        return false
+        #cio.states=[:displayed]
       end
+      true
+    end
+
+    def sync_cio_to_highlighted
+      cio =  MINT::CIO.first(:name=>self.name)
+      if (cio and not cio.is_in? :highlighted)
+        cio.sync_event(:highlight)
+        # cio.states=[:highlighted]
+      end
+      true
+    end
+
+    def sync_cio_to_hidden
+      cio =  MINT::CIO.first(:name=>self.name)
+      if (cio and not cio.is_in? :hidden)
+        cio.sync_event(:hide)
+      end
+      true
     end
 
     def focus_previous
@@ -112,39 +118,24 @@ module MINT
       end
     end
 
-    def sync_cio_to_highlighted
-      cio =  MINT::CIO.first(:name=>self.name)
-      if (cio and not cio.is_in? :highlighted)
-        cio.sync_event(:highlight)
-        # cio.states=[:highlighted]
-      end
-      true
-    end
-
-    def sync_cio_to_displayed
-      cio =  MINT::CIO.first(:name=>self.name)
-      if (cio and not cio.is_in? :displayed)
-        if (cio.is_in? :suspended or cio.is_in? :positioned)
-          cio.sync_event(:display)
+    def focus_next
+      if (self.next)
+        if self.next.process_event("focus")
+          return true
         else
-          cio.sync_event(:unhighlight)
+          puts "ERRROR #{self.next.name} could not execute focus event"
+          return false
         end
-        #cio.states=[:displayed]
+      else
+        puts "WARNING!! > no next element found!"
+        return false
       end
-      true
     end
 
-    def sync_cio_to_hidden
-      cio =  MINT::CIO.first(:name=>self.name)
-      if (cio and not cio.is_in? :hidden)
-        cio.sync_event(:hide)
-        end
-      true
-    end
   end
 
 
-   class AIO_sync_callback
+  class AIO_sync_callback
     def sync_cio_to_highlighted
       true
     end
@@ -157,14 +148,18 @@ module MINT
       true
     end
     def inform_parent_presenting
-          true
-        end
+      true
+    end
     def present_first_child
       true
     end
 
-     def present_children
-       true
-     end
+    def present_children
+      true
+    end
+
+    def stop_publish(data)
+      true
+    end
   end
 end

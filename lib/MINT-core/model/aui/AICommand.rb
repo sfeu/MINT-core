@@ -1,5 +1,5 @@
-module MINT2
-  class AICommand_sync_callback < AIO_sync_callback
+module MINT
+  class AICommand_sync_callback < MINT::AIO_sync_callback
 
     def sync_cio_to_pressed
       true
@@ -13,7 +13,7 @@ module MINT2
     def initialize_statemachine
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/AICommand.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aicommand.scxml"
 
         @statemachine.reset
 

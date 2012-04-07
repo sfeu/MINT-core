@@ -1,4 +1,4 @@
-module MINT2
+module MINT
 
 
   class AIINDiscrete < AIIN

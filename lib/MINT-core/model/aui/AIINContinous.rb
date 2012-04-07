@@ -1,4 +1,4 @@
-module MINT2
+module MINT
 
 
   class AIINContinous < AIIN
@@ -11,7 +11,7 @@ module MINT2
     def initialize_statemachine
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/AIINContinous.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aiincontinous.scxml"
 
         reset = @statemachine.reset
 

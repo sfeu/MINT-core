@@ -2,8 +2,7 @@ module MINT
   class Screen < Interactor
     property :root, String
 
-    @@publish_attributes = Interactor.published_attributes + [:root
-    ]
+    PUBLISH_ATTRIBUTES += [:root ]
 
     protected
     def initialize_statemachine

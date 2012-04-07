@@ -1,8 +1,8 @@
-module MINT2
+module MINT
 
 
   class AIOUT < AIO
 
- end
+  end
 
 end

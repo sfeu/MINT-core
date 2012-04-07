@@ -65,7 +65,7 @@ module MINT2
     before :update!, :initialize_points
     public
 
-    @@publish_attributes = MINT::Interactor.published_attributes + [:x,:y,:width,:height]
+    PUBLISH_ATTRIBUTES += [:x,:y,:width,:height]
 
     def initialize_points
       @pos = Cassowary::ClPoint.new()

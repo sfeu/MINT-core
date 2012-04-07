@@ -1,64 +1,28 @@
 # AUI MODEL
-module MINT
-
-
-
   require "MINT-core/model/aui/AIO"
-  require "MINT-core/model/new/aui/AIO"
 
-  class AIIN < AIO
-  end
-  require "MINT-core/model/new/aui/AIIN"
+  require "MINT-core/model/aui/AIIN"
+  require "MINT-core/model/aui/AIINDiscrete"
 
-  class AIINContinous < AIIN
-  end
+  require "MINT-core/model/aui/AIReference"
 
-  class AIINDiscrete <AIIN
-  end
+  require "MINT-core/model/aui/AICommand"
 
-  class AIReference < AIINDiscrete
-  end
-  require "MINT-core/model/new/aui/AIINDiscrete"
-
-  require "MINT-core/model/new/aui/AIReference"
-
-  class AICommand <AIINDiscrete
-  end
-  require "MINT-core/model/new/aui/AICommand"
-
-
- require "MINT-core/model/aui/AIINChoose"
-
-  class AIOUT <AIO
-  end
-  require "MINT-core/model/new/aui/AIOUT"
+  require "MINT-core/model/aui/AIOUT"
 
   require "MINT-core/model/aui/AIOUTDiscrete"
 
-
-  class AIOUTContext < AIOUTDiscrete
-    property :text, String
-  end
-
-  require "MINT-core/model/new/aui/AIOUTDiscrete"
-
   require "MINT-core/model/aui/AIC"
-    require "MINT-core/model/new/aui/AIC"
 
-  class AIOUTContinous < AIOUT
-  end
-  require "MINT-core/model/new/aui/AIOUTContinous"
-  require "MINT-core/model/new/aui/AIINContinous"
+  require "MINT-core/model/aui/AIOUTContinous"
+  require "MINT-core/model/aui/AIINContinous"
 
-end
+  require "MINT-core/model/aui/AIINChoose"
 
-require "MINT-core/model/aui/AIChoice"
+  require "MINT-core/model/aui/AISingleChoiceElement"
+  require "MINT-core/model/aui/AISingleChoice"
 
-require "MINT-core/model/aui/AISingleChoiceElement"
-require "MINT-core/model/aui/AISingleChoice"
+  require "MINT-core/model/aui/AIMultiChoiceElement"
+  require "MINT-core/model/aui/AIMultiChoice"
 
-require "MINT-core/model/aui/AIMultiChoiceElement"
-require "MINT-core/model/aui/AIMultiChoice"
-
-# require "MINT-core/model/aui/AISinglePresence"
-  require "MINT-core/model/new/aui/AISinglePresence"
+  require "MINT-core/model/aui/AISinglePresence"

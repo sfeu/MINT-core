@@ -49,11 +49,11 @@ describe "Complementary mapping" do
       }
       )
       m.start
-      volume = MINT2::AIOUTContinous.create(:name=>"volume")
+      volume = MINT::AIOUTContinous.create(:name=>"volume")
       volume.process_event(:organize).should ==[:organized]
       volume.process_event(:present).should ==[:defocused, :waiting]
 
-      slider = MINT2::AIINContinous.create(:name=>"slider")
+      slider = MINT::AIINContinous.create(:name=>"slider")
       slider.process_event(:organize).should ==[:organized]
       slider.process_event(:present).should ==[:defocused]
       slider.process_event(:focus).should ==[:waiting]

@@ -28,8 +28,8 @@ describe 'AUI' do
         test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous" ,%w(initialized)
         #MINT::Interactor.redis redis
 
-        MINT2::AIOUTContinous.new(:name=>"a").save
-        @a = MINT2::AIOUTContinous.first
+        MINT::AIOUTContinous.new(:name=>"a").save
+        @a = MINT::AIOUTContinous.first
         @a.states.should ==[:initialized]
         @a.new_states.should == [:initialized]
       end
@@ -43,8 +43,8 @@ describe 'AUI' do
 
         test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous" ,%w(initialized organized)
 
-        MINT2::AIOUTContinous.new(:name=>"a").save
-        @a = MINT2::AIOUTContinous.first
+        MINT::AIOUTContinous.new(:name=>"a").save
+        @a = MINT::AIOUTContinous.first
 
         @a.process_event(:organize).should ==[:organized]
         @a.states.should == [:organized]
@@ -59,8 +59,8 @@ describe 'AUI' do
         require "MINT-core"
         DataMapper.finalize
 
-        MINT2::AIOUTContinous.new(:name=>"a").save
-        @a = MINT2::AIOUTContinous.first
+        MINT::AIOUTContinous.new(:name=>"a").save
+        @a = MINT::AIOUTContinous.first
         test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous",
                         ["initialized","organized",["defocused","waiting","p", "c"],["focused"],
                          ["progressing", "moving", "c"]]
@@ -81,8 +81,8 @@ describe 'AUI' do
         require "MINT-core"
         DataMapper.finalize
 
-        MINT2::AIOUTContinous.new(:name=>"a").save
-        @a = MINT2::AIOUTContinous.first
+        MINT::AIOUTContinous.new(:name=>"a").save
+        @a = MINT::AIOUTContinous.first
         @a.process_event(:organize).should ==[:organized]
 
         @a.process_event(:present).should ==[:defocused, :waiting]

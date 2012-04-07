@@ -1,6 +1,4 @@
-module MINT2
-
-
+module MINT
   class AIOUTContinous < AIOUT
 
     property :data, Integer
@@ -10,7 +8,7 @@ module MINT2
     def initialize_statemachine
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/AIOUTContinous.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aioutcontinous.scxml"
 
         @statemachine.reset
 

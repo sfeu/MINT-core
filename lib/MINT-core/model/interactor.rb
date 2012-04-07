@@ -38,11 +38,7 @@ module MINT
     public
 
 
-    @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
-
-    def self.published_attributes
-      @publish_attributes = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
-    end
+    PUBLISH_ATTRIBUTES = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
 
     def self.create_channel_name
       a = [self]
@@ -65,7 +61,7 @@ module MINT
     end
 
     def publish_update
-      RedisConnector.pub.publish self.class.create_channel_name, self.to_json(:only => @publish_attributes)
+      RedisConnector.pub.publish self.class.create_channel_name, self.to_json(:only => self.class::PUBLISH_ATTRIBUTES)
     end
 
     def self.notify(action,query,callback,time = nil)

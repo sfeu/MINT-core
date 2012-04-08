@@ -1,5 +1,5 @@
 module MINT
-  class AIOUTContinous < AIOUT
+  class AIOUTContinuous < AIOUT
     #Todo check this
     #property :min, Integer
     #property :max, Integer

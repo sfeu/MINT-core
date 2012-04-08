@@ -37,11 +37,11 @@ describe "Complementary mapping" do
 
       o1 = Observation.new(:element =>"Interactor.AIO.AIIN.AIINContinuous",:name => "slider", :states =>[:progressing])
 
-      o2 = Observation.new(:element =>"Interactor.AIO.AIOUT.AIOUTContinous",:name=>"volume", :states =>[:presenting])
+      o2 = Observation.new(:element =>"Interactor.AIO.AIOUT.AIOUTContinuous",:name=>"volume", :states =>[:presenting])
 
       a1 = BindAction.new(:elementIn => "Interactor.AIO.AIIN.AIINContinuous",:nameIn => "slider", :attrIn =>"data",:attrOut=>"data",
                           #:transform =>:manipulate,
-                          :elementOut =>"Interactor.AIO.AIOUT.AIOUTContinous", :nameOut=>"volume" )
+                          :elementOut =>"Interactor.AIO.AIOUT.AIOUTContinuous", :nameOut=>"volume" )
       m = ComplementaryMapping.new(:observations => [o1,o2],:actions =>[a1])
       # m.initialized_callback(Proc.new {p "Hello World"})
       m.activated_callback(Proc.new {

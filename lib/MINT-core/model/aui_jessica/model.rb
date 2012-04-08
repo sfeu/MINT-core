@@ -2,7 +2,7 @@
 module MINT
   require "MINT-core/model/aui_jessica/AIO"
   require "MINT-core/model/aui_jessica/AIOUT"
-  require "MINT-core/model/aui_jessica/AIOUTContinous"
+  require "MINT-core/model/aui_jessica/AIOUTContinuous"
   require "MINT-core/model/aui_jessica/AIContainer"
   require "MINT-core/model/aui_jessica/AISinglePresence"
   require "MINT-core/model/aui_jessica/AISingleChoice"
@@ -23,7 +23,7 @@ module MINT
   class AIIN < AIO
   end
 
-  class AIINContinous < AIIN
+  class AIINContinuous < AIIN
     #property :min, Integer
     #property :max, Integer
   end
@@ -54,7 +54,7 @@ module MINT
     #property :description, String
   end
 
-  class AIOUTContinous < AIOUT
+  class AIOUTContinuous < AIOUT
     #property :min, Integer
     #property :max, Integer
   end

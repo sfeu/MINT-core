@@ -1,4 +1,4 @@
-<scxml initial="initialized" name="AIOUTContinous" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=545.3296276078213 h=762.0  -->
+<scxml initial="initialized" name="AIOUTContinuous" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=545.3296276078213 h=762.0  -->
  <state id="initialized"><!--   node-size-and-position x=445.32962760782124 y=43.0 w=80.0 h=20.0  -->
   <transition event="organize" target="organized"></transition>
  </state>

@@ -2,11 +2,11 @@ require "spec_helper"
 require "em-spec/rspec"
 
 def create_structure
-  MINT::AIC.create(:name=>"a", :children =>"e1|e2|e3")
+  MINT::AIContainer.create(:name=>"a", :children =>"e1|e2|e3")
   MINT::AIO.create(:name => "e1", :parent=>"a")
   MINT::AIO.create(:name => "e2", :parent=>"a")
   MINT::AIO.create(:name => "e3", :parent=>"a")
-  MINT::AIC.first
+  MINT::AIContainer.first
 
 end
 
@@ -27,7 +27,7 @@ describe 'AUI' do
   end
 
 
-  describe 'AIC' do
+  describe 'AIContainer' do
     it 'should initialize with initiated' do
       connect do |redis|
         @a = create_structure
@@ -107,23 +107,23 @@ describe 'AUI' do
     it 'AIO should handle parent' do
       connect do |redis|
 
-        MINT::AIC.create(:name=>"parent", :states => [:defocused],:children =>"a1")
-        MINT::AIC.create(:name=>"a1", :states => [:focused],:children =>"ee1|ee2|ee3",:parent=>"parent")
+        MINT::AIContainer.create(:name=>"parent", :states => [:defocused],:children =>"a1")
+        MINT::AIContainer.create(:name=>"a1", :states => [:focused],:children =>"ee1|ee2|ee3",:parent=>"parent")
         MINT::AIO.create(:name => "ee1",:states => [:defocused],:parent=>"a1")
         MINT::AIO.create(:name => "ee2",:states => [:defocused],:parent=>"a1")
         MINT::AIO.create(:name => "ee3",:states => [:defocused],:parent=>"a1")
-        @a = MINT::AIC.first(:name => "a1")
-        b = MINT::AIC.first(:name => "parent")
+        @a = MINT::AIContainer.first(:name => "a1")
+        b = MINT::AIContainer.first(:name => "parent")
 
 
         @a.states.should == [:focused]
-        #b =  MINT2::AIC.create(:name=>"parent",:children =>[@a])
+        #b =  MINT2::AIContainer.create(:name=>"parent",:children =>[@a])
         b.states.should == [:defocused]
         @a.process_event(:parent)
 
         @a.states.should ==[:defocused]
 
-        b = MINT::AIC.first(:name => "parent")
+        b = MINT::AIContainer.first(:name => "parent")
         b.states.should ==[:focused]
       end
     end

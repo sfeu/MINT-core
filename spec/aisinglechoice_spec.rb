@@ -99,10 +99,10 @@ describe 'SingleChoice' do
       e1.states.should == [:suspended]
     end
 
-    it 'should hide if suspend is called from parent AIC' do
+    it 'should hide if suspend is called from parent AIContainer' do
       sc =MINT::AISingleChoice.first(:name => "choice")
 
-      aic = MINT::AIC.create(:name => "container", :states=>[:defocused],:childs =>[sc])
+      aic = MINT::AIContainer.create(:name => "container", :states=>[:defocused],:childs =>[sc])
 
       aic.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
@@ -119,7 +119,7 @@ describe 'SingleChoice' do
 
       sc =MINT::AISingleChoice.first(:name => "choice")
 
-      aic = MINT::AIC.create(:name => "container", :states=>[:defocused],:childs =>[sc])
+      aic = MINT::AIContainer.create(:name => "container", :states=>[:defocused],:childs =>[sc])
 
       aic.process_event(:suspend).should == [:suspended]
       e1 = MINT::AISingleChoiceElement.first(:name => "element_1")

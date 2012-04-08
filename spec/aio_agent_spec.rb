@@ -8,15 +8,15 @@ connection_options = { :adapter => "redis"}
 #  DataMapper.setup(:default, { :adapter => "rinda", :host =>"localhost",:port=>4000})
     # ,:local =>Rinda::TupleSpace.new})
    # DataMapper::Logger.new("data.log", :debug)
-    @aui = AIC.new(:name=>"RecipeFinder", 
+    @aui = AIContainer.new(:name=>"RecipeFinder",
         :childs =>[
                    AIReference.new(:name=>"RecipeFinder_label",:label=>"Willkommen"),
                    AIOUTContext.new(:name=>"RecipeFinder_description",:text=>"Willkommen beim 4 Sterne Koch Assistenten."),
-                   AIC.new(:name=>"RecipeFilter",
+                   AIContainer.new(:name=>"RecipeFilter",
                            :childs => [
                                        AIReference.new(:name=>"RecipeFilter_label",:label=>"Suchkriterien"),
                                        AIOUTContext.new(:name=>"RecipeFilter_description",:text=>"In diesem Feld können Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen."),
-                                       AIC.new(:name=>"RecipeCuisine", 
+                                       AIContainer.new(:name=>"RecipeCuisine",
                                                :childs=>[
                                                          AIReference.new(:name=>"RecipeCuisine_label",:label=>"Nationale Küche"),
                                                          AIOUTContext.new(:name=>"RecipeCuisine_description",:text=>"Welche nationale Küche wählen Sie? "),
@@ -29,7 +29,7 @@ connection_options = { :adapter => "redis"}
                                                                                      ] 
                                                                           )
                                                         ]),
-                                       AIC.new(:name=>"RecipeCategory",
+                                       AIContainer.new(:name=>"RecipeCategory",
                                                :childs=>[
                                                          AIReference.new(:name=>"RecipeCategory_label",:label=>"Menǘart "),
                                                          AIOUTContext.new(:name=>"RecipeCategory_description",:text=>" Welche Menǘart möchten Sie kochen? "),
@@ -42,7 +42,7 @@ connection_options = { :adapter => "redis"}
                                                                                      ] 
                                                                           )
                                                         ]),
-                                       AIC.new(:name=>"RecipeCalories",
+                                       AIContainer.new(:name=>"RecipeCalories",
                                                :childs=>[
                                                          AIReference.new(:name=>"RecipeCalories_label",:label=>"gesundheitsbewusst "),
                                                          AIOUTContext.new(:name=>"RecipeCalories_description",:text=>" Wollen Sie gesundheitsbewusst kochen? "),
@@ -55,7 +55,7 @@ connection_options = { :adapter => "redis"}
                                                                           )
                                                         ]),
                                        ]),
-                   AIC.new(:name =>"RecipeSelection",
+                   AIContainer.new(:name =>"RecipeSelection",
                            :childs => [
                                        AIReference.new(:name=>"RecipeSelection_label",:label=>"Rezeptdetails"),
                                        AIOUTContext.new(:name=>"RecipeSelection_description",:text=>"Hier werden Ihre Rezeptvorschläge mit den Details angezeigt und Sie können bestimmen, für wieviele Personen das Rezept berechnet werden soll."),
@@ -110,14 +110,14 @@ connection_options = { :adapter => "redis"}
     end
     
     it "should organize parental relations correctly" do
-      aic = AIC.new(:name =>"AIC", :childs=>[AIO.new(:name=>"AIO")])
+      aic = AIContainer.new(:name =>"AIContainer", :childs=>[AIO.new(:name=>"AIO")])
       aic.save!
       
-      AIO.first(:name=>"AIO").parent.name.should == "AIC"
+      AIO.first(:name=>"AIO").parent.name.should == "AIContainer"
     end
     
     it "should organize parental relations correctly 2" do
-      AIC.new(:name=>"RecipeFinder", 
+      AIContainer.new(:name=>"RecipeFinder",
         :childs =>[
                    AIReference.new(:name=>"RecipeFinder_label",:label=>"Willkommen")]).save!
        
@@ -226,7 +226,7 @@ it 'should support next navigation in organize 2' do
       AUIControl.find_common(["Schweinebraten","RecipeCalories_choice","RecipeFinder_description"]).should=="RecipeFinder"
     end
     
-    it "should find the correct common AIC for a given ETS 2" do
+    it "should find the correct common AIContainer for a given ETS 2" do
        AUIControl.find_common(["RecipeCategory","Start", "FoundRecipes"]).should=="RecipeFinder"
       AUIControl.find_common(["RecipeCategory", "Start", "FoundRecipes", "RecipeCuisine", "RecipeCalories"]).should=="RecipeFinder"
     end

@@ -208,7 +208,7 @@ describe 'AUI' do
     it 'should handle parent' do
       @a = MINT::AIO.create(:name => "test",:parent =>"parent")
       @a.states=[:focused]
-      b =  MINT::AIC.new(:name=>"parent",:children =>["test"])
+      b =  MINT::AIContainer.new(:name=>"parent",:children =>["test"])
       b.states = [:defocused]
       @a.process_event(:parent)
 

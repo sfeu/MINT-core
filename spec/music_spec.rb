@@ -5,8 +5,8 @@ describe 'AUI' do
     connection_options = { :adapter => "in_memory"}
     DataMapper.setup(:default, connection_options)
       #    DataMapper.setup(:default, { :adapter => "rinda",:local =>Rinda::TupleSpace.new})
-    AIC.new(:name=>"interactive_sheet", :childs => [
-    AIC.new(:name=>"sheets", :childs =>[]),
+    AIContainer.new(:name=>"interactive_sheet", :childs => [
+    AIContainer.new(:name=>"sheets", :childs =>[]),
     AISingleChoice.new(:name=>"option", :label=>"Options", :childs => [
         AISingleChoiceElement.new(:name=>"nodding",:label=>"Nodding"),
         AISingleChoiceElement.new(:name=>"tilting",:label=>"Tilting"),
@@ -14,11 +14,11 @@ describe 'AUI' do
       ])
     ]).save
 
-    @interactive_sheet = AIC.first
+    @interactive_sheet = AIContainer.first
     AUIControl.organize(@interactive_sheet,nil,0)
     @interactive_sheet.save!
 
-    @sheets = MINT::AIC.first(:name=>"sheets")
+    @sheets = MINT::AIContainer.first(:name=>"sheets")
     @option = MINT::AISingleChoice.first(:name=>"option")
   end
 
@@ -26,7 +26,7 @@ describe 'AUI' do
     it 'interactive_sheet should recover state after save and reload' do
       @interactive_sheet.states.should == [:organized]
       @interactive_sheet.save!
-      b =  MINT::AIC.first(:name=>"interactive_sheet")
+      b =  MINT::AIContainer.first(:name=>"interactive_sheet")
       b.states.should == [:organized]
       b.process_event(:present).should == [:defocused]
     end
@@ -37,7 +37,7 @@ describe 'AUI' do
       @sheets.new_states.should == [:organized]
       @sheets.process_event(:present).should ==[:defocused]
       @sheets.save!
-      sheets =  MINT::AIC.first(:name=>"sheets")
+      sheets =  MINT::AIContainer.first(:name=>"sheets")
       sheets.states.should == [:defocused]
       sheets.process_event(:focus).should == [:focused]
     end
@@ -134,7 +134,7 @@ describe 'AUI' do
 
     it "should sync sheets to highlighted" do
       @interactive_sheet.process_event(:present)
-      @sheets = MINT::AIC.first(:name=>"sheets")
+      @sheets = MINT::AIContainer.first(:name=>"sheets")
       @sheets.process_event(:focus)
       @sheets.states.should == [:focused]
       MINT::CIC.first(:name=>"interactive_sheet").states.should == [:displayed]
@@ -147,7 +147,7 @@ describe 'AUI' do
 
     it "should sync option to highlighted" do
       @interactive_sheet.process_event(:present)
-      @sheets = MINT::AIC.first(:name=>"sheets")
+      @sheets = MINT::AIContainer.first(:name=>"sheets")
       @option = MINT::AISingleChoice.first(:name=>"option")
       @option.process_event(:focus)
       @option.states.should == [:focused, :listing]

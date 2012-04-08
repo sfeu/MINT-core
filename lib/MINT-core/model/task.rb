@@ -22,10 +22,10 @@ module MINT
 
 
 # Each {InteractionTask} is linked to one abstract interaction container
-# {MINT::AIC}
+# {MINT::AIContainer}
 #
   class InteractionTask < Task
-    #   has 1, :AIC @TODO - Mappings unklar
+    #   has 1, :AIContainer @TODO - Mappings unklar
     belongs_to :pts, "PTS"
   end
 

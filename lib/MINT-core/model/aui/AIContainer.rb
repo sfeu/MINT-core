@@ -1,13 +1,7 @@
 module MINT
 
-  class AIC < AIOUTDiscrete
-    #    belongs_to :task @TODO - Mappings unklar
+  class AIContainer < AIOUTDiscrete
 
-    #has n, :children, MINT2::AIO
-    #has n, :neighbour_parent, :child_key =>[:target_id]
-    #has n, :children, 'MINT2::AIO', :through => :neighbour_parent, :via => :source
-
-    #   has n, :children, "MINT2::AIO"
     property :children, String
 
     def children
@@ -29,7 +23,7 @@ module MINT
     def initialize_statemachine
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aic.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aicontainer.scxml"
         @statemachine.reset
       end
     end

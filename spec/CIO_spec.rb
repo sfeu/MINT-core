@@ -59,13 +59,13 @@ end
 
 
 def layout_scenario2
-  MINT::AIC.create(:name=>"RecipeFinder_content",:states =>[:organized],:children=>"RecipeFilter")
-  MINT::AIC.create(:name=>"RecipeFilter",:states =>[:organized],:children=>"RecipeFilter_description1|RecipeFilter_content")
-  MINT::AIC.create(:name=>"RecipeFilter_description1",:states =>[:organized],:children=>"RecipeFilter_label|RecipeFilter_description")
+  MINT::AIContainer.create(:name=>"RecipeFinder_content",:states =>[:organized],:children=>"RecipeFilter")
+  MINT::AIContainer.create(:name=>"RecipeFilter",:states =>[:organized],:children=>"RecipeFilter_description1|RecipeFilter_content")
+  MINT::AIContainer.create(:name=>"RecipeFilter_description1",:states =>[:organized],:children=>"RecipeFilter_label|RecipeFilter_description")
   MINT::AIReference.create(:name=>"RecipeFilter_label",:label=>"Suchkriterien",:states =>[:organized])
   MINT::AIContext.new(:name=>"RecipeFilter_description",:states =>[:organized],
                       :text=>"In diesem Feld koennen Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen.")
-  MINT::AIC.create(:name=>"RecipeFilter_content",:states =>[:organized])
+  MINT::AIContainer.create(:name=>"RecipeFilter_content",:states =>[:organized])
 
 
   @test = MINT::CIC.create( :name => "RecipeFinder_content", :rows => 1, :cols=> 1,:x=>0, :y=>0, :width =>800, :height => 600)
@@ -217,7 +217,7 @@ describe 'CUI' do
         it "should calculate sizes for CIC" do
           connect do |redis|
             layout_setup
-            a_parent = MINT::AIC.create(:name=>"parent", :children =>"left|right|up|down")
+            a_parent = MINT::AIContainer.create(:name=>"parent", :children =>"left|right|up|down")
 
             parent_cic = MINT::CIC.create(:name =>"parent",:cols=>2,:rows=>2,:x=>0,:y=>0,:width=>800,:height=>600)
 
@@ -233,9 +233,9 @@ describe 'CUI' do
         it "should calculate sizes for nested CICs" do
           connect do |redis|
             layout_setup
-            MINT::AIC.create(:name=>"top", :children =>"parent_left|parent_right")
-            MINT::AIC.create(:name=>"parent_left", :children =>"left|right|up|down",:states =>[:organized] )
-            MINT::AIC.create(:name=>"parent_right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
+            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right|up|down",:states =>[:organized] )
+            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
             top_cic = MINT::CIC.create(:name =>"top",:cols=>2,:rows=>1,:x=>0,:y=>0,:width=>800,:height=>600)
             parent_left_cic = MINT::CIC.create(:name =>"parent_left",:cols=>2,:rows=>2)
@@ -257,10 +257,10 @@ describe 'CUI' do
           connect do |redis|
             layout_setup
 
-            a_top = MINT::AIC.create(:name=>"top", :children =>"parent_left|parent_right")
-            MINT::AIC.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+            a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
+            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
 
-            MINT::AIC.create(:name=>"parent_right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
             top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
             parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
@@ -281,10 +281,10 @@ describe 'CUI' do
             layout_setup
 
 
-            a_top = MINT::AIC.create(:name=>"top", :children =>"parent_left|parent_right")
-            MINT::AIC.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+            a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
+            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
 
-            MINT::AIC.create(:name=>"parent_right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
             top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
 
@@ -298,7 +298,7 @@ describe 'CUI' do
           end
         end
 
-        it "should handle nested AIC definitions" do
+        it "should handle nested AIContainer definitions" do
           connect do |redis|
             layout_setup
 
@@ -329,10 +329,10 @@ describe 'CUI' do
             layout_setup
             @solver = Cassowary::ClSimplexSolver.new
 
-            a_top = MINT::AIC.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
+            a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
 
-            MINT::AIC.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
-            MINT::AIC.create(:name=>"parent_right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
             top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
             parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
@@ -350,10 +350,10 @@ describe 'CUI' do
           connect do |redis|
             layout_setup
             @solver = Cassowary::ClSimplexSolver.new
-            a_top = MINT::AIC.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
+            a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
 
-            MINT::AIC.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
-            MINT::AIC.create(:name=>"parent_right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
             top_cic = MINT::CIC.create(:name =>"top",:states=>[:positioned],:x=>0,:y=>0,:width=>800,:height=>800)
             parent_left_cic = MINT::CIC.create(:name =>"parent_left",:states=>[:positioned],:x=>10,:y=>10,:width=>300,:height=>800).save!
@@ -376,10 +376,10 @@ describe 'CUI' do
           connect do |redis|
             layout_setup
             @solver = Cassowary::ClSimplexSolver.new
-            a_top = MINT::AIC.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
+            a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
 
-            MINT::AIC.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
-            MINT::AIC.create(:name=>"parent_right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
             top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
             parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!

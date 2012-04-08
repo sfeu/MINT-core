@@ -6,7 +6,7 @@ module MINT
     property :label, String
     property :description, Text,   :lazy => false
 
-    # TODO Links are established without Datamapper's relations because of problems with cycles and self-references (AIC))
+    # TODO Links are established without Datamapper's relations because of problems with cycles and self-references (AIContainer))
     property :parent, String
     property :previous, String
     property :next, String
@@ -19,7 +19,7 @@ module MINT
     def parent
       p = super
       if p
-        AIC.get("aui",p)
+        AIContainer.get("aui",p)
       else
         nil
       end

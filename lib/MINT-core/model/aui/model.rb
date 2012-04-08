@@ -13,7 +13,7 @@
 
   require "MINT-core/model/aui/AIOUTDiscrete"
 
-  require "MINT-core/model/aui/AIC"
+  require "MINT-core/model/aui/AIContainer"
 
   require "MINT-core/model/aui/AIOUTContinous"
   require "MINT-core/model/aui/AIINContinous"

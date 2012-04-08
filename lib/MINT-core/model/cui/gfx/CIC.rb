@@ -5,7 +5,7 @@ module MINT
 
     def calculate_position(parent_cic,elements,solver,i,b,layer=0)
       p "container #{self.name} #{b}"
-      aic = AIC.first(:name=>self.name)
+      aic = AIContainer.first(:name=>self.name)
       elements = []
 
 
@@ -82,7 +82,7 @@ module MINT
       if self.process_event!("position")
      #   p "in positionion #{self.name}"
         self.layer = layer
-        aic = AIC.first(:name=>self.name)
+        aic = AIContainer.first(:name=>self.name)
 
         elements_count = aic.children.length
 
@@ -166,7 +166,7 @@ module MINT
         }
         self.process_event("calculated")
       else
-        aic = AIC.first(:name=>name)
+        aic = AIContainer.first(:name=>name)
         elements = []
         aic.children.each_with_index do |e,i|
           cio = CIO.first(:name=>e.name)

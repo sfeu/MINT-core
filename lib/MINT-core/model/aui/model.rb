@@ -15,8 +15,8 @@
 
   require "MINT-core/model/aui/AIContainer"
 
-  require "MINT-core/model/aui/AIOUTContinous"
-  require "MINT-core/model/aui/AIINContinous"
+  require "MINT-core/model/aui/AIOUTContinuous"
+  require "MINT-core/model/aui/AIINContinuous"
 
   require "MINT-core/model/aui/AIINChoose"
 

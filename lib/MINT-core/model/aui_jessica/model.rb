@@ -9,7 +9,7 @@ module MINT
   require "MINT-core/model/aui_jessica/AIMultiChoice"
   require "MINT-core/model/aui_jessica/AIIN"
   require "MINT-core/model/aui_jessica/Aiindiscrete"
-  require "MINT-core/model/aui_jessica/AIINContinous"
+  require "MINT-core/model/aui_jessica/AIINContinuous"
   require "MINT-core/model/aui_jessica/AIReference"
   require "MINT-core/model/aui_jessica/AICommand"
   require "MINT-core/model/aui_jessica/AIChoiceElement"

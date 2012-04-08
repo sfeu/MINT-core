@@ -1,7 +1,7 @@
 module MINT
 
 
-  class AIINContinous < AIIN
+  class AIINContinuous < AIIN
 
     property :data, Integer
     property :min, Integer,:default  => 0
@@ -11,7 +11,7 @@ module MINT
     def initialize_statemachine
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aiincontinous.scxml"
+        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aiincontinuous.scxml"
 
         reset = @statemachine.reset
 
@@ -23,9 +23,9 @@ module MINT
     def publish(attribute)
       channel_name =  create_attribute_channel_name(attribute)
 
-      RedisConnector.sub.psubscribe('Interactor.AIO.AIIN.AIINContinous.'+self.name.to_s+":*") # TODO all users
+      RedisConnector.sub.psubscribe('Interactor.AIO.AIIN.AIINContinuous.'+self.name.to_s+":*") # TODO all users
       RedisConnector.sub.on(:pmessage) { |key, channel, message|
-        if key.eql?  'Interactor.AIO.AIIN.AIINContinous.'+self.name.to_s+":*"
+        if key.eql?  'Interactor.AIO.AIIN.AIINContinuous.'+self.name.to_s+":*"
         if message.eql? "stop"
           process_event("halt")
         else

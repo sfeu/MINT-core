@@ -35,30 +35,30 @@ describe "Complementary mapping" do
       }
 
 
-      o1 = Observation.new(:element =>"Interactor.AIO.AIIN.AIINContinous",:name => "slider", :states =>[:progressing])
+      o1 = Observation.new(:element =>"Interactor.AIO.AIIN.AIINContinuous",:name => "slider", :states =>[:progressing])
 
       o2 = Observation.new(:element =>"Interactor.AIO.AIOUT.AIOUTContinous",:name=>"volume", :states =>[:presenting])
 
-      a1 = BindAction.new(:elementIn => "Interactor.AIO.AIIN.AIINContinous",:nameIn => "slider", :attrIn =>"data",:attrOut=>"data",
+      a1 = BindAction.new(:elementIn => "Interactor.AIO.AIIN.AIINContinuous",:nameIn => "slider", :attrIn =>"data",:attrOut=>"data",
                           #:transform =>:manipulate,
                           :elementOut =>"Interactor.AIO.AIOUT.AIOUTContinous", :nameOut=>"volume" )
       m = ComplementaryMapping.new(:observations => [o1,o2],:actions =>[a1])
       # m.initialized_callback(Proc.new {p "Hello World"})
       m.activated_callback(Proc.new {
-        RedisConnector.pub.publish  'Interactor.AIO.AIIN.AIINContinous.slider:test', 20
+        RedisConnector.pub.publish  'Interactor.AIO.AIIN.AIINContinuous.slider:test', 20
       }
       )
       m.start
-      volume = MINT::AIOUTContinous.create(:name=>"volume")
+      volume = MINT::AIOUTContinuous.create(:name=>"volume")
       volume.process_event(:organize).should ==[:organized]
       volume.process_event(:present).should ==[:defocused, :waiting]
 
-      slider = MINT::AIINContinous.create(:name=>"slider")
+      slider = MINT::AIINContinuous.create(:name=>"slider")
       slider.process_event(:organize).should ==[:organized]
       slider.process_event(:present).should ==[:defocused]
       slider.process_event(:focus).should ==[:waiting]
 
-      RedisConnector.pub.publish  'Interactor.AIO.AIIN.AIINContinous.slider:test', 10
+      RedisConnector.pub.publish  'Interactor.AIO.AIIN.AIINContinuous.slider:test', 10
     end
   end
 end

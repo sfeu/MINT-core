@@ -17,7 +17,7 @@ describe 'AUI' do
 
   end
 
-  describe 'AIOUTContinous' do
+  describe 'AIOUTContinuous' do
     it 'should initialize with initiated' do
 
       connect do |redis|
@@ -25,11 +25,11 @@ describe 'AUI' do
 
         DataMapper.finalize
 
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous" ,%w(initialized)
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized)
         #MINT::Interactor.redis redis
 
-        MINT::AIOUTContinous.new(:name=>"a").save
-        @a = MINT::AIOUTContinous.first
+        MINT::AIOUTContinuous.new(:name=>"a").save
+        @a = MINT::AIOUTContinuous.first
         @a.states.should ==[:initialized]
         @a.new_states.should == [:initialized]
       end
@@ -41,10 +41,10 @@ describe 'AUI' do
         require "MINT-core"
         DataMapper.finalize
 
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous" ,%w(initialized organized)
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized organized)
 
-        MINT::AIOUTContinous.new(:name=>"a").save
-        @a = MINT::AIOUTContinous.first
+        MINT::AIOUTContinuous.new(:name=>"a").save
+        @a = MINT::AIOUTContinuous.first
 
         @a.process_event(:organize).should ==[:organized]
         @a.states.should == [:organized]
@@ -59,9 +59,9 @@ describe 'AUI' do
         require "MINT-core"
         DataMapper.finalize
 
-        MINT::AIOUTContinous.new(:name=>"a").save
-        @a = MINT::AIOUTContinous.first
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinous",
+        MINT::AIOUTContinuous.new(:name=>"a").save
+        @a = MINT::AIOUTContinuous.first
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous",
                         ["initialized","organized",["defocused","waiting","p", "c"],["focused"],
                          ["progressing", "moving", "c"]]
         @a.process_event(:organize).should ==[:organized]
@@ -81,8 +81,8 @@ describe 'AUI' do
         require "MINT-core"
         DataMapper.finalize
 
-        MINT::AIOUTContinous.new(:name=>"a").save
-        @a = MINT::AIOUTContinous.first
+        MINT::AIOUTContinuous.new(:name=>"a").save
+        @a = MINT::AIOUTContinuous.first
         @a.process_event(:organize).should ==[:organized]
 
         @a.process_event(:present).should ==[:defocused, :waiting]
@@ -91,11 +91,11 @@ describe 'AUI' do
         @a.process_event(:move).should ==[:focused, :progressing]
 
         redis2 = EventMachine::Hiredis.connect
-        redis2.publish("Interactor.AIO.AIOUT.AIOUTContinous.1",10).callback { |c|
+        redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.1",10).callback { |c|
           @a.data.should==10
-          redis2.publish("Interactor.AIO.AIOUT.AIOUTContinous.1",20).callback { |c|
+          redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.1",20).callback { |c|
             @a.data.should==20
-            redis2.publish("Interactor.AIO.AIOUT.AIOUTContinous.1",10).callback { |c|
+            redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.1",10).callback { |c|
               @a.data.should==10
               @a.new_states.should==[:regressing]
               done

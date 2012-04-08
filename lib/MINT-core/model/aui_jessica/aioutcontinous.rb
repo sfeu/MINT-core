@@ -7,9 +7,9 @@ module MINT
     def initialize_statemachine
       if @statemachine.blank?
         #parser = StatemachineParser.new(self)
-        #@statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aioutcontinous.scxml"
+        #@statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aioutcontinuous.scxml"
         @statemachine = Statemachine.build do
-          superstate :AIOUTContinous do
+          superstate :AIOUTContinuous do
             trans :initialized, :organize, :organized
             trans :organized, :present, :presenting
             trans :organized, :suspend, :suspended

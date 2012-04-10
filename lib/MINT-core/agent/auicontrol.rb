@@ -3,25 +3,51 @@ module AUIControl
  include MINT
   
   # ensures that all prev/next relationships are setup properlyin one complete sequence
-  def AUIControl.organize(aio,parent_aio = nil, layer = 0)
-    
+  def AUIControl.organize_sub(aio,parent_aio = nil, layer = 0)
+
+    last_child = nil
     if (aio.kind_of? MINT::AIContainer)
      # aio.entry = aio.children[0]
-      last = aio
+      prev = aio
       aio.children.each do |child|
-        #last.next = child
-        #child.previous = last
+        prev.next = child.name
+        prev.process_event("organize") #if not prev.kind_of? MINT::AIContainer
 
-        last = organize(child,aio,layer+1) 
+        child.previous = prev.name
+
+        prev = organize_sub(child,aio,layer+1)
+        last_child = child
       end
-      aio.process_event("organize")
-      return last
+
+      #prev.process_event("organize")
+      return prev
     else
-      aio.process_event("organize")
       return aio
     end
   end
- 
+
+ def AUIControl.organize(aio,parent_aio = nil, layer = 0)
+  r= organize_sub(aio,parent_aio, layer )
+  r.process_event("organize")
+ end
+
+  def AUIControl.organize_new (aio,prev = nil, layer = 0)
+    aio.previous=prev.name  if prev
+
+    if (aio.kind_of? MINT::AIContainer)
+      prev_child = aio
+      aio.children.each do |child|
+        organize(child,prev_child)
+        prev_child = child
+      end
+      if aio.children
+        aio.next=aio.children[0].name
+      end
+    end
+    aio.process_event "organize"
+  end
+
+
   # connects all  aios on the same level 
   def AUIControl.organize2(aio,parent_aio = nil, layer = 0)
    # if layer == 0 
@@ -35,9 +61,9 @@ module AUIControl
 
       aio.children.each do |child|
         if last
-        last.next = child
+        last.next = child.name
+        child.previous = last.name
         end
-        child.previous = last
         copy = child
         organize2(copy,nil,layer+1)
         last = child

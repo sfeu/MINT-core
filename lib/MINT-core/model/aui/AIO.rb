@@ -25,6 +25,10 @@ module MINT
       end
     end
 
+    def parent2str
+      parent.name      if  self.parent
+    end
+
     def next
       p = super
       if p
@@ -34,6 +38,11 @@ module MINT
       end
     end
 
+    def next2str
+      self.next.name if self.next
+    end
+
+
     def previous
       p = super
       if p
@@ -42,6 +51,10 @@ module MINT
         nil
       end
     end
+
+    def previous2str
+          previous.name if  self.previous
+        end
 
     def initialize_statemachine
       if @statemachine.nil?

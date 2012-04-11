@@ -206,6 +206,7 @@ describe 'AUI' do
     end
 
     it 'should handle parent' do
+      connect do |redis|
       @a = MINT::AIO.create(:name => "test",:parent =>"parent")
       @a.states=[:focused]
       b =  MINT::AIContainer.new(:name=>"parent",:children =>["test"])
@@ -216,6 +217,7 @@ describe 'AUI' do
       b = MINT::AIO.first(:name=>"parent")
 
       b.states.should ==[:focused]
+      end
     end
 
     it 'should serialize to JSON' do

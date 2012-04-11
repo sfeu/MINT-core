@@ -17,6 +17,7 @@ describe "Complementary mapping" do
   end
 
   it "should be initialized correctly" do
+    pending "needs to be fixed"
     em do
 
       RedisConnector.sub.subscribe 'ss:channels'

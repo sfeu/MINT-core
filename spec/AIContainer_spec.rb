@@ -1,19 +1,23 @@
 require "spec_helper"
 require "em-spec/rspec"
 
-def create_structure
-  MINT::AIContainer.create(:name=>"a", :children =>"e1|e2|e3")
-  MINT::AIO.create(:name => "e1", :parent=>"a")
-  MINT::AIO.create(:name => "e2", :parent=>"a")
-  MINT::AIO.create(:name => "e3", :parent=>"a")
-  MINT::AIContainer.first
 
-end
 
 describe 'AUI' do
   include EventMachine::SpecHelper
 
   before :all do
+    class ::Helper
+    def self.create_structure
+      MINT::AIContainer.create(:name=>"a", :children =>"e1|e2|e3")
+      MINT::AIO.create(:name => "e1", :parent=>"a")
+      MINT::AIO.create(:name => "e2", :parent=>"a")
+      MINT::AIO.create(:name => "e3", :parent=>"a")
+      MINT::AIContainer.first
+
+    end
+    end
+
     connection_options = { :adapter => "redis"}
     DataMapper.setup(:default, connection_options)
 
@@ -30,7 +34,7 @@ describe 'AUI' do
   describe 'AIContainer' do
     it 'should initialize with initiated' do
       connect do |redis|
-        @a = create_structure
+        @a = Helper.create_structure
 
         @a.states.should ==[:initialized]
         @a.new_states.should == [:initialized]
@@ -39,7 +43,7 @@ describe 'AUI' do
 
     it 'should transform to organizing state ' do
       connect do |redis|
-        @a = create_structure
+        @a = Helper.create_structure
         @a.process_event(:organize).should ==[:organized]
         @a.states.should == [:organized]
         @a.new_states.should == [:organized]
@@ -48,7 +52,7 @@ describe 'AUI' do
 
     it 'should support parent navigation' do
       connect do |redis|
-        @a = create_structure
+        @a = Helper.create_structure
         e = MINT::AIO.first(:name => "e1")
         p = e.parent
         p.should == @a
@@ -58,7 +62,7 @@ describe 'AUI' do
     it 'should support navigation to child' do
 
       connect do |redis|
-        @a = create_structure
+        @a = Helper.create_structure
 
         aio = @a.children.first
         aio.states=[:defocused]
@@ -76,7 +80,7 @@ describe 'AUI' do
 
     it 'should transform all children to presented if presented' do
       connect do |redis|
-        @a = create_structure
+        @a = Helper.create_structure
         AUIControl.organize(@a,nil,0)
         # @a.process_event(:organize).should ==[:organized]
         @a.states.should == [:organized]
@@ -90,7 +94,7 @@ describe 'AUI' do
 
     it 'should transform all children to suspended if suspended' do
       connect do |redis|
-        @a = create_structure
+        @a = Helper.create_structure
         @a.children.each do |c|
           c.states = [:defocused]
         end

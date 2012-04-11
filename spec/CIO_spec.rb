@@ -2,77 +2,8 @@ require "spec_helper"
 
 require "em-spec/rspec"
 
+require "cui_helper"
 
-def create_structure
-  @up = MINT::CIO.create(:name => "up",:down =>"center")
-  @down = MINT::CIO.create(:name => "down",:up=>"center")
-  @left = MINT::CIO.create(:name => "left",:right=>"center")
-  @right = MINT::CIO.create(:name => "right",:left=>"center")
-  @center = MINT::CIO.create(:name => "center",:left=>"left",:right =>"right",:up =>"up", :down=>"down")
-end
-
-def set_highlighted
-  @up.states=[:displayed]
-  @down.states=[:displayed]
-  @left.states=[:displayed]
-  @right.states=[:displayed]
-  @center.states=[:highlighted]
-end
-
-
-def scenario2
-  create_structure
-  @up.states=[:displayed]
-  @down.states=[:displayed]
-  @left.states=[:displayed]
-  @right.states=[:displayed]
-  @center.states=[:highlighted]
-
-  @a_left = MINT::AIO.new(:name => "left",:states =>[:defocused])
-  @a_left.save!
-
-  @a_right = MINT::AIO.new(:name => "right",:states =>[:defocused])
-  @a_right.save!
-  @a_up = MINT::AIO.new(:name => "up",:states =>[:defocused])
-  @a_up.save!
-  @a_down = MINT::AIO.new(:name => "down",:states =>[:defocused])
-  @a_down.save!
-  @a_center = MINT::AIO.new(:name => "center",:states =>[:focused], :next =>"down")
-  @a_center.save!
-end
-
-def layout_setup
-  scenario2
-  @solver = Cassowary::ClSimplexSolver.new
-
-  @up.states=[:initialized]
-  @down.states=[:initialized]
-  @left.states=[:initialized]
-  @right.states=[:initialized]
-
-
-  @a_left.states=[:organized]
-  @a_right.states=[:organized]
-  @a_up.states=[:organized]
-  @a_down.states=[:organized]
-end
-
-
-def layout_scenario2
-  MINT::AIContainer.create(:name=>"RecipeFinder_content",:states =>[:organized],:children=>"RecipeFilter")
-  MINT::AIContainer.create(:name=>"RecipeFilter",:states =>[:organized],:children=>"RecipeFilter_description1|RecipeFilter_content")
-  MINT::AIContainer.create(:name=>"RecipeFilter_description1",:states =>[:organized],:children=>"RecipeFilter_label|RecipeFilter_description")
-  MINT::AIReference.create(:name=>"RecipeFilter_label",:label=>"Suchkriterien",:states =>[:organized])
-  MINT::AIContext.new(:name=>"RecipeFilter_description",:states =>[:organized],
-                      :text=>"In diesem Feld koennen Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen.")
-  MINT::AIContainer.create(:name=>"RecipeFilter_content",:states =>[:organized])
-
-
-  @test = MINT::CIC.create( :name => "RecipeFinder_content", :rows => 1, :cols=> 1,:x=>0, :y=>0, :width =>800, :height => 600)
-
-  @test.calculate_container(@solver,10)
-
-end
 
 describe 'CUI' do
   include EventMachine::SpecHelper
@@ -122,19 +53,20 @@ describe 'CUI' do
 
     it 'should initialize with initiated' do
       connect do |redis|
-        create_structure
-        @center.states.should == [:initialized]
+        center = CUIHelper.create_structure
+
+        center.states.should == [:initialized]
       end
     end
 
     it 'should transform to display state after sequence of position,calculate, ready events ' do
       connect do |redis|
-        create_structure
-
-        @center.process_event(:position).should ==[:positioning]
-        @center.process_event(:calculated).should ==[:positioned]
-        @center.process_event(:display).should ==[:displayed]
-        @center.states.should == [:displayed]
+        CUIHelper.create_structure
+        center = MINT::CIO.first(:name => "center")
+        center.process_event(:position).should ==[:positioning]
+        center.process_event(:calculated).should ==[:positioned]
+        center.process_event(:display).should ==[:displayed]
+        center.states.should == [:displayed]
       end
     end
 
@@ -144,9 +76,8 @@ describe 'CUI' do
 
       it 'should move highlight to up and down' do
         connect do |redis|
-          create_structure
-          set_highlighted
-          @center.process_event("up").should ==[:displayed]
+          center=CUIHelper.create_structure_w_highlighted
+          center.process_event("up").should ==[:displayed]
 
           up = MINT::CIO.first(:name=>"up")
           up.states.should ==[:highlighted]
@@ -158,9 +89,8 @@ describe 'CUI' do
 
       it 'should move highlight to left and right' do
         connect do |redis|
-          create_structure
-          set_highlighted
-          @center.process_event("left").should ==[:displayed]
+          center = CUIHelper.create_structure_w_highlighted
+          center.process_event("left").should ==[:displayed]
 
           left = MINT::CIO.first(:name=>"left")
           left.states.should ==[:highlighted]
@@ -175,8 +105,8 @@ describe 'CUI' do
 
       it 'should sync highlight movements to AUI' do
         connect do |redis|
-          scenario2
-          @center.process_event(:left).should ==[:displayed]
+          center = CUIHelper.scenario2
+          center.process_event(:left).should ==[:displayed]
           MINT::AIO.first(:name=>"center").states.should ==[:defocused]
           MINT::AIO.first(:name=>"left").states.should ==[:focused]
           MINT::CIO.first(:name=>"left").states.should ==[:highlighted]
@@ -185,10 +115,9 @@ describe 'CUI' do
 
       it 'should sync AUI focus movements to CUI' do
         connect do |redis|
-          scenario2
-          @center.save!
-          @down.save!
-          @a_center.process_event("next").should ==[:defocused]
+          center = CUIHelper.scenario2
+          a_center = MINT::AIO.first(:name => "center")
+          a_center.process_event("next").should ==[:defocused]
           MINT::AIO.first(:name=>"down").states.should ==[:focused]
           MINT::CIO.first(:name=>"center").states.should ==[:displayed]
           MINT::CIO.first(:name=>"down").states.should ==[:highlighted]
@@ -197,11 +126,11 @@ describe 'CUI' do
 
       it 'should calculate its minimum size' do
         connect do |redis|
-          scenario2
-          @center.text="Hello world!"
-          @center.calculateMinimumSize
-          @center.minwidth.should==77
-          @center.minheight.should==26
+          center = CUIHelper.scenario2
+          center.text="Hello world!"
+          center.calculateMinimumSize
+          center.minwidth.should==77
+          center.minheight.should==26
         end
       end
 
@@ -216,7 +145,9 @@ describe 'CUI' do
 
         it "should calculate sizes for CIC" do
           connect do |redis|
-            layout_setup
+            @solver = Cassowary::ClSimplexSolver.new
+
+            CUIHelper.layout_setup
             a_parent = MINT::AIContainer.create(:name=>"parent", :children =>"left|right|up|down")
 
             parent_cic = MINT::CIC.create(:name =>"parent",:cols=>2,:rows=>2,:x=>0,:y=>0,:width=>800,:height=>600)
@@ -232,7 +163,9 @@ describe 'CUI' do
 
         it "should calculate sizes for nested CICs" do
           connect do |redis|
-            layout_setup
+            @solver = Cassowary::ClSimplexSolver.new
+
+            CUIHelper.layout_setup
             MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
             MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right|up|down",:states =>[:organized] )
             MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
@@ -255,7 +188,9 @@ describe 'CUI' do
 
         it "should consider CIC definitions without column or row definition to be positioned vertically" do
           connect do |redis|
-            layout_setup
+            @solver = Cassowary::ClSimplexSolver.new
+
+            CUIHelper.layout_setup
 
             a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
             MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
@@ -278,7 +213,9 @@ describe 'CUI' do
 
         it "should create CIC definitions that are missing and position them vertically vertically" do
           connect do |redis|
-            layout_setup
+            @solver = Cassowary::ClSimplexSolver.new
+
+            CUIHelper.layout_setup
 
 
             a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
@@ -300,9 +237,11 @@ describe 'CUI' do
 
         it "should handle nested AIContainer definitions" do
           connect do |redis|
-            layout_setup
+            solver = Cassowary::ClSimplexSolver.new
 
-            layout_scenario2
+            CUIHelper.layout_setup
+
+            CUIHelper.layout_scenario2(solver)
 
             checkSizes(MINT::CIO.first(:name=>"RecipeFilter_content"),20,305,760,275)
             MINT::AIO.first(:name=>"RecipeFilter_label").label.should=="Suchkriterien"
@@ -311,11 +250,12 @@ describe 'CUI' do
 
         it "should calculate the layer  level for nested containers" do
           connect do |redis|
-            layout_setup
+            solver = Cassowary::ClSimplexSolver.new
+            CUIHelper.layout_setup
 
-            layout_scenario2
+            @test = CUIHelper.layout_scenario2(solver)
 
-            @test.calculate_container(@solver,10)
+            @test.calculate_container(solver,10)
 
             MINT::CIO.first(:name=>"RecipeFilter_content").layer.should ==2
             MINT::CIO.first(:name=>"RecipeFilter_label").layer.should== 3
@@ -326,7 +266,7 @@ describe 'CUI' do
 
         it "should end up with all cios set to state  >positioned< after layout calculation" do
           connect do |redis|
-            layout_setup
+            CUIHelper.layout_setup
             @solver = Cassowary::ClSimplexSolver.new
 
             a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
@@ -348,7 +288,7 @@ describe 'CUI' do
 
         it "should layout only elements that have not been calculated - case uncalculated leaf cios" do
           connect do |redis|
-            layout_setup
+            CUIHelper.layout_setup
             @solver = Cassowary::ClSimplexSolver.new
             a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
 
@@ -374,7 +314,7 @@ describe 'CUI' do
         it "should layout uncalculated parental elements based on calculated leaf cios" do
           pending("get the right container calculation working that has no children!")
           connect do |redis|
-            layout_setup
+            CUIHelper.layout_setup
             @solver = Cassowary::ClSimplexSolver.new
             a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
 

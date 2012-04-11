@@ -6,42 +6,42 @@ require "em-spec/rspec"
 describe 'AUI' do
   include EventMachine::SpecHelper
 
-  before :each do
-    connection_options = { :adapter => "redis"}
-    DataMapper.setup(:default, connection_options)
-
-    DataMapper::Model.raise_on_save_failure = true
-    redis = Redis.connect
-    redis.flushdb
+  before :all do
+      connection_options = { :adapter => "redis"}
+      DataMapper.setup(:default, connection_options)
 
 
-  end
+      connect do |redis|
+        require "MINT-core"
+        require "support/redis_connector_monkey_patch"  # TODO dirty patch for a bug that i have not found :(
+        DataMapper.finalize
+        DataMapper::Model.raise_on_save_failure = true
+      end
+    end
 
   describe 'AIOUTContinuous' do
     it 'should initialize with initiated' do
 
-      connect do |redis|
-        require "MINT-core"
+      connect true do |redis|
 
-        DataMapper.finalize
 
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized)
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized)  do
+          MINT::AIOUTContinuous.new(:name=>"a").save
+                  @a = MINT::AIOUTContinuous.first
+                  @a.states.should ==[:initialized]
+                  @a.new_states.should == [:initialized]
+
+        end
         #MINT::Interactor.redis redis
 
-        MINT::AIOUTContinuous.new(:name=>"a").save
-        @a = MINT::AIOUTContinuous.first
-        @a.states.should ==[:initialized]
-        @a.new_states.should == [:initialized]
-      end
+        end
     end
 
     it 'should transform to organizing state ' do
 
-      connect do |redis|
-        require "MINT-core"
-        DataMapper.finalize
+      connect  true do |redis|
 
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized organized)
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized organized)   do
 
         MINT::AIOUTContinuous.new(:name=>"a").save
         @a = MINT::AIOUTContinuous.first
@@ -49,61 +49,43 @@ describe 'AUI' do
         @a.process_event(:organize).should ==[:organized]
         @a.states.should == [:organized]
         @a.new_states.should == [:organized]
-
-      end
-    end
-
-    it 'should transform to progressing state ' do
-
-      connect do |redis|
-        require "MINT-core"
-        DataMapper.finalize
-
-        MINT::AIOUTContinuous.new(:name=>"a").save
-        @a = MINT::AIOUTContinuous.first
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous",
-                        ["initialized","organized",["defocused","waiting","p", "c"],["focused"],
-                         ["progressing", "moving", "c"]]
-        @a.process_event(:organize).should ==[:organized]
-
-        @a.process_event(:present).should ==[:defocused, :waiting]
-        @a.process_event(:focus).should ==[:focused, :waiting]
-
-        @a.process_event(:move).should ==[:focused, :progressing]
-
-
+                                                                                                     end
       end
     end
 
     it 'should transform to progressing state and consume value' do
-
-      connect do |redis|
-        require "MINT-core"
-        DataMapper.finalize
+      pending "test synchronization needs to be implemented"
+      connect   do |redis|
 
         MINT::AIOUTContinuous.new(:name=>"a").save
         @a = MINT::AIOUTContinuous.first
+
         @a.process_event(:organize).should ==[:organized]
 
         @a.process_event(:present).should ==[:defocused, :waiting]
         @a.process_event(:focus).should ==[:focused, :waiting]
+        test_msg_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous.data.a",@a,:data,[10,20,10], [{:data=>10,:name=>"a"},{:data=>20,:name=>"a"},{:data=>10,:name=>"a"}]
 
-        @a.process_event(:move).should ==[:focused, :progressing]
+end
+        #@a.process_event(:move).should ==[:focused, :progressing]
 
-        redis2 = EventMachine::Hiredis.connect
-        redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.1",10).callback { |c|
-          @a.data.should==10
-          redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.1",20).callback { |c|
-            @a.data.should==20
-            redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.1",10).callback { |c|
-              @a.data.should==10
-              @a.new_states.should==[:regressing]
-              done
-            }
-          }
-        }
+        #redis2 = EventMachine::Hiredis.connect
+        #redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.data.a",{:data=>10,:name=>"a"}.to_json).callback { |c|
+        #  @a.data.should==10
+        #  redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.data.a",{:data=>20,:name=>"a"}.to_json).callback { |c|
+        #    @a.data.should==20
+        #    @a.new_states.should==[:progressing,:moving, :c]
+        #    redis2.publish("Interactor.AIO.AIOUT.AIOUTContinuous.data.a",{:data=>10,:name=>"a"}.to_json).callback { |c|
+        #      @a.data.should==10
+        #      @a.new_states.should==[:regressing]
+        #      done
+        #    }
+        #  }
+        #}
+        #
 
-      end
+
+
     end
 
     it "runs test code in an em block automatically" do

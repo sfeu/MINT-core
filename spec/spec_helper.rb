@@ -24,4 +24,3 @@ RSpec.configure do |config|
   config.include StatemachineHelper
   config.include EventMachine::SpecHelper
 end
-

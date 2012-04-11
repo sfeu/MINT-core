@@ -18,10 +18,10 @@ def create_scenario
   MINT::AIContext.create(:name=>"RecipeCuisine_description",:parent =>"RecipeCuisine",:text=>"Welche nationale Kueche waehlen Sie? ")
   MINT::AIMultiChoice.create(:name=>"RecipeCuisine_choice",:parent =>"RecipeCuisine",
                        :children => "French|German|Italian|Chinese")
-  MINT::AIINChoose.create(:name => "French", :parent =>"RecipeCuisine_choice",:label =>"Franzoesisch")
-  MINT::AIINChoose.create(:name => "German",:parent =>"RecipeCuisine_choice",:label =>"Deutsch")
-  MINT::AIINChoose.create(:name => "Italian",:parent =>"RecipeCuisine_choice",:label =>"Italienisch")
-  MINT::AIINChoose.create(:name => "Chinese",:parent =>"RecipeCuisine_choice",:label =>"Chinesisch")
+  MINT::AIChoiceElement.create(:name => "French", :parent =>"RecipeCuisine_choice",:label =>"Franzoesisch")
+  MINT::AIChoiceElement.create(:name => "German",:parent =>"RecipeCuisine_choice",:label =>"Deutsch")
+  MINT::AIChoiceElement.create(:name => "Italian",:parent =>"RecipeCuisine_choice",:label =>"Italienisch")
+  MINT::AIChoiceElement.create(:name => "Chinese",:parent =>"RecipeCuisine_choice",:label =>"Chinesisch")
 
   MINT::AIContainer.create(:name=>"RecipeCategory",:parent =>"RecipeFilter",
                      :children => "RecipeCategory_label|RecipeCategory_description|RecipeCategory_choice")
@@ -29,10 +29,10 @@ def create_scenario
   MINT::AIContext.create(:name=>"RecipeCategory_description",:parent =>"RecipeCategory",:text=>" Welche Menueart moechten Sie kochen? ")
   MINT::AIMultiChoice.create(:name=>"RecipeCategory_choice",:parent =>"RecipeCategory",
                        :children => "Main|Pastry|Dessert|Starter")
-  MINT::AIINChoose.create(:name => "Main", :parent =>"RecipeCategory_choice",:label =>"Hauptgericht")
-  MINT::AIINChoose.create(:name => "Pastry",:parent =>"RecipeCategory_choice",:label =>"Gebaeck")
-  MINT::AIINChoose.create(:name => "Dessert",:parent =>"RecipeCategory_choice",:label =>"Nachtisch")
-  MINT::AIINChoose.create(:name => "Starter",:parent =>"RecipeCategory_choice",:label =>"Vorspeise")
+  MINT::AIChoiceElement.create(:name => "Main", :parent =>"RecipeCategory_choice",:label =>"Hauptgericht")
+  MINT::AIChoiceElement.create(:name => "Pastry",:parent =>"RecipeCategory_choice",:label =>"Gebaeck")
+  MINT::AIChoiceElement.create(:name => "Dessert",:parent =>"RecipeCategory_choice",:label =>"Nachtisch")
+  MINT::AIChoiceElement.create(:name => "Starter",:parent =>"RecipeCategory_choice",:label =>"Vorspeise")
 
   MINT::AIContainer.create(:name=>"RecipeCalories",:parent =>"RecipeFilter",
                      :children => "RecipeCalories_label|RecipeCalories_description|RecipeCalories_choice")
@@ -40,9 +40,9 @@ def create_scenario
   MINT::AIContext.create(:name=>"RecipeCalories_description",:parent =>"RecipeCalories",:text=>" Wollen Sie gesundheitsbewusst kochen? ")
   MINT::AISingleChoice.create(:name=>"RecipeCalories_choice",:parent =>"RecipeCalories",
                         :children => "Diet|LowFat|NotRelevant")
-  MINT::AIINChoose.create(:name => "Diet", :label =>"Hauptgericht",:parent =>"RecipeCalories_choice")
-  MINT::AIINChoose.create(:name => "LowFat",:label =>"Gebaeck",:parent =>"RecipeCalories_choice")
-  MINT::AIINChoose.create(:name => "NotRelevant",:label =>"Nachtisch",:parent =>"RecipeCalories_choice")
+  MINT::AIChoiceElement.create(:name => "Diet", :label =>"Hauptgericht",:parent =>"RecipeCalories_choice")
+  MINT::AIChoiceElement.create(:name => "LowFat",:label =>"Gebaeck",:parent =>"RecipeCalories_choice")
+  MINT::AIChoiceElement.create(:name => "NotRelevant",:label =>"Nachtisch",:parent =>"RecipeCalories_choice")
 
 
   MINT::AIContainer.create(:name =>"RecipeSelection",:parent =>"RecipeFinder",
@@ -51,9 +51,9 @@ def create_scenario
   MINT::AIContext.create(:name=>"RecipeSelection_description",:parent =>"RecipeSelection",:text=>"Hier werden Ihre Rezeptvorschlaege mit den Details angezeigt und Sie koennen bestimmen, fuer wieviele Personen das Rezept berechnet werden soll.")
   MINT::AISingleChoice.create(:name=>"FoundRecipes",:parent =>"RecipeSelection",
                         :children => "Schweinebraten|Lammkotletts|Spagetti")
-  MINT::AIINChoose.create(:name => "Schweinebraten", :label =>"Schweinebraten",:parent =>"FoundRecipes")
-  MINT::AIINChoose.create(:name => "Lammkotletts",:label =>"Lammkotletts",:parent =>"FoundRecipes")
-  MINT::AIINChoose.create(:name => "Spagetti",:label =>"Spagetti",:parent =>"FoundRecipes")
+  MINT::AIChoiceElement.create(:name => "Schweinebraten", :label =>"Schweinebraten",:parent =>"FoundRecipes")
+  MINT::AIChoiceElement.create(:name => "Lammkotletts",:label =>"Lammkotletts",:parent =>"FoundRecipes")
+  MINT::AIChoiceElement.create(:name => "Spagetti",:label =>"Spagetti",:parent =>"FoundRecipes")
   MINT::AICommand.create(:name=>"Start",:label=>"Kochassistent starten",:parent =>"RecipeSelection",:description=>"Hier koennen Sie den Kochassistenten starten.")
 
 end
@@ -141,7 +141,7 @@ describe 'AUI-Agent' do
     it 'should organize with parental relationships 4' do
       connect do |redis|
         create_scenario
-        MINT::AIINChoose.first(:name => "Main").parent.name.should ==  "RecipeCategory_choice"
+        MINT::AIChoiceElement.first(:name => "Main").parent.name.should ==  "RecipeCategory_choice"
       end
     end
 

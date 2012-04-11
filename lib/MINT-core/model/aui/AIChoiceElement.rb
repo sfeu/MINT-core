@@ -1,5 +1,5 @@
 module MINT
-  class AIINChoose_sync_callback < AIO_sync_callback
+  class AIChoiceElement_sync_callback < AIO_sync_callback
      def initialize(element)
        @element=element
      end
@@ -22,10 +22,10 @@ module MINT
      end
    end
 
-   class AIINChoose < AIINDiscrete
+   class AIChoiceElement < AIINDiscrete
 
      def sync_event(event)
-       process_event(event, AIINChoose_sync_callback.new(self))
+       process_event(event, AIChoiceElement_sync_callback.new(self))
      end
      def sync_cio_to_selected
        cio =  MINT::Selectable.first(:name=>self.name)

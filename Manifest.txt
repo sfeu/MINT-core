@@ -19,11 +19,10 @@ lib/MINT-core/agent/cuicontrol.rb
 lib/MINT-core/mapping/mapping.rb
 lib/MINT-core/mapping/sequential.rb
 lib/MINT-core/model/aui/AIC.rb
-lib/MINT-core/model/aui/AIINChoose.rb
+lib/MINT-core/model/aui/AIChoiceElement.rb
 lib/MINT-core/model/aui/AIMultiChoice.rb
 lib/MINT-core/model/aui/AIMultiChoiceElement.rb
 lib/MINT-core/model/aui/AIO.rb
-lib/MINT-core/model/aui/AIOUTDiscrete.rb
 lib/MINT-core/model/aui/AISingleChoice.rb
 lib/MINT-core/model/aui/AISingleChoiceElement.rb
 lib/MINT-core/model/aui/AISinglePresence.rb

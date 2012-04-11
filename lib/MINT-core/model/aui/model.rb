@@ -11,14 +11,12 @@
   require "MINT-core/model/aui/AIOUT"
   require "MINT-core/model/aui/AIContext"
 
-  require "MINT-core/model/aui/AIOUTDiscrete"
-
   require "MINT-core/model/aui/AIContainer"
 
   require "MINT-core/model/aui/AIOUTContinuous"
   require "MINT-core/model/aui/AIINContinuous"
 
-  require "MINT-core/model/aui/AIINChoose"
+  require "MINT-core/model/aui/AIChoiceElement"
 
   require "MINT-core/model/aui/AISingleChoiceElement"
   require "MINT-core/model/aui/AISingleChoice"

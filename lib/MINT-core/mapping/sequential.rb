@@ -1,6 +1,6 @@
 module MINT
 
-  # click_select_mapping = Sequential.new(HWButton,:pressed,HWButton,:released, 300, { AIINChoose  =>"focused"},:choose)
+  # click_select_mapping = Sequential.new(HWButton,:pressed,HWButton,:released, 300, { AIChoiceElement  =>"focused"},:choose)
 
   class Sequential < Mapping
     def initialize(source_model_1,state_1,source_model_2,state_2, state_2_conditions, min_time, max_time, conditions, error_recovery = nil)

@@ -28,15 +28,9 @@
    <onentry>
     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
    </onentry>
-   <transition target="defocused">
-    <if cond="refers != nil">
-     <script>refers.process_event(:focus)</script>
-    </if>
-<!--   edge-path [defocused]  x=130.0 y=80.0  --></transition>
-   <transition target="defocused">
-    <if cond="refers == nil">
-     <script></script>
-    </if>
+   <transition cond="@refers == nil" target="defocused"><!--   edge-path [defocused]  x=130.0 y=80.0  --></transition>
+   <transition cond="@refers != nil" target="defocused">
+    <script> @refers.process_event(:focus) </script>
 <!--   edge-path [defocused]  x=130.0 y=30.0  --></transition>
   </state>
  </state>

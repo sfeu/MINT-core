@@ -1,5 +1,5 @@
 module MINT
-  class AISinglePresence < MINT::AIContainer
+  class AISinglePresence < AIContainer
 
 
       def initialize_statemachine

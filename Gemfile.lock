@@ -1,9 +1,4 @@
 PATH
-  remote: ../MINT-sdl
-  specs:
-    MINT-sdl (1.0.2)
-
-PATH
   remote: ../dm-redis-adapter
   specs:
     dm-redis-adapter (0.6.0)
@@ -102,7 +97,6 @@ PLATFORMS
 
 DEPENDENCIES
   MINT-scxml!
-  MINT-sdl!
   MINT-statemachine!
   cassowary (~> 1.0.1)
   dm-core (~> 1.2.0)

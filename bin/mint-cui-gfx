@@ -20,7 +20,7 @@ mapping_cache1 = ExecuteOnStateChange.new(CIO,[:hidden],CUIControl.method(:fill_
 l.addMapping(mapping_cache1)
 
 
-realityframe = ExecuteOnStateChange.new(AIINChoose,["dragging"],l.method(:wait_border_crossing))
+realityframe = ExecuteOnStateChange.new(AIChoiceElement,["dragging"],l.method(:wait_border_crossing))
 l.addMapping(realityframe)
 
 

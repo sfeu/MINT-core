@@ -1,6 +1,6 @@
 module MINT
 
-  class AIContainer < AIOUTDiscrete
+  class AIContainer < AIOUT
 
     property :children, String
 

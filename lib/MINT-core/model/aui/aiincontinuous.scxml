@@ -13,43 +13,45 @@
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=156.66281848634637 y=158.0  --></transition>
   <transition event="present" target="presenting"><!--   edge-path [presenting]  x=176.66281848634637 y=228.0  --></transition>
  </state>
- <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=253.0 w=293.32563697269273 h=559.0  -->
+ <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=253.0 w=296.5756369726928 h=559.0  -->
   <onentry>
    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-   <log expr="publish(&#039;data&#039;)"></log>
   </onentry>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=156.66281848634637 y=228.0  --></transition>
-  <state id="defocused"><!--   node-size-and-position x=111.66281848634637 y=43.0 w=70.0 h=20.0  -->
+  <state id="defocused"><!--   node-size-and-position x=113.28781848634637 y=43.0 w=70.0 h=20.0  -->
    <onentry>
     <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
    </onentry>
-   <transition event="focus" target="focused"><!--   edge-path [focused]  x=162.92876838486922 y=86.80854779381569  --></transition>
+   <transition event="focus" target="focused"><!--   edge-path [focused]  x=158.28781848634637 y=88.0  --></transition>
   </state>
-  <state id="focused" initial="waiting"><!--   node-size-and-position x=20.0 y=113.0 w=253.32563697269273 h=426.0  -->
+  <state id="focused" initial="waiting"><!--   node-size-and-position x=20.0 y=113.0 w=256.57563697269273 h=426.0  -->
    <onentry>
     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
    </onentry>
-   <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=143.07123161513078 y=89.19145220618431  --></transition>
-   <state id="moving"><!--   node-size-and-position x=40.0 y=114.0 w=160.65127394538547 h=293.0  -->
+   <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=138.28781848634637 y=88.0  --></transition>
+   <state id="moving"><!--   node-size-and-position x=20.0 y=113.0 w=182.15127394538547 h=293.0  -->
+    <onentry>
+     <script>publish(@data)</script>
+    </onentry>
     <transition event="halt" target="waiting"></transition>
-    <state id="progressing"><!--   node-size-and-position x=25.0 y=113.0 w=80.0 h=20.0  -->
-     <transition cond="data==max" target="max"></transition>
-     <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=88.28980419737606 y=190.96045745887997  --></transition>
+    <state id="progressing"><!--   node-size-and-position x=25.0 y=183.0 w=80.0 h=20.0  -->
+     <transition cond="@data==max" target="max"></transition>
+     <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=71.71019580262394 y=120.96045745887999 pointx=0.0 pointy=0.0 offsetx=4.0 offsety=0.0  --></transition>
     </state>
-    <state id="regressing"><!--   node-size-and-position x=60.0 y=253.0 w=70.0 h=20.0  -->
-     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=68.71019580262396 y=195.03954254112 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
-     <transition cond="data == min" target="min"><!--   edge-path [min]  x=140.0 y=193.0 x=135.0 y=123.0  --></transition>
+    <state id="regressing"><!--   node-size-and-position x=60.0 y=43.0 w=70.0 h=20.0  -->
+     <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=91.28980419737604 y=125.03954254112001 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
+     <transition cond="@data == min" target="min"></transition>
     </state>
-    <state id="max"><!--   node-size-and-position x=20.0 y=183.0 w=30.0 h=20.0  -->
-     <transition event="regress" target="regressing"></transition>
+    <state id="max"><!--   node-size-and-position x=85.0 y=253.0 w=30.0 h=20.0  -->
+     <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=135.0 y=193.0 x=140.0 y=123.0  --></transition>
     </state>
-    <state id="min"><!--   node-size-and-position x=85.0 y=43.0 w=30.0 h=20.0  -->
+    <state id="min"><!--   node-size-and-position x=20.0 y=113.0 w=30.0 h=20.0  -->
      <transition event="progress" target="progressing"></transition>
     </state>
    </state>
-   <state id="waiting"><!--   node-size-and-position x=75.32563697269273 y=43.0 w=50.0 h=20.0  -->
-    <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=20.0 y=114.0 pointx=0.0 pointy=0.0 offsetx=0.0 offsety=-40.0  --></transition>
-    <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=240.0 y=104.0 pointx=0.0 pointy=0.0 offsetx=99.0 offsety=0.0  --></transition>
+   <state id="waiting"><!--   node-size-and-position x=86.07563697269273 y=43.0 w=50.0 h=20.0  -->
+    <transition event="progress" target="progressing"><!--   edge-path [progressing]  pointx=0.0 pointy=0.0 offsetx=0.0 offsety=-75.0  --></transition>
+    <transition event="regress" target="regressing"><!--   edge-path [regressing]  pointx=0.0 pointy=0.0 offsetx=99.0 offsety=-5.0  --></transition>
    </state>
   </state>
  </state>

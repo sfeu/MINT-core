@@ -20,10 +20,10 @@ a.addMapping(gesture_previous)
 #gesture_narrow= Complementary.new(HandGesture,"narrowed",{ AIO  =>"focused"},:child)
 #a.addMapping(gesture_narrow)
 
-gesture_confirmed= ComplementarySendEvent.new(HandGesture,"confirmed",{ AIINChoose  =>"focused"},:choose)
+gesture_confirmed= ComplementarySendEvent.new(HandGesture,"confirmed",{ AIChoiceElement  =>"focused"},:choose)
 a.addMapping(gesture_confirmed)
 
-mouse_confirmed= ComplementarySendEvent.new(Pointer,"selected",{ AIINChoose  =>"focused"},:choose)
+mouse_confirmed= ComplementarySendEvent.new(Pointer,"selected",{ AIChoiceElement =>"focused"},:choose)
 a.addMapping(mouse_confirmed)
 
 #sync_unhighlight = Synchronize.new(AIO,"presented",CIO, :unhighlight, :displayed)

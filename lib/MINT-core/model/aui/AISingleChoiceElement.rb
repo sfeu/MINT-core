@@ -1,5 +1,5 @@
 module MINT
-  class AISingleChoiceElement < AIINChoose
+  class AISingleChoiceElement < AIChoiceElement
     def initialize_statemachine
       p "enter init"
       if @statemachine.nil?

@@ -90,7 +90,7 @@ module MINT
     end
 
     def sync_aio_to_unchosen
-      aio =  MINT::AIINChoose.first(:name=>self.name)
+      aio =  MINT::AIChoiceElement.first(:name=>self.name)
       if (aio and not aio.is_in? :unchosen)
         aio.sync_event(:unchoose)
       end
@@ -98,7 +98,7 @@ module MINT
     end
 
     def sync_aio_to_chosen
-      aio =  MINT::AIINChoose.first(:name=>self.name)
+      aio =  MINT::AIChoiceElement.first(:name=>self.name)
       if (aio and not aio.is_in? :chosen)
         aio.sync_event(:choose)
       end

@@ -12,6 +12,7 @@ describe 'AUI' do
 
     connect do |redis|
       require "MINT-core"
+      require "support/redis_connector_monkey_patch"  # TODO dirty patch for a bug that i have not found :(
 
       DataMapper.finalize
       DataMapper::Model.raise_on_save_failure = true
@@ -29,7 +30,8 @@ describe 'AUI' do
     end
     it 'should refer to correct object' do
       connect do |redis|
-        @a = MINT::AIReference.create(:name=>"ref")
+        @a = MINT::AIReference.create(:name=>"ref",:refers=>"target")
+        MINT::AIO.create(:name=>"target")
 
         @a.refers.name.should == "target"
       end
@@ -37,7 +39,8 @@ describe 'AUI' do
 
     it 'should focus referred object' do
       connect do |redis|
-        @a = MINT::AIReference.create(:name=>"ref")
+        @a = MINT::AIReference.create(:name=>"ref",:refers=>"target")
+        MINT::AIO.create(:name=>"target")
 
         #Todo ask Sebastian about the functioning of AIReference
         @a.process_event(:organize)
@@ -49,35 +52,35 @@ describe 'AUI' do
       end
     end
 
-  end
 
-  describe 'AIReference without refers' do
+    describe 'without refers' do
 
-    it 'should return to defocused in case there is no referred object' do
-      connect do |redis|
-        @a = MINT::AIReference.create(:name=>"ref")
-        @a.process_event(:organize)
-        @a.process_event(:present)
-        @a.process_event(:focus)
-        @a.states.should == [:defocused]
+      it 'should return to defocused in case there is no referred object' do
+        connect do |redis|
+          @a = MINT::AIReference.create(:name=>"ref")
+          @a.process_event(:organize)
+          @a.process_event(:present)
+          @a.process_event(:focus)
+          @a.states.should == [:defocused]
+        end
       end
+
     end
 
-
-
-    describe 'AIReference' do
+    describe 'with refers' do
       it 'should initialize with initiated and store reference correctly' do
         connect true do |redis|
           @a = MINT::AIReference.create(:name=>"ref")
 
-          test_state_flow redis,"Interactor.AIO" ,%w(initialized)
+          test_state_flow redis,"Interactor.AIO" ,%w(initialized)   do
 
-          @r = MINT::AIO.create(:name => "test")
-          @a = MINT::AIReference.create(:name=>"reference", :refers => "test")
+            @r = MINT::AIO.create(:name => "test")
+            @a = MINT::AIReference.create(:name=>"reference", :refers => "test")
 
-          @a.states.should ==[:initialized]
-          @a.new_states.should == [:initialized]
-          @a.refers.name.should=="test"
+            @a.states.should ==[:initialized]
+            @a.new_states.should == [:initialized]
+            @a.refers.name.should=="test"
+          end
         end
 
       end
@@ -86,16 +89,17 @@ describe 'AUI' do
         connect true do |redis|
           @a = MINT::AIReference.create(:name=>"ref")
 
-          test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,%w(defocused defocused)
-          # test_state_flow redis,"Interactor.AIO" ,%w(focused focused)
+          # TODO there still seems to be a bug while publishing state updates!!!
+          test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,%w(initialized focused defocused)     do
+            # test_state_flow redis,"Interactor.AIO" ,%w(focused focused)
 
-          @r = MINT::AIO.create(:name => "test",:states=>[:defocused])
-          @a = MINT::AIReference.create(:name=>"reference", :refers => "test",:states=>[:defocused])
+            @r = MINT::AIO.create(:name => "test",:states=>[:defocused])
+            @a = MINT::AIReference.create(:name=>"reference", :refers => "test",:states=>[:defocused])
 
-          @a.process_event :focus
-          @a.states.should ==[:defocused]
-          MINT::AIO.get("aui","test").states.should ==[:focused]
-
+            @a.process_event :focus
+            @a.states.should ==[:defocused]
+            MINT::AIO.get("aui","test").states.should ==[:focused]
+          end
         end
 
       end

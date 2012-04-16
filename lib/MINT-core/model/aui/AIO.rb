@@ -63,7 +63,7 @@ module MINT
 
     # hook to inform parent about presenting state
     def inform_parent_presenting
-      #self.parent.child_to_presenting(self) if (self.parent)
+      self.parent.child_to_presenting(self) if (self.parent)
       true
     end
 

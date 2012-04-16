@@ -10,11 +10,11 @@ describe 'AUI' do
   before :all do
     class ::AISinglePresenceHelper
       def self.create_data
-        MINT::AISinglePresence.new(:name=>"a", :children =>[
-            MINT::AIO.new(:name => "e1"),
-            MINT::AIO.new(:name => "e2"),
-            MINT::AIO.new(:name => "e3")
-        ]).save
+        MINT::AISinglePresence.create(:name=>"a", :children =>"e1|e2|e3")
+
+        MINT::AIO.create(:name => "e1",:parent=>"a")
+        MINT::AIO.create(:name => "e2",:parent=>"a")
+        MINT::AIO.create(:name => "e3",:parent=>"a")
 
         @a = MINT::AISinglePresence.first
         @a

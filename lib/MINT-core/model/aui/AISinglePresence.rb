@@ -1,5 +1,6 @@
 module MINT
   class AISinglePresence < AIContainer
+    property :active_child, String
 
     def getSCXML
       "#{File.dirname(__FILE__)}/aisinglepresence.scxml"
@@ -7,13 +8,15 @@ module MINT
 
     # hook that is called from a child if it enters presenting state
     def child_to_presenting(child)
-      children.all.each do |e|
-        e.process_event(:suspend) if e.id != child.id and not e.is_in? :suspended
+      children.each do |e|
+        e.process_event(:suspend) if e.name != child.name and not e.is_in? :suspended
       end
+      attribute_set(:active_child, child.name)
     end
 
     def present_first_child
       children[0].process_event :present
+      attribute_set(:active_child, children[0].name)
     end
 
     def present_next_child
@@ -49,11 +52,19 @@ module MINT
     end
 
     def exists_next_child
-      self.children.next!=nil
-    end
+      if attribute_get(:active_child)
+        c = MINT::AIO.get("aui",attribute_get(:active_child))
+        return true if c.next
+      end
+  false
+      end
 
     def exists_prev_child
-      self.children.previous!=nil
+      if attribute_get(:active_child)
+             c = MINT::AIO.get("aui",attribute_get(:active_child))
+             return true if c.previous
+           end
+       false
     end
 
   end

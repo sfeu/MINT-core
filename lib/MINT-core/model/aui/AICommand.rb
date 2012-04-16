@@ -10,15 +10,11 @@ module MINT
   end
 
   class AICommand < AIINDiscrete
-    def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aicommand.scxml"
 
-        @statemachine.reset
-
-      end
+    def getSCXML
+          "#{File.dirname(__FILE__)}/aicommand.scxml"
     end
+
     def sync_event(event)
       process_event(event, AICommand_sync_callback.new)
     end

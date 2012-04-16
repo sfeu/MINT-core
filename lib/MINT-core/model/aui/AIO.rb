@@ -16,6 +16,10 @@ module MINT
       "aui"
     end
 
+    def getSCXML
+      "#{File.dirname(__FILE__)}/aio.scxml"
+    end
+
     def parent
       p = super
       if p
@@ -56,15 +60,7 @@ module MINT
           previous.name if  self.previous
         end
 
-    def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aio.scxml"
 
-        @statemachine.reset
-
-      end
-    end
     # hook to inform parent about presenting state
     def inform_parent_presenting
       #self.parent.child_to_presenting(self) if (self.parent)

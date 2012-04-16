@@ -6,9 +6,6 @@ module MINT
   class Interactor
     include DataMapper::Resource
 
-
-
-
     def getModel
       "core"
     end
@@ -60,12 +57,26 @@ module MINT
       Object.const_get("MINT").const_get channel.split('.').last
     end
 
-    def publish_update
+    def publish_update(states,abstract_states, atomic_states)
+
+
+      as_copy = attribute_get(:abstract_states)
+      new_copy = attribute_get(:new_states)
+      states_copy = attribute_get(:states)
+
+      attribute_set(:abstract_states, abstract_states.join('|'))
+      attribute_set(:new_states, states.join('|'))
+      attribute_set(:states, atomic_states.join('|'))
+
       RedisConnector.pub.publish self.class.create_channel_name, self.to_json(:only => self.class::PUBLISH_ATTRIBUTES)
+
+      attribute_set(:abstract_states, as_copy)
+      attribute_set(:new_states, new_copy)
+      attribute_set(:states, states_copy)
     end
 
     def self.notify(action,query,callback,time = nil)
-     RedisConnector.sub.subscribe("#{self.create_channel_name}")
+      RedisConnector.sub.subscribe("#{self.create_channel_name}")
 
       RedisConnector.sub.on(:message) { |channel, message|
         found=JSON.parse message
@@ -184,13 +195,21 @@ module MINT
       end
       @statemachine.In(state)
     end
+
+    def getSCXML
+      nil
+    end
+
     protected
+
     def initialize_statemachine
       if @statemachine.nil?
-        @statemachine = Statemachine.build do
-          trans :initialized, :run, :running
-          trans :running, :done, :finished
-        end
+        parser = StatemachineParser.new(self)
+        @statemachine = parser.build_from_scxml getSCXML
+        @statemachine.activation=self.method(:publish_update)
+
+        @statemachine.reset
+
       end
     end
 
@@ -202,10 +221,10 @@ module MINT
         recover_statemachine
       end
       attribute_set(:states, @statemachine.states_id.join('|'))
-      attribute_set(:abstract_states, @statemachine.abstract_states.concat(@statemachine.states_id).join('|'))
+      attribute_set(:abstract_states, @statemachine.abstract_states.join('|'))
       # attribute_set(:new_states,new_states) if new_states and new_states.length>0 # second condition to
       save!
-      publish_update
+      # publish_update
     end
 
 

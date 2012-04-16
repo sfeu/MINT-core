@@ -5,16 +5,9 @@ module MINT
     property :min, Integer,:default  => 0
     property :max, Integer,:default  => 100
 
-    def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aioutcontinuous.scxml"
-
-        @statemachine.reset
-
-      end
+    def getSCXML
+      "#{File.dirname(__FILE__)}/aioutcontinuous.scxml"
     end
-
 
     PUBLISH_ATTRIBUTES += [:data]
 

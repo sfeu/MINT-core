@@ -13,7 +13,7 @@ describe 'AUI' do
 
     connect do |redis|
       require "MINT-core"
-
+      require "support/redis_connector_monkey_patch"  # TODO dirty patch for a bug that i have not found :(
       DataMapper.finalize
       DataMapper::Model.raise_on_save_failure = true
     end

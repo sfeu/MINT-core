@@ -1,22 +1,15 @@
 module MINT
   class AISinglePresence < AIContainer
 
-
-      def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/aisinglepresence.scxml"
-
-        @statemachine.reset
-
-      end
+    def getSCXML
+      "#{File.dirname(__FILE__)}/aisinglepresence.scxml"
     end
 
     # hook that is called from a child if it enters presenting state
     def child_to_presenting(child)
       children.all.each do |e|
         e.process_event(:suspend) if e.id != child.id and not e.is_in? :suspended
-        end
+      end
     end
 
     def present_first_child

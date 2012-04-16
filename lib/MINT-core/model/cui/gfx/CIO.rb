@@ -292,15 +292,11 @@ module MINT
       return cio
     end
 
-    def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/cio.scxml"
 
-        @statemachine.reset
-
-      end
+    def getSCXML
+          "#{File.dirname(__FILE__)}/cio.scxml"
     end
+
 
     def sync_event(event)
       process_event(event, CIO_sync_callback.new)

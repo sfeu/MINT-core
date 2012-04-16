@@ -5,14 +5,8 @@ module MINT
 
     PUBLISH_ATTRIBUTES += [:x,:y]
 
-    def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/pointer.scxml"
-
-        @statemachine.reset
-
-      end
+    def getSCXML
+      "#{File.dirname(__FILE__)}/pointer.scxml"
     end
 
     def consume(id)

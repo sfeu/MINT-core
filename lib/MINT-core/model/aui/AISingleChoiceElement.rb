@@ -1,5 +1,11 @@
 module MINT
   class AISingleChoiceElement < AIChoiceElement
+
+    def getSCXML
+          "#{File.dirname(__FILE__)}/aisinglechoiceelement.scxml"
+        end
+
+    # TODO initalize_statemachine could be removed as soon as the scxml is working
     def initialize_statemachine
       p "enter init"
       if @statemachine.nil?

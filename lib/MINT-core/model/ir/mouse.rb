@@ -1,14 +1,9 @@
 
 module MINT
   class Mouse  < Pointer
-    def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/mouse.scxml"
 
-        @statemachine.reset
-
-      end
+    def getSCXML
+      "#{File.dirname(__FILE__)}/mouse.scxml"
     end
 
     def consume(id)

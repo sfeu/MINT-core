@@ -1,0 +1,32 @@
+<scxml initial="initialized" name="InteractorTest" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=630.0 h=510.0  -->
+ <state id="organized"><!--   node-size-and-position x=10.0 y=130.0 w=80.0 h=30.0  -->
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=160.0 y=160.0 pointx=0.0 pointy=4.0 offsetx=-4.0 offsety=2.0  --></transition>
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=50.0 y=260.0  --></transition>
+ </state>
+ <state id="initialized"><!--   node-size-and-position x=10.0 y=40.0 w=80.0 h=30.0  -->
+  <transition event="organize" target="organized"></transition>
+ </state>
+ <parallel id="presenting"><!--   node-size-and-position x=80.0 y=180.0 w=530.0 h=330.0  -->
+  <transition event="suspend" target="suspended"></transition>
+  <state id="f" initial="defocused"><!--   node-size-and-position x=60.0 y=40.0 w=340.0 h=100.0  -->
+   <state id="defocused"><!--   node-size-and-position x=30.0 y=40.0 w=80.0 h=30.0  -->
+    <transition event="focus" target="focused"><!--   edge-path [focused]  x=180.0 y=80.0  --></transition>
+   </state>
+   <state id="focused"><!--   node-size-and-position x=250.0 y=40.0 w=80.0 h=30.0  -->
+    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=180.0 y=30.0  --></transition>
+   </state>
+  </state>
+  <state id="g" initial="in"><!--   node-size-and-position x=50.0 y=180.0 w=340.0 h=100.0  -->
+   <state id="in"><!--   node-size-and-position x=30.0 y=40.0 w=80.0 h=30.0  -->
+    <transition event="out" target="out"><!--   edge-path [out]  x=180.0 y=80.0  --></transition>
+   </state>
+   <state id="out"><!--   node-size-and-position x=250.0 y=40.0 w=80.0 h=30.0  -->
+    <transition event="in" target="in"><!--   edge-path [in]  x=180.0 y=30.0  --></transition>
+   </state>
+  </state>
+ </parallel>
+ <state id="suspended"><!--   node-size-and-position x=190.0 y=60.0 w=80.0 h=30.0  -->
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=290.0 y=140.0  --></transition>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  pointx=0.0 pointy=11.0 offsetx=2.0 offsety=-1.0  --></transition>
+ </state>
+</scxml>

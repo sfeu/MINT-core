@@ -54,9 +54,9 @@ describe 'Interactor' do
         @a.process_event(:focus)
         @a.new_states.should == [:focused]
         @a.abstract_states.should == "InteractorTest|root|presenting|f|g"
-    #    @a.process_event(:suspend)
-    #            @a.new_states.should == [:suspended]
-    #            @a.abstract_states.should == "root"
+        @a.process_event(:suspend)
+        @a.new_states.should == [:suspended]
+        @a.abstract_states.should == "root"
 
       end
     end

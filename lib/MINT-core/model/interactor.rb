@@ -31,8 +31,13 @@ module MINT
 
     protected
     before :save, :save_statemachine
+    after :create, :init_statemachine
 
     public
+
+    def init_statemachine
+      initialize_statemachine true
+    end
 
 
     PUBLISH_ATTRIBUTES = [:name,:states,:abstract_states,:new_states,:classtype, :mint_model]
@@ -135,7 +140,7 @@ module MINT
     def initialize(attributes = nil)
       super(attributes)
 
-      recover_statemachine
+  #    recover_statemachine
     end
 
     # The sync event method is overwritten in the derived classes to prevent synchronization cycles by setting an empty callback
@@ -196,19 +201,21 @@ module MINT
       @statemachine.In(state)
     end
 
+
     def getSCXML
-      nil
+      "#{File.dirname(__FILE__)}/interactor.scxml"
     end
 
     protected
 
-    def initialize_statemachine
+    def initialize_statemachine(publish_initialize = false)
       if @statemachine.nil?
         parser = StatemachineParser.new(self)
         @statemachine = parser.build_from_scxml getSCXML
+
         @statemachine.activation=self.method(:publish_update)
 
-        @statemachine.reset
+        @statemachine.reset(nil,publish_initialize)
 
       end
     end
@@ -217,7 +224,7 @@ module MINT
 
     def save_statemachine
       if not @statemachine
-        initialize_statemachine
+        initialize_statemachine true
         recover_statemachine
       end
       attribute_set(:states, @statemachine.states_id.join('|'))

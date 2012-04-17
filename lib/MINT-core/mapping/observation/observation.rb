@@ -61,11 +61,12 @@ class Observation
       if channel.eql? element
         found=JSON.parse message
 
-        if  name.eql? found["name"]
+        if name.nil? or name.eql? found["name"]
 
           if found.has_key? "new_states"
             if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
-              #p "observation true: #{element}:#{name} in states #{states}"
+
+            #p "observation true: #{element}:#{name} in states #{states}"
               cb.call element, true , result(found)
             else
               if (found["states"] & states).length == 0

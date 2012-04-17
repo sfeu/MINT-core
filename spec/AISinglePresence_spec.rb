@@ -27,6 +27,7 @@ describe 'AUI' do
 
     connect do |redis|
       require "MINT-core"
+      require "support/redis_connector_monkey_patch"  # TODO dirty patch for a bug that i have not found :(
 
       DataMapper.finalize
       DataMapper::Model.raise_on_save_failure = true
@@ -124,7 +125,31 @@ describe 'AUI' do
       end
     end
 
+    describe 'synchronized with Redis-PubSub' do
+      it 'should transform first child to presented if presented and rest to suspended' do
+        connect true do |redis|
 
+
+
+          test_state_flow redis,"Interactor.AIO.AIOUT.AIContainer.AISinglePresence" ,
+                          ["initialized", "organized", ["presenting","defocused"] ,["focused","waiting"], "entered"] do
+
+            @a = AISinglePresenceHelper.create_data
+                      AUIControl.organize(@a,nil,0)
+
+            @a.process_event(:present)
+
+            @a.process_event(:focus)
+
+            @a.process_event(:enter)
+
+          end
+
+
+        end
+      end
+
+    end
 
   end
 end

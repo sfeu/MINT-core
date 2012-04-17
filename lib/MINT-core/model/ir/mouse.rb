@@ -22,9 +22,13 @@ module MINT
             case data["data"]
 
               when "LEFT_PRESSED"
-                process_event :press
+                process_event :press_left
               when "LEFT_RELEASED"
-                process_event :release
+                process_event :release_left
+              when "RIGHT_PRESSED"
+                process_event :press_right
+              when "RIGHT_RELEASED"
+                process_event :release_right
 
             end
 

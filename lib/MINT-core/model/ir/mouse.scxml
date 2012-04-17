@@ -1,20 +1,18 @@
-<scxml initial="disconnected" name="Mouse" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=662.0 h=660.0  -->
+<scxml initial="disconnected" name="Mouse" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=870.0 h=660.0  -->
  <state id="disconnected"><!--   node-size-and-position x=280.0 y=60.0 w=100.0 h=50.0  -->
   <onentry>
    <log expr="consume(name)"></log>
   </onentry>
   <transition event="connect" target="connected"></transition>
  </state>
- <parallel id="connected"><!--   node-size-and-position x=70.0 y=190.0 w=500.0 h=470.0  -->
-  <transition target="disconnected"></transition>
-  <transition target="disconnected"></transition>
+ <parallel id="connected"><!--   node-size-and-position x=70.0 y=190.0 w=760.0 h=300.0  -->
   <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=400.0 y=160.0  --></transition>
-  <state id="leftbutton" initial="released"><!--   node-size-and-position x=40.0 y=50.0 w=210.0 h=210.0  -->
-   <state id="released"><!--   node-size-and-position x=20.0 y=50.0 w=140.0 h=40.0  -->
-    <transition event="press" target="pressed"><!--   edge-path [pressed]  x=60.0 y=110.0 pointx=0.0 pointy=-40.0 offsetx=0.0 offsety=-5.0  --></transition>
+  <state id="leftbutton" initial="left_released"><!--   node-size-and-position x=40.0 y=50.0 w=220.0 h=240.0  -->
+   <state id="left_released"><!--   node-size-and-position x=40.0 y=50.0 w=140.0 h=40.0  -->
+    <transition event="press_left" target="left_pressed"><!--   edge-path [left_pressed]  x=100.0 y=110.0 pointx=0.0 pointy=-40.0 offsetx=0.0 offsety=-5.0  --></transition>
    </state>
-   <state id="pressed"><!--   node-size-and-position x=30.0 y=140.0 w=120.0 h=40.0  -->
-    <transition event="release" target="released"><!--   edge-path [released]  x=140.0 y=120.0  --></transition>
+   <state id="left_pressed"><!--   node-size-and-position x=50.0 y=140.0 w=120.0 h=40.0  -->
+    <transition event="release_left" target="left_released"><!--   edge-path [left_released]  x=180.0 y=120.0  --></transition>
    </state>
   </state>
   <state id="pointer" initial="stopped"><!--   node-size-and-position x=270.0 y=50.0 w=210.0 h=210.0  -->
@@ -23,6 +21,14 @@
    </state>
    <state id="moving"><!--   node-size-and-position x=30.0 y=150.0 w=100.0 h=40.0  -->
     <transition event="stop" target="stopped"><!--   edge-path [stopped]  x=50.0 y=130.0 pointx=0.0 pointy=2.0 offsetx=-15.0 offsety=-2.0  --></transition>
+   </state>
+  </state>
+  <state id="rightbutton" initial="right_released"><!--   node-size-and-position x=520.0 y=50.0 w=210.0 h=210.0  -->
+   <state id="right_released"><!--   node-size-and-position x=20.0 y=50.0 w=140.0 h=40.0  -->
+    <transition event="press_right" target="right_pressed"><!--   edge-path [right_pressed]  x=80.0 y=110.0 pointx=0.0 pointy=-40.0 offsetx=0.0 offsety=-5.0  --></transition>
+   </state>
+   <state id="right_pressed"><!--   node-size-and-position x=30.0 y=140.0 w=120.0 h=40.0  -->
+    <transition event="release_right" target="right_released"><!--   edge-path [right_released]  x=160.0 y=120.0  --></transition>
    </state>
   </state>
  </parallel>

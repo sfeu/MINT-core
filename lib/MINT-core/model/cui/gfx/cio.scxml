@@ -9,6 +9,7 @@
  </state>
  <state id="positioned"><!--   node-size-and-position x=220.0 y=320.0 w=100.0 h=40.0  -->
   <transition event="display" target="displaying"></transition>
+  <transition event="hide" target="hidden"></transition>
  </state>
  <state id="displaying" initial="displayed"><!--   node-size-and-position x=380.0 y=270.0 w=350.0 h=200.0  -->
   <onentry>
@@ -49,5 +50,6 @@
    <invoke src="sync_aio_to_suspended" type="x-mint"></invoke>
   </onentry>
   <transition event="position" target="positioning"></transition>
+  <transition event="display" target="displaying"><!--   edge-path [displaying]  x=410.0 y=240.0  --></transition>
  </state>
 </scxml>

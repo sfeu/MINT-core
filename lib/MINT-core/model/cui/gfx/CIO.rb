@@ -45,6 +45,7 @@ module MINT
     property :up, String
     property :down, String
 
+    property :highlightable, Boolean, :default => false
 
 
 #    before :create, :recover_statemachine

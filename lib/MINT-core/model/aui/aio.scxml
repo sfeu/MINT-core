@@ -27,7 +27,7 @@
    <transition cond="exists_prev" event="prev" target="defocused">
     <invoke src="focus_previous" type="x-mint"></invoke>
 <!--   edge-path [defocused]  x=270.0 y=130.0 x=50.0 y=130.0  --></transition>
-   <transition event="parent" target="defocused">
+   <transition cond="exists_parent" event="parent" target="defocused">
     <invoke src="focus_parent" type="x-mint"></invoke>
 <!--   edge-path [defocused]  x=270.0 y=150.0 x=50.0 y=150.0  --></transition>
    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=160.0 y=40.0  --></transition>

@@ -207,14 +207,12 @@ describe 'AUI' do
 
     it 'should handle parent' do
       connect do |redis|
-      @a = MINT::AIO.create(:name => "test",:parent =>"parent")
-      @a.states=[:focused]
-      b =  MINT::AIContainer.new(:name=>"parent",:children =>["test"])
-      b.states = [:defocused]
+      @a = MINT::AIO.create(:name => "test",:parent =>"parent",:states=>[:focused])
+      b =  MINT::AIContainer.create(:name=>"parent",:children =>["test"],:states => [:defocused])
       @a.process_event(:parent)
 
       @a.states.should ==[:defocused]
-      b = MINT::AIO.first(:name=>"parent")
+      b = MINT::AIContainer.first(:name=>"parent")
 
       b.states.should ==[:focused]
       end

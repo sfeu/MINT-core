@@ -81,10 +81,14 @@ module MINT
       self.previous!=nil
     end
 
+    def exists_parent
+          self.parent!=nil
+        end
+
     def sync_cio_to_displayed
       cio =  MINT::CIO.first(:name=>self.name)
       if (cio and not cio.is_in? :displayed)
-        if (cio.is_in? :suspended or cio.is_in? :positioned)
+        if (cio.is_in? :hidden or cio.is_in? :positioned)
           cio.sync_event(:display)
         else
           cio.sync_event(:unhighlight)

@@ -39,8 +39,8 @@ module CUIControl
   end
 
   def CUIControl.fill_active_cio_cache(result=nil)
-    @active_cios = CIO.all.select{ |e| e.is_in?(:displaying) and not e.kind_of? MINT::CIC }
-    puts "CIO cache initialized with #{@active_cios.length} elements"
+    @active_cios = CIO.all.select{ |e| e.is_in?(:displaying) and e.highlightable}
+    puts "CIO cache initialized with #{@active_cios.inspect} elements"
   end 
   
 end

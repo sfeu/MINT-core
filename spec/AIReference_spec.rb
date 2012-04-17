@@ -89,13 +89,10 @@ describe 'AUI' do
         connect true do |redis|
           @a = MINT::AIReference.create(:name=>"ref")
 
-          # TODO there still seems to be a bug while publishing state updates!!!
-          test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,%w(initialized focused defocused)     do
-            # test_state_flow redis,"Interactor.AIO" ,%w(focused focused)
-
+          test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,["initialized",["presenting","defocused"],"focused", "defocused"]     do
             @r = MINT::AIO.create(:name => "test",:states=>[:defocused])
-            @a = MINT::AIReference.create(:name=>"reference", :refers => "test",:states=>[:defocused])
-
+            @a = MINT::AIReference.create(:name=>"reference", :refers => "test",:states=>[:organized])
+            @a.process_event :present
             @a.process_event :focus
             @a.states.should ==[:defocused]
             MINT::AIO.get("aui","test").states.should ==[:focused]

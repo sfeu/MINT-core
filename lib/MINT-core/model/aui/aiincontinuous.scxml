@@ -14,9 +14,6 @@
   <transition event="present" target="presenting"><!--   edge-path [presenting]  x=176.66281848634637 y=228.0  --></transition>
  </state>
  <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=253.0 w=296.5756369726928 h=559.0  -->
-  <onentry>
-   <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-  </onentry>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=156.66281848634637 y=228.0  --></transition>
   <state id="defocused"><!--   node-size-and-position x=113.28781848634637 y=43.0 w=70.0 h=20.0  -->
    <onentry>
@@ -31,16 +28,16 @@
    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=138.28781848634637 y=88.0  --></transition>
    <state id="moving"><!--   node-size-and-position x=20.0 y=113.0 w=182.15127394538547 h=293.0  -->
     <onentry>
-     <script>publish(@data)</script>
+     <script>publish(data)</script>
     </onentry>
     <transition event="halt" target="waiting"></transition>
     <state id="progressing"><!--   node-size-and-position x=25.0 y=183.0 w=80.0 h=20.0  -->
-     <transition cond="@data==max" target="max"></transition>
+     <transition cond="data==max" target="max"></transition>
      <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=71.71019580262394 y=120.96045745887999 pointx=0.0 pointy=0.0 offsetx=4.0 offsety=0.0  --></transition>
     </state>
     <state id="regressing"><!--   node-size-and-position x=60.0 y=43.0 w=70.0 h=20.0  -->
      <transition event="progress" target="progressing"><!--   edge-path [progressing]  x=91.28980419737604 y=125.03954254112001 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
-     <transition cond="@data == min" target="min"></transition>
+     <transition cond="data == min" target="min"></transition>
     </state>
     <state id="max"><!--   node-size-and-position x=85.0 y=253.0 w=30.0 h=20.0  -->
      <transition event="regress" target="regressing"><!--   edge-path [regressing]  x=135.0 y=193.0 x=140.0 y=123.0  --></transition>

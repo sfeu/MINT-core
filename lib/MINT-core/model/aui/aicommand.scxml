@@ -3,7 +3,7 @@
   <transition event="organize" target="organized"></transition>
  </state>
  <state id="organized"><!--   node-size-and-position x=404.0 y=123.0 w=90.0 h=30.0  -->
-  <transition event="present" target="presenting"><!--   edge-path [presenting]  pointx=0.0 pointy=-1.0 offsetx=5.0 offsety=3.0  --></transition>
+  <transition event="present" target="p"><!--   edge-path [p]  pointx=0.0 pointy=-1.0 offsetx=5.0 offsety=3.0  --></transition>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=405.6903639607025 y=363.4691792784482 pointx=0.0 pointy=0.0 offsetx=39.0 offsety=0.0  --></transition>
  </state>
  <state id="suspended"><!--   node-size-and-position x=290.0 y=569.0 w=90.0 h=30.0  -->
@@ -11,31 +11,31 @@
    <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
   </onentry>
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=386.30963603929746 y=358.5308207215518 pointx=0.0 pointy=0.0 offsetx=61.0 offsety=0.0  --></transition>
-  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=305.127831987654 y=548.6135273664199  --></transition>
+  <transition event="present" target="p"><!--   edge-path [p]  x=305.127831987654 y=548.6135273664199  --></transition>
  </state>
- <parallel id="presenting"><!--   node-size-and-position x=20.0 y=203.0 w=400.0 h=316.0  -->
-  <onentry>
-   <invoke src="inform_parent_presenting" type="x-mint"></invoke>
-  </onentry>
+ <parallel id="p"><!--   node-size-and-position x=20.0 y=203.0 w=400.0 h=316.0  -->
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=322.8721680123459 y=539.3864726335801  --></transition>
-  <state id="b" initial="deactivated"><!--   node-size-and-position x=250.0 y=43.0 w=130.0 h=253.0  -->
+  <state id="activation" initial="deactivated"><!--   node-size-and-position x=250.0 y=43.0 w=130.0 h=253.0  -->
    <state id="deactivated"><!--   node-size-and-position x=20.0 y=123.0 w=90.0 h=30.0  -->
     <onentry>
      <invoke src="sync_cio_to_released" type="x-mint"></invoke>
     </onentry>
-    <transition event="activate" target="activated"><!--   edge-path [activated]  x=70.0 y=178.0  --></transition>
+    <transition cond="In(:focused)" event="activate" target="activated"><!--   edge-path [activated]  x=70.0 y=178.0  --></transition>
    </state>
    <state id="activated"><!--   node-size-and-position x=20.0 y=203.0 w=90.0 h=30.0  -->
     <onentry>
      <invoke src="sync_cio_to_pressed" type="x-mint"></invoke>
     </onentry>
-    <transition event="deactivate" target="deactivated"><!--   edge-path [deactivated]  x=50.0 y=178.0  --></transition>
+    <transition cond="In(:focused)" event="deactivate" target="deactivated"><!--   edge-path [deactivated]  x=50.0 y=178.0  --></transition>
    </state>
    <history id="H" type="deep"><!--   node-size-and-position x=50.0 y=43.0 w=30.0 h=30.0  -->
     <transition target="deactivated"></transition>
    </history>
   </state>
-  <state id="d" initial="defocused"><!--   node-size-and-position x=20.0 y=43.0 w=170.0 h=173.0  -->
+  <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=43.0 w=170.0 h=173.0  -->
+   <onentry>
+    <invoke src="inform_parent_presenting" type="x-mint"></invoke>
+   </onentry>
    <state id="focused"><!--   node-size-and-position x=20.0 y=123.0 w=130.0 h=30.0  -->
     <onentry>
      <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>

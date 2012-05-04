@@ -24,7 +24,7 @@ module MINT
       "#{File.dirname(__FILE__)}/aicontainer.scxml"
     end
 
-    def hide_children
+    def suspend_children
       if (self.children)
         self.children.each do |c|
           c.process_event("suspend")

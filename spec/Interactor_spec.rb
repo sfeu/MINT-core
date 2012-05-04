@@ -56,7 +56,7 @@ describe 'Interactor' do
         @a.abstract_states.should == "InteractorTest|root|presenting|f|g"
         @a.process_event(:suspend)
         @a.new_states.should == [:suspended]
-        @a.abstract_states.should == "root"
+        @a.abstract_states.should == "InteractorTest|root"
 
       end
     end

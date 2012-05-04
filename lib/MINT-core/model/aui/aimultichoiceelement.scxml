@@ -11,10 +11,11 @@
    <invoke src="sync_cio_to hidden" type="x-mint"></invoke>
   </onentry>
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=270.0 y=70.0  --></transition>
+  <transition event="present" target="p"><!--   edge-path [p]  x=370.0 y=80.0  --></transition>
  </state>
- <parallel id="p"><!--   node-size-and-position x=50.0 y=100.0 w=410.0 h=280.0  -->
+ <parallel id="p"><!--   node-size-and-position x=30.0 y=100.0 w=410.0 h=280.0  -->
+  <transition event="suspend" target="suspended"></transition>
   <state id="presenting" initial="defocused"><!--   node-size-and-position x=200.0 y=30.0 w=200.0 h=140.0  -->
-   <transition event="suspend" target="suspended"></transition>
    <state id="defocused"><!--   node-size-and-position x=60.0 y=30.0 w=90.0 h=30.0  -->
     <onentry>
      <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>

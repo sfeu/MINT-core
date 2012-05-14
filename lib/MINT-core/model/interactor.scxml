@@ -1,0 +1,3 @@
+<scxml initial="initialized" name="Interactor" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=662.0 h=581.0  -->
+ <state id="initialized"><!--   node-size-and-position x=280.0 y=122.0 w=100.0 h=100.0  --></state>
+</scxml>

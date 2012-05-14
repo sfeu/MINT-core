@@ -16,7 +16,7 @@
  <parallel id="presenting"><!--   node-size-and-position x=20.0 y=183.0 w=436.6592552156425 h=489.0  -->
   <onentry>
    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-   <script> @d=consume(id)</script>
+   <script>@d = consume(&quot;data&quot;)</script>
   </onentry>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=357.6143945166738 y=693.286093236459  --></transition>
   <state id="f" initial="defocused"><!--   node-size-and-position x=305.1592552156425 y=43.0 w=111.5 h=153.0  -->

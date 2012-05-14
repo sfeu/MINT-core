@@ -77,7 +77,7 @@ describe 'Interactor' do
     it 'should transform to organizing state for present action' do
       connect true do |redis|
 
-        test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized", ["defocused","in"],"out"] do
+        test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized", ["presenting","f","defocused","g","in"],"out"] do
           @a = InteractorTest.create(:name => "test")
           @a.process_event(:organize)
           @a.process_event(:present)

@@ -1,10 +1,8 @@
 
 module MINT
   class Head < Interactor
-    attr_accessor :mode
     #property :angle, Integer, :default  => -1
     #property :distance, Integer, :default  => -1
-     property :mode, Enum[ :nodding, :turning, :tilting ],  :default => :tilting
 
     def initialize_statemachine
 
@@ -32,20 +30,5 @@ module MINT
       @publish_angle=false
     end
 
-
-    def in_nodding_mode
-      return true if self.mode.eql? :nodding
-      false
-    end
-
-    def in_turning_mode
-      return true if self.mode.eql? :turning
-      false
-    end
-
-    def in_tilting_mode
-      return true if self.mode.eql? :tilting
-      false
-    end
   end
 end

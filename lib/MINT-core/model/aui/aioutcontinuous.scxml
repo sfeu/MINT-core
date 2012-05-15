@@ -1,59 +1,59 @@
-<scxml initial="initialized" name="AIOUTContinuous" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=545.3296276078213 h=762.0  -->
- <state id="initialized"><!--   node-size-and-position x=445.32962760782124 y=43.0 w=80.0 h=20.0  -->
+<scxml initial="initialized" name="AIOUTContinuous" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=448.1893750935549 h=782.0  -->
+ <state id="initialized"><!--   node-size-and-position x=184.09468754677744 y=43.0 w=80.0 h=20.0  -->
   <transition event="organize" target="organized"></transition>
  </state>
- <state id="organized"><!--   node-size-and-position x=450.32962760782124 y=113.0 w=70.0 h=20.0  -->
-  <transition event="present" target="presenting"></transition>
-  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=435.63157517697067 y=429.4803595258553 pointx=0.0 pointy=0.0 offsetx=47.0 offsety=0.0  --></transition>
+ <state id="organized"><!--   node-size-and-position x=189.09468754677744 y=113.0 w=70.0 h=20.0  -->
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=289.09468754677744 y=193.0 pointx=0.0 pointy=0.0 offsetx=2.0 offsety=0.0  --></transition>
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=234.09468754677746 y=158.0 pointx=0.0 pointy=0.0 offsetx=47.0 offsety=0.0  --></transition>
  </state>
- <state id="suspended"><!--   node-size-and-position x=327.32962760782124 y=722.0 w=70.0 h=20.0  -->
+ <state id="suspended"><!--   node-size-and-position x=189.09468754677746 y=183.0 w=70.0 h=20.0  -->
   <onentry>
    <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
   </onentry>
-  <transition event="organize" target="organized"><!--   edge-path [organized]  x=416.02768003867186 y=425.5196404741447 pointx=0.0 pointy=0.0 offsetx=70.0 offsety=0.0  --></transition>
-  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=339.04486069896865 y=700.7139067635411  --></transition>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  x=214.09468754677746 y=158.0 pointx=0.0 pointy=0.0 offsetx=70.0 offsety=0.0  --></transition>
+  <transition event="present" target="presenting"><!--   edge-path [presenting]  x=234.09468754677746 y=228.0  --></transition>
  </state>
- <parallel id="presenting"><!--   node-size-and-position x=20.0 y=183.0 w=436.6592552156425 h=489.0  -->
+ <parallel id="presenting"><!--   node-size-and-position x=20.0 y=253.0 w=408.18937509355493 h=509.0  -->
   <onentry>
    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-   <script>@d = consume(&quot;data&quot;)</script>
+   <script>@d = consume(id)</script>
   </onentry>
-  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=357.6143945166738 y=693.286093236459  --></transition>
-  <state id="f" initial="defocused"><!--   node-size-and-position x=305.1592552156425 y=43.0 w=111.5 h=153.0  -->
-   <state id="defocused"><!--   node-size-and-position x=21.5 y=43.0 w=70.0 h=20.0  -->
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=214.09468754677746 y=228.0  --></transition>
+  <state id="f" initial="defocused"><!--   node-size-and-position x=278.18937509355493 y=43.0 w=110.0 h=153.0  -->
+   <state id="defocused"><!--   node-size-and-position x=20.0 y=43.0 w=70.0 h=20.0  -->
     <onentry>
      <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
     </onentry>
-    <transition event="focus" target="focused"><!--   edge-path [focused]  x=70.0 y=88.0  --></transition>
+    <transition event="focus" target="focused"><!--   edge-path [focused]  x=69.0 y=88.0  --></transition>
    </state>
-   <state id="focused"><!--   node-size-and-position x=31.5 y=113.0 w=50.0 h=20.0  -->
+   <state id="focused"><!--   node-size-and-position x=30.0 y=113.0 w=50.0 h=20.0  -->
     <onentry>
      <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
     </onentry>
-    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=50.0 y=88.0  --></transition>
+    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=49.0 y=88.0  --></transition>
    </state>
   </state>
-  <state id="p" initial="waiting"><!--   node-size-and-position x=20.0 y=40.0 w=270.0 h=430.0  -->
-   <state id="moving" initial="progressing"><!--   node-size-and-position x=20.0 y=110.0 w=210.0 h=300.0  -->
-    <transition event="halt" target="waiting"><!--   edge-path [waiting]  x=93.65816676026304 y=86.22847001684735  --></transition>
-    <state id="progressing"><!--   node-size-and-position x=55.0 y=43.0 w=80.0 h=20.0  -->
+  <state id="p" initial="waiting"><!--   node-size-and-position x=20.0 y=43.0 w=198.37875018710986 h=446.0  -->
+   <state id="moving" initial="progressing"><!--   node-size-and-position x=20.0 y=133.0 w=158.37875018710983 h=293.0  -->
+    <transition event="halt" target="waiting"></transition>
+    <state id="progressing"><!--   node-size-and-position x=23.37875018710983 y=43.0 w=80.0 h=20.0  -->
      <transition cond="@d==max" target="max"></transition>
-     <transition cond="@d&lt;data" target="regressing"><!--   edge-path [regressing]  x=150.0 y=117.0 pointx=0.0 pointy=13.0 offsetx=-4.0 offsety=-40.0  --></transition>
+     <transition cond="@d&lt;data" target="regressing"><!--   edge-path [regressing]  x=85.77323140026797 y=120.88246652994194 pointx=0.0 pointy=13.0 offsetx=-4.0 offsety=-40.0  --></transition>
     </state>
-    <state id="regressing"><!--   node-size-and-position x=60.0 y=207.0 w=70.0 h=20.0  -->
-     <transition cond="@d&gt;data" target="progressing"><!--   edge-path [progressing]  x=100.0 y=117.0 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
+    <state id="regressing"><!--   node-size-and-position x=58.37875018710983 y=183.0 w=70.0 h=20.0  -->
+     <transition cond="@d&gt;data" target="progressing"><!--   edge-path [progressing]  x=66.22676859973203 y=125.11753347005806 pointx=0.0 pointy=0.0 offsetx=6.0 offsety=0.0  --></transition>
      <transition cond="@d == min" target="min"></transition>
     </state>
-    <state id="max"><!--   node-size-and-position x=20.0 y=113.0 w=30.0 h=20.0  -->
+    <state id="max"><!--   node-size-and-position x=108.37875018710983 y=113.0 w=30.0 h=20.0  -->
      <transition cond="@d&lt;data" target="regressing"></transition>
     </state>
-    <state id="min"><!--   node-size-and-position x=83.0 y=253.0 w=30.0 h=20.0  -->
-     <transition cond="@d&gt;data" target="progressing"><!--   edge-path [progressing]  x=190.0 y=267.0 x=190.0 y=77.0  --></transition>
+    <state id="min"><!--   node-size-and-position x=45.37875018710983 y=253.0 w=30.0 h=20.0  -->
+     <transition cond="@d&gt;data" target="progressing"><!--   edge-path [progressing]  x=28.37875018710983 y=193.0 x=18.37875018710983 y=123.0  --></transition>
     </state>
    </state>
-   <state id="waiting"><!--   node-size-and-position x=90.0 y=34.0 w=70.0 h=40.0  -->
-    <transition cond="@d&gt;data" event="move" target="progressing"><!--   edge-path [progressing]  x=220.0 y=54.0 x=220.0 y=164.0 pointx=0.0 pointy=-30.0 offsetx=0.0 offsety=-18.0  --></transition>
-    <transition cond="@d&lt;data" event="move" target="regressing"><!--   edge-path [regressing]  x=10.0 y=54.0 x=10.0 y=304.0 pointx=-1.0 pointy=20.0 offsetx=-50.0 offsety=0.0  --></transition>
+   <state id="waiting"><!--   node-size-and-position x=64.18937509355491 y=43.0 w=70.0 h=40.0  -->
+    <transition cond="@d&gt;data" event="move" target="progressing"><!--   edge-path [progressing]  pointx=0.0 pointy=-30.0 offsetx=0.0 offsety=-18.0  --></transition>
+    <transition cond="@d&lt;data" event="move" target="regressing"><!--   edge-path [regressing]  pointx=-1.0 pointy=20.0 offsetx=-50.0 offsety=9.0  --></transition>
    </state>
   </state>
  </parallel>

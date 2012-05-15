@@ -28,6 +28,7 @@ describe 'AUI' do
         @a.new_states.should == [:initialized]
       end
     end
+
     it 'should refer to correct object' do
       connect do |redis|
         @a = MINT::AIReference.create(:name=>"ref",:refers=>"target")
@@ -52,7 +53,6 @@ describe 'AUI' do
       end
     end
 
-
     describe 'without refers' do
 
       it 'should return to defocused in case there is no referred object' do
@@ -64,7 +64,6 @@ describe 'AUI' do
           @a.states.should == [:defocused]
         end
       end
-
     end
 
     describe 'with refers' do

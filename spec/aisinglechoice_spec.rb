@@ -1,9 +1,10 @@
 require "spec_helper"
 
 describe 'SingleChoice' do
-  before :each do
-    connection_options = { :adapter => "in_memory"}
-    DataMapper.setup(:default, connection_options)
+
+  include EventMachine::SpecHelper
+
+  before :all do
     class CallbackContext
       attr_accessor :called
 
@@ -34,122 +35,144 @@ describe 'SingleChoice' do
     end
     @callback = CallbackContext.new
 
-    @sc =MINT::AISingleChoice.new(:name => "choice",
-                                  :childs => [
-                                      MINT::AISingleChoiceElement.new(:name => "element_1"),
-                                      MINT::AISingleChoiceElement.new(:name => "element_2"),
-                                      MINT::AISingleChoiceElement.new(:name => "element_3"),
-                                      MINT::AISingleChoiceElement.new(:name => "element_4")]
-    )
-    AUIControl.organize(@sc,nil, 0)
-    @sc.save
+    connection_options = { :adapter => "redis"}
+    DataMapper.setup(:default, connection_options)
+
+    class ::Helper
+      def self.create_structure
+        MINT::AISingleChoice.create(:name => "choice", :children => "element_1|element_2|element_3|element_4")
+        MINT::AISingleChoiceElement.create(:name => "element_1", :parent=>"choice")
+        MINT::AISingleChoiceElement.create(:name => "element_2", :parent=>"choice")
+        MINT::AISingleChoiceElement.create(:name => "element_3", :parent=>"choice")
+        MINT::AISingleChoiceElement.create(:name => "element_4", :parent=>"choice")
+        MINT::AISingleChoice.first
+      end
+    end
+
+    connect do |redis|
+      require "MINT-core"
+
+      DataMapper.finalize
+      DataMapper::Model.raise_on_save_failure = true
+    end
   end
 
   describe "child relations" do
     before :each do
-      @sc.process_event(:present).should == [:defocused, :listing]
-      @sc.states.should == [:defocused, :listing]
+      connect do |redis|
+        @sc = Helper.create_structure
+        AUIControl.organize(@sc,nil,0)
 
-      @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      @e2 = MINT::AISingleChoiceElement.first(:name => "element_2")
-      @e3 = MINT::AISingleChoiceElement.first(:name => "element_3")
-      @e4 = MINT::AISingleChoiceElement.first(:name => "element_4")
+        @sc.process_event(:present).should == [:defocused, :listing]
+        @sc.states.should == [:defocused, :listing]
 
-      @e1.process_event(:present)
-      @e2.process_event(:present)
-      @e3.process_event(:present)
-      @e4.process_event(:present)
+        @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+        @e2 = MINT::AISingleChoiceElement.first(:name => "element_2")
+        @e3 = MINT::AISingleChoiceElement.first(:name => "element_3")
+        @e4 = MINT::AISingleChoiceElement.first(:name => "element_4")
+
+        @e1.process_event(:present)
+        @e2.process_event(:present)
+        @e3.process_event(:present)
+        @e4.process_event(:present)
+      end
     end
 
     it 'should deactivate other chosen elements on choose' do
-      @e1.process_event(:focus).should == [:focused, :unchosen]
-      @e1.new_states.should == [:focused]
+      connect do |redis|
+        @e1.process_event(:focus).should == [:focused, :listed]
+        @e1.new_states.should == [:focused]
 
-      @e1.process_event(:choose).should == [:focused, :chosen]
-      @e2.process_event(:choose).should == [:defocused, :chosen]
+        @e1.process_event(:choose).should == [:focused, :chosen]
+        @e2.process_event(:choose).should == [:defocused, :chosen]
 
 
-      # TODO: state actualization should be done withnt :suspend, out re-querying?
-      @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      @e1.states.should == [:focused, :unchosen]
-
+        # TODO: state actualization should be done withnt :suspend, out re-querying?
+        @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+        @e1.states.should == [:focused, :unchosen]
+      end
     end
 
     it 'should accept drag event in unchosen or chosen' do
-      @e1.process_event(:focus).should == [:focused, :unchosen]
-      @e1.states.should == [:focused, :unchosen]
+      connect do |redis|
+        @e1.process_event(:focus).should == [:focused, :listed]
+        @e1.states.should == [:focused, :listed]
 
-      @e1.process_event(:drag).should == [:dragging, :chosen]
-      @e1.states.should == [:dragging, :chosen]
+        @e1.process_event(:drag).should == [:focused, :dragging]
+        @e1.states.should == [:focused, :dragging]
 
-      @e1.process_event(:drop).should == [:defocused, :chosen]
-      @e1.states.should == [:defocused, :chosen]
+        @e1.process_event(:drop).should == [:focused, :listed]
+        @e1.states.should == [:focused, :listed]
 
-      @e1.process_event(:focus).should == [:focused, :chosen]
-      @e1.states.should == [:focused, :chosen]
+        @e1.process_event(:focus).should == [:focused, :chosen]
+        @e1.states.should == [:focused, :chosen]
 
-      @e1.process_event(:drag).should == [:dragging, :chosen]
-      @e1.states.should == [:dragging, :chosen]
+        @e1.process_event(:drag).should == [:dragging, :chosen]
+        @e1.states.should == [:dragging, :chosen]
+      end
   end
 
     it 'should hide child elements on suspend' do
-      sc =MINT::AISingleChoice.first(:name => "choice")
-      sc.process_event(:suspend).should == [:suspended]
-      e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:suspended]
+      connect do |redis|
+        sc =MINT::AISingleChoice.first(:name => "choice")
+        sc.process_event(:suspend).should == [:suspended]
+        e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+        e1.states.should == [:suspended]
+      end
     end
 
     it 'should hide if suspend is called from parent AIContainer' do
-      sc =MINT::AISingleChoice.first(:name => "choice")
+      connect do |redis|
+        sc = MINT::AISingleChoice.first(:name => "choice")
 
-      aic = MINT::AIContainer.create(:name => "container", :states=>[:defocused],:childs =>[sc])
+        aic = MINT::AIContainer.create(:name => "container", :states=>[:defocused], :children => [sc])
 
-      aic.process_event(:suspend).should == [:suspended]
-      e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:suspended]
+        aic.process_event(:suspend).should == [:suspended]
+        e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+        e1.states.should == [:suspended]
+      end
     end
 
     it "should sync suspend to CUI"   do
-      MINT::RadioButtonGroup.create(:name =>"choice", :states => [:presenting,:listed])
-      MINT::Selectable.create(:name =>"element_1", :states =>[:displayed,:listed])
-      MINT::Selectable.create(:name =>"element_2", :states =>[:displayed,:listed])
-      MINT::Selectable.create(:name =>"element_3", :states =>[:displayed,:listed])
-      MINT::Selectable.create(:name =>"element_4", :states =>[:displayed,:listed])
+      connect do |redis|
+        MINT::RadioButtonGroup.create(:name =>"choice", :states => [:presenting,:listed])
+        MINT::Selectable.create(:name =>"element_1", :states =>[:displayed,:listed])
+        MINT::Selectable.create(:name =>"element_2", :states =>[:displayed,:listed])
+        MINT::Selectable.create(:name =>"element_3", :states =>[:displayed,:listed])
+        MINT::Selectable.create(:name =>"element_4", :states =>[:displayed,:listed])
 
 
-      sc =MINT::AISingleChoice.first(:name => "choice")
+        sc =MINT::AISingleChoice.first(:name => "choice")
 
-      aic = MINT::AIContainer.create(:name => "container", :states=>[:defocused],:childs =>[sc])
+        aic = MINT::AIContainer.create(:name => "container", :states=>[:defocused],:children =>[sc])
 
-      aic.process_event(:suspend).should == [:suspended]
-      e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.states.should == [:suspended]
+        aic.process_event(:suspend).should == [:suspended]
+        e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+        e1.states.should == [:suspended]
 
-      s4=MINT::Selectable.first(:name =>"element_4")
-      s4.states.should ==[:hidden]
-      rbg = MINT::RadioButtonGroup.first(:name=>"choice")
-      rbg.states.should == [:hidden]
+        s4=MINT::Selectable.first(:name =>"element_4")
+        s4.states.should ==[:hidden]
+        rbg = MINT::RadioButtonGroup.first(:name=>"choice")
+        rbg.states.should == [:hidden]
+      end
     end
 
     it "should remove elements that have been dropped elsewhere"   do
-      #pending("get drop from drag n drop working")
-      sc = MINT::AISingleChoice.first(:name => "choice")
-      e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
-      e1.process_event(:focus)
-      e1.process_event(:drag)
-      #e1.process_event(:drop)
-      dest = MINT::AISingleChoice.new(:name => "choice_dest")
-      AUIControl.organize(dest,nil, 0)
-      dest.process_event(:present)
-      dest.process_event(:focus)
-      dest.process_event(:drop)
-      #dest.childs << e1
-      #p dest.childs.save
-      sc.childs.length.should == 3
-      dest.childs.length.should == 1
-      p sc.childs.inspect
-      e1 = MINT::AISingleChoiceElement.first(:name => "element_1").should_not == nil
-
+      connect do |redis|
+        sc = MINT::AISingleChoice.first(:name => "choice")
+        e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+        e1.process_event(:focus)
+        e1.process_event(:drag)
+        dest = MINT::AISingleChoice.new(:name => "choice_dest")
+        AUIControl.organize(dest,nil, 0)
+        dest.process_event(:present)
+        dest.process_event(:focus)
+        dest.process_event(:drop)
+        sc.childs.length.should == 3
+        dest.childs.length.should == 1
+        p sc.childs.inspect
+        e1 = MINT::AISingleChoiceElement.first(:name => "element_1").should_not == nil
+      end
     end
   end
 

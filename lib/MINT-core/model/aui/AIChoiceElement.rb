@@ -44,7 +44,7 @@ module MINT
      end
 
      def unchoose_others
-       aios = self.parent.childs.all(:states=>/\bchosen\b/)
+       aios = self.parent.children.all(:states=>/\bchosen\b/)
        aios.each do |aio|
          aio.process_event("unchoose")
        end

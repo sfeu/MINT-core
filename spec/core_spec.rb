@@ -23,17 +23,17 @@ describe 'Interactor' do
       p = MINT::Interactor.all.first
       p.name.should == "test1"
       p.states.should == [:initialized]
-      p.abstract_states.should == "root|initialized"
+      p.abstract_states.should == "Interactor|root"
     end
   end
 
-  it 'should initialize to states set have been been set during creation' do
+  it 'should initialize to states set that have been set during creation' do
     connect do |redis|
       MINT::Interactor.create(:name =>"test2",:states=>[:finished])
       p = MINT::Interactor.all.first
       p.name.should == "test2"
       p.states.should == [:finished]
-      p.abstract_states.should == "root|finished"
+      p.abstract_states.should == "root"
     end
   end
 

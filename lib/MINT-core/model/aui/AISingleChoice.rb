@@ -8,9 +8,9 @@ module MINT
 
     def add(elements)
       elements.each do |e|
-        self.childs << e
+        self.children << e
       end
-      self.childs.save
+      self.children.save
     end
 
   end

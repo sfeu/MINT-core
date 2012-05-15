@@ -1,34 +1,52 @@
 require "spec_helper"
 
 describe 'AUI' do
-  before :each do
-    connection_options = { :adapter => "in_memory"}
-    DataMapper.setup(:default, connection_options)
-      #    DataMapper.setup(:default, { :adapter => "rinda",:local =>Rinda::TupleSpace.new})
-    AIContainer.new(:name=>"interactive_sheet", :childs => [
-    AIContainer.new(:name=>"sheets", :childs =>[]),
-    AISingleChoice.new(:name=>"option", :label=>"Options", :childs => [
-        AISingleChoiceElement.new(:name=>"nodding",:label=>"Nodding"),
-        AISingleChoiceElement.new(:name=>"tilting",:label=>"Tilting"),
-        AISingleChoiceElement.new(:name=>"turning",:label=>"Turning")
-      ])
-    ]).save
+    include EventMachine::SpecHelper
 
-    @interactive_sheet = AIContainer.first
-    AUIControl.organize(@interactive_sheet,nil,0)
-    @interactive_sheet.save!
+    before :all do
+      connection_options = { :adapter => "redis"}
+      DataMapper.setup(:default, connection_options)
 
-    @sheets = MINT::AIContainer.first(:name=>"sheets")
-    @option = MINT::AISingleChoice.first(:name=>"option")
-  end
+      class ::Helper
+        def self.initialize
+          AIContainer.create(:name=>"interactive_sheet", :children => [
+              AIContainer.create(:name=>"sheets", :children =>[]),
+              AISingleChoice.create(:name=>"option", :label=>"Options", :children => [
+                  AISingleChoiceElement.create(:name=>"nodding",:label=>"Nodding"),
+                  AISingleChoiceElement.create(:name=>"tilting",:label=>"Tilting"),
+                  AISingleChoiceElement.create(:name=>"turning",:label=>"Turning")
+              ])
+          ]).save
+
+          @interactive_sheet = AIContainer.first
+          AUIControl.organize(@interactive_sheet,nil,0)
+          @interactive_sheet.save!
+
+          @sheets = MINT::AIContainer.first(:name=>"sheets")
+          @option = MINT::AISingleChoice.first(:name=>"option")
+        end
+      end
+
+      connect do |redis|
+        require "MINT-core"
+
+        DataMapper.finalize
+        DataMapper::Model.raise_on_save_failure = true
+
+      end
+    end
+
 
   describe 'music sheet' do
     it 'interactive_sheet should recover state after save and reload' do
-      @interactive_sheet.states.should == [:organized]
-      @interactive_sheet.save!
-      b =  MINT::AIContainer.first(:name=>"interactive_sheet")
-      b.states.should == [:organized]
-      b.process_event(:present).should == [:defocused]
+      connect do |redis|
+        Helper.initialize
+        @interactive_sheet.states.should == [:organized]
+        @interactive_sheet.save!
+        b =  MINT::AIContainer.first(:name=>"interactive_sheet")
+        b.states.should == [:organized]
+        b.process_event(:present).should == [:defocused]
+      end
     end
 
     it 'sheets should recover state after save and reload' do

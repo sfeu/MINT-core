@@ -66,7 +66,7 @@ describe 'SingleChoiceElement' do
 
       @a.process_event(:present,callback).should == [:defocused, :listed]
       @a.states.should == [:defocused, :listed]
-      @a.new_states.should == [:defocused, :listed, :p, :presenting, :choice]
+      @a.new_states.should == [:defocused, :listed, :p, :presenting, :choice, :c]
       callback.called.should == false
 
       @a.process_event(:focus,callback).should == [:focused, :listed]
@@ -88,7 +88,7 @@ describe 'SingleChoiceElement' do
       b.states.should == [:organized]
       b.new_states.should == [:organized]
       b.process_event(:present).should == [:defocused, :listed]
-      b.new_states.should == [:defocused, :listed, :p, :presenting, :choice]
+      b.new_states.should == [:defocused, :listed, :p, :presenting, :choice, :c]
     end
   end
 

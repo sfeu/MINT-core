@@ -132,7 +132,7 @@ describe 'AUI' do
 
 
           test_state_flow redis,"Interactor.AIO.AIOUT.AIContainer.AISinglePresence" ,
-                          ["initialized", "organized", ["defocused", "presenting"] ,["waiting", "focused"], "entered"] do
+                          ["initialized", "organized", ["presenting", "defocused"] ,["focused", "waiting"], "entered"] do
 
             @a = AISinglePresenceHelper.create_data
                       AUIControl.organize(@a,nil,0)

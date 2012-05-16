@@ -43,7 +43,7 @@ describe 'AUI' do
         Helper.initialize
         @interactive_sheet.states.should == [:organized]
         @interactive_sheet.save!
-        b =  MINT::AIContainer.first(:name=>"interactive_sheet")
+        b = MINT::AIContainer.first(:name=>"interactive_sheet")
         b.states.should == [:organized]
         b.process_event(:present).should == [:defocused]
       end

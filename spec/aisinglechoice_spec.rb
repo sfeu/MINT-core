@@ -93,7 +93,7 @@ describe 'SingleChoice' do
       end
     end
 
-    it 'should accept drag event in unchosen or chosen' do
+    it 'should accept drag event in listed or chosen' do
       connect do |redis|
         @e1.process_event(:focus).should == [:focused, :listed]
         @e1.states.should == [:focused, :listed]
@@ -104,11 +104,15 @@ describe 'SingleChoice' do
         @e1.process_event(:drop).should == [:focused, :listed]
         @e1.states.should == [:focused, :listed]
 
-        @e1.process_event(:focus).should == [:focused, :chosen]
+        @e1.process_event(:choose).should == [:focused, :chosen]
         @e1.states.should == [:focused, :chosen]
 
-        @e1.process_event(:drag).should == [:dragging, :chosen]
-        @e1.states.should == [:dragging, :chosen]
+        @e1.process_event(:drag).should == [:focused, :dragging]
+        @e1.states.should == [:focused, :dragging]
+
+        @e1.process_event(:drop).should == [:focused, :listed]
+        @e1.states.should == [:focused, :listed]
+
       end
   end
 

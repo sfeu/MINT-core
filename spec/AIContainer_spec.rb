@@ -1,21 +1,19 @@
 require "spec_helper"
 require "em-spec/rspec"
 
-
-
 describe 'AUI' do
   include EventMachine::SpecHelper
 
   before :all do
     class ::Helper
-    def self.create_structure
-      MINT::AIContainer.create(:name=>"a", :children =>"e1|e2|e3")
-      MINT::AIO.create(:name => "e1", :parent=>"a")
-      MINT::AIO.create(:name => "e2", :parent=>"a")
-      MINT::AIO.create(:name => "e3", :parent=>"a")
-      MINT::AIContainer.first
+      def self.create_structure
+        MINT::AIContainer.create(:name=>"a", :children =>"e1|e2|e3")
+        MINT::AIO.create(:name => "e1", :parent=>"a")
+        MINT::AIO.create(:name => "e2", :parent=>"a")
+        MINT::AIO.create(:name => "e3", :parent=>"a")
+        MINT::AIContainer.first
 
-    end
+      end
     end
 
     connection_options = { :adapter => "redis"}

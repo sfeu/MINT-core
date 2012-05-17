@@ -23,7 +23,9 @@ module MINT
     def parent
       p = super
       if p
-        AIContainer.get("aui",p)
+        r = AIContainer.get("aui",p)
+        puts r
+        return r
       else
         nil
       end

@@ -134,7 +134,26 @@ describe 'SingleChoiceElement' do
   it "should save abstract states property upon initial element creation" do
     connect do |redis|
       @a = MINT::AISingleChoiceElement.create(:name => "test")
-      puts @a.abstract_states
+      @a.abstract_states.should == "AISingleChoiceElement|root"
+    end
+  end
+
+  it "should retrieve the correct abstract states after entering parallel states" do
+    connect do |redis|
+      @a = MINT::AISingleChoiceElement.create(:name => "test")
+      @a.process_event(:organize).should == [:organized]
+      @a.process_event(:present).should == [:defocused, :listed]
+      @a.abstract_states.should == "AISingleChoiceElement|root|p|presenting|choice|c"
+    end
+  end
+
+  it "should retrieve the correct abstract states after leaving parallel states" do
+    connect do |redis|
+      @a = MINT::AISingleChoiceElement.create(:name => "test")
+      @a.process_event(:organize).should == [:organized]
+      @a.process_event(:present).should == [:defocused, :listed]
+      @a.process_event(:suspend).should == [:suspended]
+      @a.abstract_states.should == "AISingleChoiceElement|root"
     end
   end
 end

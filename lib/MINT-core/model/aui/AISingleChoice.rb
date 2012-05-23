@@ -10,7 +10,7 @@ module MINT
       elements.each do |e|
         self.children << e
       end
-      self.children.save
+      #self.children.save
     end
 
   end

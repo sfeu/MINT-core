@@ -24,7 +24,6 @@ module MINT
       p = super
       if p
         r = AIContainer.get("aui",p)
-        puts r
         return r
       else
         nil

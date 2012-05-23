@@ -7,11 +7,11 @@ describe 'AUI' do
       class ::Helper
         def self.create_structure
           MINT::AIContainer.create(:name=>"interactive_sheet", :children => "sheets|option")
-          MINT::AIContainer.create(:name=>"sheets", :children => "")
-          MINT::AISingleChoice.create(:name=>"option", :label=>"Options", :children => "nodding|tilting|turning")
-          MINT::AISingleChoiceElement.create(:name=>"nodding",:label=>"Nodding")
-          MINT::AISingleChoiceElement.create(:name=>"tilting",:label=>"Tilting")
-          MINT::AISingleChoiceElement.create(:name=>"turning",:label=>"Turning")
+          MINT::AIContainer.create(:name=>"sheets", :children => "", :parent => "interactive_sheet")
+          MINT::AISingleChoice.create(:name=>"option", :label=>"Options", :children => "nodding|tilting|turning", :parent => "interactive_sheet")
+          MINT::AISingleChoiceElement.create(:name=>"nodding",:label=>"Nodding", :parent => "option")
+          MINT::AISingleChoiceElement.create(:name=>"tilting",:label=>"Tilting", :parent => "option")
+          MINT::AISingleChoiceElement.create(:name=>"turning",:label=>"Turning", :parent => "option")
         end
 
         def self.create_structure_CUI
@@ -134,7 +134,7 @@ describe 'AUI' do
 
         # recover nodding to see the change made
         nodding = MINT::AISingleChoiceElement.first(:name=>"nodding")
-        nodding.states.should == [:defocused, :listed]
+        nodding.states.should == [:focused, :listed]
 
         #recover and check
         tilting =  MINT::AISingleChoiceElement.first(:name=>"tilting")
@@ -235,11 +235,11 @@ describe 'AUI' do
         MINT::AISingleChoiceElement.first(:name=>"nodding").process_event(:focus)
         MINT::AISingleChoiceElement.first(:name=>"nodding").process_event(:choose)
 
-        MINT::AISingleChoiceElement.first(:name=>"nodding").states.should == [:defocused, :chosen]
+        MINT::AISingleChoiceElement.first(:name=>"nodding").states.should == [:focused, :chosen]
         MINT::AISingleChoiceElement.first(:name=>"tilting").states.should == [:defocused, :listed]
         MINT::AISingleChoiceElement.first(:name=>"turning").states.should == [:defocused, :listed]
 
-        MINT::RadioButton.first(:name=>"nodding").states.should == [:displayed, :selected]
+        MINT::RadioButton.first(:name=>"nodding").states.should == [:highlighted, :selected]
         MINT::RadioButton.first(:name=>"tilting").states.should == [:displayed, :listed]
         MINT::RadioButton.first(:name=>"turning").states.should == [:displayed, :listed]
       end

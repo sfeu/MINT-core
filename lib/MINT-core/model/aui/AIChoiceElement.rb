@@ -11,12 +11,15 @@ module MINT
        true
      end
 
-
-
      def unchoose_others
-       aios = @element.parent.childs.all(:states=>/\bchosen\b/)
+       aios = []
+       @element.parent.children.each do |c|
+         if c.is_in? :chosen
+           aios << c
+         end
+       end
        aios.each do |aio|
-         aio.process_event("unchoose") if aio.is_in? :chosen
+         aio.process_event("unchoose")
        end
        true
      end
@@ -44,7 +47,12 @@ module MINT
      end
 
      def unchoose_others
-       aios = self.parent.children.all(:states=>/\bchosen\b/)
+       aios = []
+       self.parent.children.each do |c|
+         if c.is_in? :chosen
+           aios << c
+         end
+       end
        aios.each do |aio|
          aio.process_event("unchoose")
        end

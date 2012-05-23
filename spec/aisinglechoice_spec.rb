@@ -142,7 +142,7 @@ describe 'SingleChoice' do
         #TODO Find out from where these RadioButtonGroup states come from
         Helper.initialize_main_structure
 
-        MINT::RadioButtonGroup.create(:name =>"choice", :states => [:presenting,:listed])
+        MINT::RadioButtonGroup.create(:name =>"choice", :states => [:displayed])
         MINT::Selectable.create(:name =>"element_1", :states =>[:displayed,:listed])
         MINT::Selectable.create(:name =>"element_2", :states =>[:displayed,:listed])
         MINT::Selectable.create(:name =>"element_3", :states =>[:displayed,:listed])

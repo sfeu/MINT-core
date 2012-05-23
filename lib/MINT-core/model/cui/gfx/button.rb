@@ -13,14 +13,13 @@ module MINT
   end
 
   class Button < CIO
-    def initialize_statemachine
-      if @statemachine.nil?
-        parser = StatemachineParser.new(self)
-        @statemachine = parser.build_from_scxml "#{File.dirname(__FILE__)}/button.scxml"
 
-        @statemachine.reset
+    def getModel
+         "cui-gfx"
+    end
 
-      end
+    def getSCXML
+          "#{File.dirname(__FILE__)}/button.scxml"
     end
 
     def sync_event(event)

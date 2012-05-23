@@ -11,7 +11,7 @@ module CUIControl2
     x = result["x"]
     y = result["y"]
 
-    highlighted_cio = MINT::CIO.first(:abstract_states=>/highlighted/)
+    highlighted_cio = MINT::CIO.first(:states=>/highlighted/)
 
     if (highlighted_cio!=nil && highlighted_cio.x<=x && highlighted_cio.y<=y && highlighted_cio.x+highlighted_cio.width>=x && highlighted_cio.y+highlighted_cio.height>=y)
     #  puts "unchanged"

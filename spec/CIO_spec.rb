@@ -348,8 +348,8 @@ describe 'CUI' do
     it "should highlight CIOs based on coordinates retrieved by mouse" do
       connect do |redis|
 
-        a= MINT::CIO.create(:name=>"left_2x",:x=>1,:y =>1, :width=>390,:height =>800,:states => [:displayed])
-        b= MINT::CIO.create(:name=>"right_2x",:x=>400,:y =>2, :width=>389,:height =>799,:states => [:displayed])
+        a= MINT::CIO.create(:name=>"left_2x",:x=>1,:y =>1, :width=>390,:height =>800,:states => [:displayed], :highlightable => true)
+        b= MINT::CIO.create(:name=>"right_2x",:x=>400,:y =>2, :width=>389,:height =>799,:states => [:displayed], :highlightable => true)
 
         puts b.pos.Xvalue
 

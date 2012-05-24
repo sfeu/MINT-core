@@ -99,7 +99,7 @@ module MINT
         #      p aic.name
         elements=[]
         ai_childs.each_with_index do |e,i|
-          if e.abstract_states =~ /organized/
+          if e.states == [:organized]
 
           cio = CIO.first(:name=>e.name)
 

@@ -27,7 +27,7 @@ module MINT
     end
 
     def sync_aio_to_activated
-      aio =  MINT2::AICommand.first(:name=>self.name)
+      aio =  MINT::AICommand.first(:name=>self.name)
       if (aio and not aio.is_in? :activated)
         aio.sync_event(:activate)
       end
@@ -36,7 +36,7 @@ module MINT
 
 
     def sync_aio_to_deactivated
-      aio =  MINT2::AICommand.first(:name=>self.name)
+      aio =  MINT::AICommand.first(:name=>self.name)
       if (aio and not aio.is_in? :deactivated)
         aio.sync_event(:deactivate)
       end

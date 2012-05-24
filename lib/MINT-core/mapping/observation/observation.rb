@@ -52,12 +52,12 @@ class Observation
   def start(cb)
 
     check_true_at_startup(cb)
-
-    RedisConnector.sub.subscribe("#{element}").callback {
+    r = RedisConnector.sub
+    r.subscribe("#{element}").callback {
       @initiated_callback.call(element) if @initiated_callback
     }
 
-    RedisConnector.sub.on(:message) do |channel, message|
+    r.on(:message) do |channel, message|
       if channel.eql? element
         found=JSON.parse message
 

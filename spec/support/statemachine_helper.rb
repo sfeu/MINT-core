@@ -11,6 +11,11 @@ module StatemachineHelper
 
       done if expected_states.length==0
     }
+    EM.add_timer(3) {
+      raise "failed to wait for state change to >>#{expected_states.first}<<, which not occurred during the last 3 seconds"
+      done # EM.stop
+
+    }
   end
 
   def test_msg_flow (redis,channel,interactor,attribute,value, publish_data)

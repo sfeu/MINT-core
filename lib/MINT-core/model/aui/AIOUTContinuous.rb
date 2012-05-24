@@ -1,7 +1,7 @@
 module MINT
   class AIOUTContinuous < AIOUT
 
-    property :data, Integer
+    property :data, Integer, :default  => 0
     property :min, Integer,:default  => 0
     property :max, Integer,:default  => 100
 
@@ -24,37 +24,44 @@ module MINT
 
 
     def consume(attribute)
+      @d = 0
+
       channel_name = create_attribute_channel_name(attribute)
-      RedisConnector.sub.subscribe(channel_name)
-      RedisConnector.sub.on(:message) { |channel, message|
+      p "subscribed #{channel_name}"
+      r = RedisConnector.sub
+      r.subscribe(channel_name)
+
+      r.on(:message) { |channel, message|
+        p "message"
         if channel.eql? channel_name
 
           found=JSON.parse message
 
           if self.name.eql? found['name']
             if found['data']
-              value = found['data'].to_i
+              @d = found['data'].to_i
+              @data = attribute_get(:data)
 
+              process_event "move"
 
-              d = attribute_get(:data)
-              if d
-                if value > d and not (is_in?(:progressing) or is_in?(:max))# state comparison just for performance
-                  process_event("progress")
-                elsif value  < d and not (is_in?(:regressing) or is_in?(:min))
-                  process_event("regress")
-                end
-              else
-                #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
-              end
-              attribute_set(:data,value)
-              RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{self.name}",:params=>{:name=>self.name,:data=>value },:destinations=>["user:testuser"]}.to_json)
+              #if d
+              #  if value > d and not (is_in?(:progressing) or is_in?(:max))# state comparison just for performance
+              #    process_event("move")
+              #  elsif value  < d and not (is_in?(:regressing) or is_in?(:min))
+              #    process_event("move")
+              #  end
+              #else
+              #  #  @statemachine.process_event("progress") # default progress TODO improve default handling for first data
+              #end
+              attribute_set(:data,@d)
+              RedisConnector.pub.publish("ss:channels",{:event=>self.class.create_channel_name+".#{self.name}",:params=>{:name=>self.name,:data=>@d },:destinations=>["user:testuser"]}.to_json)
             end
           end
         end
       }
 
 
-
+      @d
     end
 
     def halt(id)

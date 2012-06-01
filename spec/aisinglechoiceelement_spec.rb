@@ -130,7 +130,7 @@ describe 'SingleChoiceElement' do
       b.name.should == "test"
     end
   end
-  
+
   it "should save abstract states property upon initial element creation" do
     connect do |redis|
       @a = MINT::AISingleChoiceElement.create(:name => "test")
@@ -156,4 +156,35 @@ describe 'SingleChoiceElement' do
       @a.abstract_states.should == "AISingleChoiceElement|root"
     end
   end
+
+  it "should remove itself from parent choice if it enters dragging state (case: choice with just one element)" do
+    connect do |redis|
+      @a = MINT::AISingleChoiceElement.create(:name => "test",:parent=>"choice",:states=> [:focused, :chosen])
+      @c = MINT::AISingleChoice.create(:name => "choice",:children=>"test",:states=>[:defocused,:listing])
+
+      @a.process_event(:drag).should == [:focused,:dragging]
+
+      MINT::AISingleChoiceElement.first.parent.should == nil
+      MINT::AISingleChoice.first.children.to_a.empty?.should ==true
+
+    end
+  end
+
+  it "should remove itself from parent choice if it enters dragging state (case: choice with several elements)" do
+    connect do |redis|
+      MINT::AISingleChoiceElement.create(:name => "A",:parent=>"choice",:states=> [:focused, :chosen])
+      @a = MINT::AISingleChoiceElement.create(:name => "B",:parent=>"choice",:states=> [:focused, :chosen])
+      MINT::AISingleChoiceElement.create(:name => "C",:parent=>"choice",:states=> [:focused, :chosen])
+
+      @c = MINT::AISingleChoice.create(:name => "choice",:children=>"A|B|C",:states=>[:defocused,:listing])
+
+      @a.process_event(:drag).should == [:focused,:dragging]
+
+      MINT::AISingleChoiceElement.get("aui","B").parent.should == nil
+      MINT::AISingleChoice.first.children.length.should == 2
+
+    end
+  end
+
+
 end

@@ -46,7 +46,9 @@
     <transition target="choice"></transition>
    </state>
    <state id="choice" initial="listed"><!--   node-size-and-position x=20.0 y=183.0 w=181.5 h=153.0  -->
-    <transition event="drag" target="dragging"><!--   edge-path [dragging]  x=140.75 y=123.0  --></transition>
+    <transition event="drag" target="dragging">
+     <invoke src="remove_from_choice" type="x-mint"></invoke>
+<!--   edge-path [dragging]  x=140.75 y=123.0  --></transition>
     <state id="listed"><!--   node-size-and-position x=100.0 y=43.0 w=60.0 h=20.0  -->
      <onentry>
       <invoke src="sync_cio_to_listed" type="x-mint"></invoke>

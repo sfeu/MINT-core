@@ -90,6 +90,7 @@ describe 'SingleChoice' do
       connect do |redis|
         Helper.initialize_main_structure
         @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
+        sc =MINT::AISingleChoice.first(:name => "choice")
 
         @e1.process_event(:focus).should == [:focused, :listed]
         @e1.states.should == [:focused, :listed]
@@ -97,7 +98,10 @@ describe 'SingleChoice' do
         @e1.process_event(:drag).should == [:focused, :dragging]
         @e1.states.should == [:focused, :dragging]
 
-        @e1.process_event(:drop).should == [:focused, :listed]
+
+        sc.process_event(:focus).should == [:focused, :listing]
+        sc.process_event(:drop).should == [:defocused, :listing]
+        @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
         @e1.states.should == [:focused, :listed]
 
         @e1.process_event(:choose).should == [:focused, :chosen]
@@ -106,7 +110,9 @@ describe 'SingleChoice' do
         @e1.process_event(:drag).should == [:focused, :dragging]
         @e1.states.should == [:focused, :dragging]
 
-        @e1.process_event(:drop).should == [:focused, :listed]
+        sc.process_event(:focus).should == [:focused, :listing]
+        sc.process_event(:drop).should == [:defocused, :listing]
+        @e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
         @e1.states.should == [:focused, :listed]
 
       end
@@ -170,12 +176,16 @@ describe 'SingleChoice' do
         e1 = MINT::AISingleChoiceElement.first(:name => "element_1")
         e1.process_event(:focus)
         e1.process_event(:drag)
-        dest = MINT::AISingleChoice.new(:name => "choice_dest")
+        dest = MINT::AISingleChoice.create(:name => "choice_dest")
         AUIControl.organize(dest,nil, 0)
         dest.process_event(:present)
         dest.process_event(:focus)
         dest.process_event(:drop)
+
+        sc = MINT::AISingleChoice.first(:name => "choice")
         sc.children.length.should == 3
+
+        dest = MINT::AISingleChoice.first(:name => "choice_dest")
         dest.children.length.should == 1
         p sc.children.inspect
         e1 = MINT::AISingleChoiceElement.first(:name => "element_1").should_not == nil

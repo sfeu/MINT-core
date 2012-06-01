@@ -20,6 +20,16 @@ module MINT
       []
     end
 
+    def children= children
+      if children.is_a? Array
+        a= children.map { |c| c.name if not c.is_a? String}
+
+        super(a.join("|"))
+      else
+        super(children)
+        end
+    end
+
     def getSCXML
       "#{File.dirname(__FILE__)}/aicontainer.scxml"
     end

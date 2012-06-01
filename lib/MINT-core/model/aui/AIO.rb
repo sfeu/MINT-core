@@ -30,6 +30,14 @@ module MINT
       end
     end
 
+    def parent= (p)
+      if p.nil? or p.is_a? String
+        super(p)
+      else
+        super(p.name)
+      end
+    end
+
     def parent2str
       parent.name      if  self.parent
     end

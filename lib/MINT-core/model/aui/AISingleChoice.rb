@@ -7,10 +7,14 @@ module MINT
 
 
     def add(elements)
+
       elements.each do |e|
-        self.children << e
+        self.children = self.children << e
+        e.parent = self
+        e.save
       end
-      #self.children.save
+
+      self.save
     end
 
   end

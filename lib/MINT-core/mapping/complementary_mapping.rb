@@ -27,7 +27,7 @@ class ComplementaryMapping
 
       observation.start self.method(:callback)
     end
-    @activated_callback.call
+    @activated_callback.call  if @activated_callback
   end
 
   def observations

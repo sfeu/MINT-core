@@ -5,15 +5,17 @@ require "MINT-core"
 
 describe "Complementary mapping" do
   include EventMachine::SpecHelper
-  before :each do
+
+  before :all do
     connection_options = { :adapter => "redis"}
     DataMapper.setup(:default, connection_options)
 
-    DataMapper::Model.raise_on_save_failure = true
-    @redis = Redis.connect
-    @redis.flushdb
-    DataMapper.finalize
-
+    connect do |redis|
+         require "MINT-core"
+         #require "support/redis_connector_monkey_patch"  # TODO dirty patch for a bug that i have not found :(
+         DataMapper.finalize
+         DataMapper::Model.raise_on_save_failure = true
+    end
   end
 
   it "should be work correctly" do
@@ -61,10 +63,19 @@ describe "Complementary mapping" do
       m.initialized_callback(Proc.new {p "Hello World"})
       m.activated_callback(Proc.new {
         # after mapping has been initialized simulate a user "test" moving the slider to 20
-        RedisConnector.pub.publish  'Interactor.AIO.AIIN.AIINContinuous.slider:test', 20
+        p = RedisConnector.pub
+        p.publish  'Interactor.AIO.AIIN.AIINContinuous.slider:test', 20
       }
       )
       m.start
+
+
+      # top timer to prevent endless waiting if test does not succeed
+      EM.add_timer(3) {
+            raise "failed"
+            done # EM.stop
+
+          }
     end
   end
 end

@@ -4,6 +4,10 @@ class EventAction < Action
       @action = params
   end
 
+  def id
+    @action[:id]
+  end
+
   def event
     @action[:event]
   end

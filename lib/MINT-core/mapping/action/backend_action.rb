@@ -4,6 +4,10 @@ class BackendAction < Action
       @action = params
   end
 
+  def id
+    @action[:id]
+  end
+
   def parameter
     @action[:parameter]
   end

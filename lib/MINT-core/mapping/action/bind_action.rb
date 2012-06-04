@@ -10,6 +10,10 @@ class BindAction < Action
     @initiated_callback = cb
   end
 
+  def id
+    @action[:id]
+  end
+
   def elementIn
     @action[:elementIn]
   end

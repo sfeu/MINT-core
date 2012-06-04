@@ -20,6 +20,10 @@ class ComplementaryMapping
     "unnamed"
   end
 
+  def id
+    @mapping[:id]
+  end
+
   def start
     observations.each do |observation|
       @observation_init[observation.element] = false

@@ -10,6 +10,10 @@ class Observation
     @observation[:continuous]
   end
 
+  def id
+    @observation[:id]
+  end
+
   def element
     @observation[:element]
   end

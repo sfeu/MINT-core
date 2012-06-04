@@ -32,7 +32,6 @@ module MINT
       r.subscribe(channel_name)
 
       r.on(:message) { |channel, message|
-        p "message"
         if channel.eql? channel_name
 
           found=JSON.parse message

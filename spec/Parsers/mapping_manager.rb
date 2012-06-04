@@ -2,8 +2,7 @@ require 'rubygems'
 require "bundler/setup"
 require 'rexml/document'
 require 'rexml/streamlistener'
-require 'MINT-core'
-require "../Parsers/mappings-parser.rb"
+require "../../MINT-nodejs/Parser/mappings-parser.rb"
 
 class MappingManager
   include REXML
@@ -48,25 +47,20 @@ class MappingManager
          #Do I have to store its name?
       when 'include'
          parser = MappingsParser.new
-         mapping = parser.build_from_scxml("../applications/streaming_example/"+ attributes['href'])
+         mapping = parser.build_from_scxml("examples/"+ attributes['href'])
          @mappings[mapping.mapping_name] = mapping
 
          #If a callback has already been register, add it.
          if @callbacks.has_key? mapping.mapping_name
-           mapping.state_callback = callback
+           mapping.state_callback = @callbacks[mapping.mapping_name]
          end
 
-         #Call callback with proper values
          #TODO check if callback here or in class initialize
          if @mappings[mapping.mapping_name].state_callback
+           p "Mapping #{mapping.mapping_name} loaded"
            @mappings[mapping.mapping_name].state_callback.call(mapping.mapping_name, {:id => mapping.id, :mapping_state => :loaded})
          end
          if attributes['start'] == "true"
-           #Call callback with proper values
-           #TODO check if callback here or in class start
-           if @mappings[mapping.mapping_name].state_callback
-             @mappings[mapping.mapping_name].state_callback.call(mapping.mapping_name, {:id => mapping.id, :mapping_state => :started})
-           end
            mapping.start
          end
     end

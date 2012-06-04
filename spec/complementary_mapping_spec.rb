@@ -59,8 +59,8 @@ describe "Complementary mapping" do
       a1 = BindAction.new(:elementIn => "Interactor.AIO.AIIN.AIINContinuous",:nameIn => "slider", :attrIn =>"data",:attrOut=>"data",
                           #:transform =>:manipulate,
                           :elementOut =>"Interactor.AIO.AIOUT.AIOUTContinuous", :nameOut=>"volume" )
-      m = ComplementaryMapping.new(:observations => [o1,o2],:actions =>[a1])
-      m.initialized_callback(Proc.new {p "Hello World"})
+      m = ComplementaryMapping.new(:name => "Mapping_spec", :observations => [o1,o2],:actions =>[a1])
+      m.initialized_callback(Proc.new {p "Initialized callback called"})
       m.activated_callback(Proc.new {
         # after mapping has been initialized simulate a user "test" moving the slider to 20
         p = RedisConnector.pub

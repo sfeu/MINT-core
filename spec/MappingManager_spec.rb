@@ -1,5 +1,6 @@
 require "spec_helper"
 require "em-spec/rspec"
+require "Parsers/mapping_manager.rb"
 
 describe 'MappingManager' do
   include EventMachine::SpecHelper
@@ -30,7 +31,7 @@ describe 'MappingManager' do
       end
 
       m.register_callback("Reset Click", method(:my_callback))
-      m.load("mim_test.xml")
+      m.load("examples/mim_streaming_example.xml")
       d = @data.shift
       d[:mapping_state].should == :loaded
       @data.length.should == 0
@@ -59,7 +60,7 @@ describe 'MappingManager' do
 
       d = @data.shift
       d[:mapping_state].should == :started
-      @data.length.should == 0
+      #There are other callbacks @data.length.should == 0
       done
     end
 
@@ -70,7 +71,6 @@ describe 'MappingManager' do
       m = MappingManager.new
       @counter = 0
 
-
       # we need to move all checks into the callback, since after the mapping is started, we are async...
       def my_callback(mapping_name,data)
         if mapping_name.eql? "Mouse Interactor Highlighting"
@@ -80,20 +80,20 @@ describe 'MappingManager' do
             when 1
               data[:mapping_state].should == :started
             when 2
-              data[:id].should == 111
+              data[:id].should == "111"
               data[:state].should == :activated
             when 3
-              data[:id].should == 2222
+              data[:id].should == "2222"
               data[:state].should == :activated
               done # terminates test
-
           end
           @counter +=1
         end
-
-        m.register_callback("Mouse Interactor Highlighting",method(:my_callback))
-        m.load("examples/mim_streaming_example.xml")
       end
+
+      m.register_callback("Mouse Interactor Highlighting",method(:my_callback))
+      m.load("examples/mim_streaming_example.xml")
+
     end
   end
 end

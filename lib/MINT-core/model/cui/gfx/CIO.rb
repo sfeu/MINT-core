@@ -45,6 +45,9 @@ module MINT
     property :up, String
     property :down, String
 
+    # Dependencies to otehr CIO elements that need to be shown/instantiated before this one
+    property :depends, String
+
     property :highlightable, Boolean, :default => false
 
 

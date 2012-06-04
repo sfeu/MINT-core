@@ -1,9 +1,7 @@
 require "spec_helper"
-
 require "em-spec/rspec"
 
-
-describe 'AUI' do
+describe 'MappingManager' do
   include EventMachine::SpecHelper
 
   before :all do
@@ -20,210 +18,82 @@ describe 'AUI' do
   end
 
 
-  describe 'MappingManager' do
-    it 'should register callback' do
-      connect do |redis|
+  it 'should register and call callback for loaded' do
+    connect do |redis|
+      m = MappingManager.new
+      @data = []
 
-
-      end
-
-    end
-
-    it 'should save with correct identifier' do
-      connect do |redis|
-
-        @a = MINT::AIO.create(:name => "test")
-        redis = Redis.connect
-        r = redis.hgetall("mint_interactors:auitest")
-        r['name'].should == "test"
-      end
-
-    end
-
-
-
-    it 'should transform to organizing state for present action' do
-      connect do |redis|
-        @a = MINT::AIO.create(:name => "test")
-        @a.process_event(:organize).should ==[:organized]
-        @a.states.should == [:organized]
-        @a.new_states.should == [:organized]
-      end
-    end
-
-    it 'should call back after event has been processed' do
-      connect do |redis|
-        class CallbackContext
-          attr_accessor :called
-
-          def initialize
-            @called = false
-          end
-          def focus_next
-            @called = true
-          end
-          def inform_parent_presenting
-          end
-
-          def sync_cio_to_displayed
-          end
-          def sync_cio_to_highlighted
-          end
-          def exists_next
-            true
-          end
-          def exists_prev
-            true
-          end
-
+      def my_callback(mapping_name,data)
+        if mapping_name.eql? "Reset Click"
+          @data << data
         end
-
-        callback = CallbackContext.new
-
-        @a = MINT::AIO.create(:name => "test")
-        @a.process_event(:organize,callback).should == [:organized]
-        callback.called.should == false
-
-        @a.process_event(:present,callback).should == [:defocused]
-        callback.called.should == false
-
-        @a.process_event(:focus,callback).should == [:focused]
-        callback.called.should == false
-
-        @a.process_event(:next,callback).should == [:defocused]
-        callback.called.should == true
       end
-    end
 
-    it 'should recover state after save and reload' do
-      connect do |redis|
-        #    DataMapper.finalize
-        @a = MINT::AIO.create(:name => "test")
-        @a.process_event(:organize).should == [:organized]
-        @a.save
-        b =  MINT::AIO.first(:mint_model =>"aui", :name => "test")
-#        b =  MINT2::AIO.get("aui","test")
-        b.states.should == [:organized]
-        b.process_event(:present)# .should == [:defocused]
-      end
-    end
-
-    it 'should store the state' do
-
-      connect do |redis|
-        a = MINT::AIO.create(:name=>"RecipeSelection_label",:label=>"Rezeptdetails")
-        a.states.should == [:initialized]
-        a.process_event(:organize)
-        a.states.should == [:organized]
-        a.save!
-        MINT::AIO.get("aui","RecipeSelection_label").states.should == [:organized]
-      end
-    end
-
-
-    #TODO Bug first sets states to array  not sure ahy
-
-    #    it "should process after load" do
-    #      t = MINT::AIO.create(:name => "p")
-    #
-    #      b = MINT::AIO.first(:name => "p")
-    #     # b.states.should == [:initialized]
-    #      b.process_event(:organized)
-    #
-    #    end
-
-
-    it "should save prev/next links" do
-      connect do |redis|
-        @a = MINT::AIO.create(:name => "test")
-        b =  MINT::AIO.create(:name=>"next")
-        @a.next = "next"
-        b.previous = "test"
-        b.save.should == true
-        @a.save.should == true
-
-        n = MINT::AIO.first(:name=>"next")
-        n.previous.should == @a
-      end
-    end
-
-    it 'should focus to next element' do
-      #pending "navigation currently not supported"
-      connect do |redis|
-        @a = MINT::AIO.create(:name => "test")
-        b =  MINT::AIO.create(:name=>"next")
-        @a.next = "next"
-        b.previous = "test"
-
-        @a.process_event(:organize)
-        b.process_event(:organize)
-
-        @a.process_event(:present)
-        b.process_event(:present)
-
-        @a.process_event(:focus).should == [:focused]
-
-        @a.process_event(:next).should == [:defocused]
-        b = MINT::AIO.first(:name=>"next")
-        b.states.should ==[:focused]
-        @a.states.should ==[:defocused]
-      end
-    end
-
-    it 'should not defocus on next if there is no next element' do
-      connect do |redis|
-        @a = MINT::AIO.create(:name => "test")
-        @a.states=[:focused]
-        @a.process_event(:next)
-        @a.states.should == [:focused]
-      end
-    end
-
-    it 'should not defocus on prev if there is no previous element' do
-      connect do |redis|
-        @a = MINT::AIO.create(:name => "test")
-        @a.states=[:focused]
-        @a.process_event(:prev).should ==[:focused]
-      end
-    end
-
-    it 'should handle previous' do
-      connect do |redis|
-        @a = MINT::AIO.create(:name => "test")
-        @a.states=[:defocused]
-        b =  MINT::AIO.new(:name=>"next", :previous =>"test")
-        b.states= [:focused]
-        b.process_event(:prev)
-
-        c = MINT::AIO.first(:name=>"test")
-        c.states.should ==[:focused]
-        b.states.should ==[:defocused]
-      end
-    end
-
-    it 'should handle parent' do
-      connect do |redis|
-      @a = MINT::AIO.create(:name => "test",:parent =>"parent",:states=>[:focused])
-      b =  MINT::AIContainer.create(:name=>"parent",:children =>["test"],:states => [:defocused])
-      @a.process_event(:parent)
-
-      @a.states.should ==[:defocused]
-      b = MINT::AIContainer.first(:name=>"parent")
-
-      b.states.should ==[:focused]
-      end
-    end
-
-    it 'should serialize to JSON' do
-      connect do |redis|
-        @a = MINT::AIO.create(:name => "test")
-        require 'dm-serializer'
-        @a.states=[:focused]
-
-        puts @a.to_json                      # => { "id": 1, "name": "Berta" }
-      end
+      m.register_callback("Reset Click", method(:my_callback))
+      m.load("mim_test.xml")
+      d = @data.shift
+      d[:mapping_state].should == :loaded
+      @data.length.should == 0
+      done
     end
 
   end
 
+  it 'should register and call callback for loaded and started' do
+    connect do |redis|
+
+      m = MappingManager.new
+      @data = []
+
+      def my_callback(mapping_name,data)
+        if mapping_name.eql? "Mouse Interactor Highlighting"
+          @data << data
+        end
+      end
+
+      m.register_callback("Mouse Interactor Highlighting", method(:my_callback))
+      m.load("examples/mim_streaming_example.xml")
+
+      d = @data.shift
+      d[:mapping_state].should == :loaded
+
+      d = @data.shift
+      d[:mapping_state].should == :started
+      @data.length.should == 0
+      done
+    end
+
+  end
+
+  it 'should activate observations after mapping has been started' do
+    connect do |redis|
+      m = MappingManager.new
+      @counter = 0
+
+
+      # we need to move all checks into the callback, since after the mapping is started, we are async...
+      def my_callback(mapping_name,data)
+        if mapping_name.eql? "Mouse Interactor Highlighting"
+          case @counter
+            when 0
+              data[:mapping_state].should == :loaded
+            when 1
+              data[:mapping_state].should == :started
+            when 2
+              data[:id].should == 111
+              data[:state].should == :activated
+            when 3
+              data[:id].should == 2222
+              data[:state].should == :activated
+              done # terminates test
+
+          end
+          @counter +=1
+        end
+
+        m.register_callback("Mouse Interactor Highlighting",method(:my_callback))
+        m.load("examples/mim_streaming_example.xml")
+      end
+    end
+  end
 end

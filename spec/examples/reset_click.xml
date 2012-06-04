@@ -1,0 +1,24 @@
+<mapping name="Reset Click" xmlns="http://www.multi-access.de"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+
+  <operator type="complementary" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.Pointer.Mouse" name="mouse" states="left_pressed" result="p"/>
+      <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" name="reset" states="focused" result="c"/>
+    </observations>
+    <actions>
+      <event id="4" type="activate" target="c"/>
+    </actions>
+  </operator>
+
+</mapping>
+
+        <!--
+
+o4 = Observation.new(:element =>"Interactor.Pointer.Mouse",:name => "mouse", :states =>[:pressed], :result => "p")
+o5 = Observation.new(:element =>"Interactor.AIO.AIIN.AIINDiscrete.AICommand",:name => "reset", :continuous => true, :states =>[:focused], :result => "c")
+a3 = EventAction.new(:event => :activate,:target => "c")
+m3 = ComplementaryMapping.new(:name=>"Reset Click",:observations => [o4,o5],:actions =>[a3])
+m3.start
+        -->

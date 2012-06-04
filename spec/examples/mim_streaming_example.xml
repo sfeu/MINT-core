@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<mim name="Streaming Example" xmlns="http://www.multi-access.de"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+
+  <include href="slider_volume.xml" start="true"/>
+  <include href="mouse_highlight.xml" start="true"/>
+  <include href="reset_click.xml" start="true"/>
+  <include href="reset_release.xml" start="true"/>
+  <include href="reset_execution.xml" start="true"/>
+</mim>

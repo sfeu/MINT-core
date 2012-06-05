@@ -89,7 +89,7 @@ class ComplementaryMapping
       @action_activated[action.identifier] = false
       action.initiated_callback(self.method :activated_cb)
       p "Action activated"
-      #@state_callback.call(@mapping[:name], {:id => action.id, :state => :activated}) if @state_callback
+      @state_callback.call(@mapping[:name], {:id => action.id, :state => :activated}) if @state_callback
       action.start observation_results   # pass observation variables
     end
   end

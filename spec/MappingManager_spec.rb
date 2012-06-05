@@ -20,7 +20,7 @@ describe 'MappingManager' do
 
 
   it 'should register and call callback for loaded' do
-    connect do |redis|
+    connect true do |redis|
       m = MappingManager.new
       @data = []
 
@@ -41,7 +41,7 @@ describe 'MappingManager' do
   end
 
   it 'should register and call callback for loaded and started' do
-    connect do |redis|
+    connect true do |redis|
 
       m = MappingManager.new
       @data = []
@@ -67,7 +67,7 @@ describe 'MappingManager' do
   end
 
   it 'should activate observations after mapping has been started' do
-    connect do |redis|
+    connect true do |redis|
       m = MappingManager.new
       @counter = 0
 
@@ -83,9 +83,26 @@ describe 'MappingManager' do
               data[:id].should == "111"
               data[:state].should == :activated
             when 3
+              data[:id].should == "111"
+              data[:state].should == :false
+            when 4
+              data[:id].should == "111"
+              data[:state].should == :true
+            when 5
               data[:id].should == "2222"
               data[:state].should == :activated
-              done # terminates test
+            when 6
+              data[:id].should == "2222"
+              data[:state].should == :succeeded
+            when 7
+              data[:mapping_state].should == :finished
+            when 8
+              data[:mapping_state].should == :started #cool would be :restarted for this case
+            when 9
+              data[:id].should == "111"
+              data[:state].should == :activated
+              p "terminate"
+              done
           end
           @counter +=1
         end
@@ -93,7 +110,8 @@ describe 'MappingManager' do
 
       m.register_callback("Mouse Interactor Highlighting",method(:my_callback))
       m.load("examples/mim_streaming_example.xml")
-
+      mouse = MINT::Mouse.create(:name =>"mouse")  # previously activated observation should be false
+      mouse.process_event :connect # observation should be true
     end
   end
 end

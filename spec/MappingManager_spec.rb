@@ -1,6 +1,5 @@
 require "spec_helper"
 require "em-spec/rspec"
-require "Parsers/mapping_manager.rb"
 
 describe 'MappingManager' do
   include EventMachine::SpecHelper

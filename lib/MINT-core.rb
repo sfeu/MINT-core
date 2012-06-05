@@ -51,4 +51,6 @@ require "MINT-core/mapping/action/action"
 require "MINT-core/mapping/action/backend_action"
 require "MINT-core/mapping/action/event_action"
 require "MINT-core/mapping/action/bind_action"
+require "MINT-core/manager/mapping_manager"
+require "MINT-core/manager/mapping_server"
 

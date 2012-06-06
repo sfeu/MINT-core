@@ -2,7 +2,6 @@ require 'rubygems'
 require "bundler/setup"
 require 'rexml/document'
 require 'rexml/streamlistener'
-require "../../MINT-nodejs/Parser/mappings-parser.rb"
 
 class MappingManager
   include REXML
@@ -46,7 +45,7 @@ class MappingManager
       when 'mim'
          #Do I have to store its name?
       when 'include'
-         parser = MappingsParser.new
+         parser = MappingParser.new
          mapping = parser.build_from_scxml("examples/"+ attributes['href'])
          @mappings[mapping.mapping_name] = mapping
 

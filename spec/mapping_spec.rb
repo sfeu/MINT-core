@@ -1,7 +1,6 @@
 require "spec_helper"
 
 require "em-spec/rspec"
-require "../../MINT-nodejs/Parser/mappings-parser.rb"
 
 
 describe 'Mapping' do
@@ -113,7 +112,7 @@ describe 'Mapping' do
       describe 'with EventAction' do
         it 'should fire event if the observation is true' do
           connect true do |redis|
-            parser = MappingsParser.new
+            parser = MappingParser.new
             scxml = <<EOS
 <mapping name="Interactor.InteractorTest Observation" xmlns="http://www.multi-access.de"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -140,7 +139,7 @@ EOS
 
         it 'should fire event if both observations are true' do
           connect true do |redis|
-            parser = MappingsParser.new
+            parser = MappingParser.new
             scxml = <<EOS
 <mapping name="Interactor.InteractorTest Observation" xmlns="http://www.multi-access.de"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

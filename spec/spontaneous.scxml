@@ -1,0 +1,11 @@
+<scxml initial="initialized" name="Spontaneous" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=885.0 h=723.0  -->
+ <state id="initialized"><!--   node-size-and-position x=220.0 y=130.0 w=100.0 h=40.0  -->
+  <transition event="position" target="superstate"></transition>
+ </state>
+ <state id="superstate" initial="positioning"><!--   node-size-and-position x=180.0 y=220.0 w=160.0 h=190.0  -->
+  <state id="positioned"><!--   node-size-and-position x=20.0 y=130.0 w=100.0 h=40.0  --></state>
+  <state id="positioning"><!--   node-size-and-position x=10.0 y=40.0 w=100.0 h=40.0  -->
+   <transition target="positioned"></transition>
+  </state>
+ </state>
+</scxml>

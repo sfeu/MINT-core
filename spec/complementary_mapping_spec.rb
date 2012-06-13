@@ -18,7 +18,7 @@ describe "Complementary mapping" do
     end
   end
 
-  it "should be work correctly" do
+  it "should be working correctly" do
     em do
 
       # capture the result an the very end: the message from the volume interactor to move the progress bar

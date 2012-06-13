@@ -56,7 +56,7 @@ class MappingManager
 
          #TODO check if callback here or in class initialize
          if @mappings[mapping.mapping_name].state_callback
-           p "Mapping #{mapping.mapping_name} loaded"
+           #p "Mapping #{mapping.mapping_name} loaded"
            @mappings[mapping.mapping_name].state_callback.call(mapping.mapping_name, {:id => mapping.id, :mapping_state => :loaded})
          end
          if attributes['start'] == "true"

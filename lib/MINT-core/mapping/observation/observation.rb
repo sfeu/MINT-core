@@ -4,6 +4,19 @@ class Observation
     @observation = parameters
     @initiated_callback = nil
     @result = nil
+    @mapping = {}
+  end
+
+  def mapping=(mapping)
+    @mapping = mapping
+  end
+
+  def mapping
+    @mapping
+  end
+
+  def mapping_callback
+    @mapping[:state_callback]
   end
 
   def is_continuous?
@@ -54,6 +67,7 @@ class Observation
   end
 
   def start(cb)
+    state = true
 
     check_true_at_startup(cb)
     r = RedisConnector.sub
@@ -71,12 +85,15 @@ class Observation
             if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
 
             p "observation true: #{element}:#{name}"
-            # Observation state == true
+            mapping_callback.call(@mapping[:mapping][:name], {:id => id, :state => :true}) if mapping_callback
               cb.call element, true , result(found)
             else
               if (found["states"] & states).length == 0
-                # Observation state == false
                 p "observation false: #{element}:#{name}"
+                if mapping_callback and state
+                  mapping_callback.call(@mapping[:mapping][:name], {:id => id, :state => :false})
+                  state = false
+                end
                 cb.call element, false, {}
               end
             end

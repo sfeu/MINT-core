@@ -111,6 +111,8 @@ describe 'MappingManager' do
       m.load("examples/mim_streaming_example.xml")
       mouse = MINT::Mouse.create(:name =>"mouse")  # previously activated observation should be false
       mouse.process_event :connect # observation should be true
+      mouse.process_event :disconnect
+      mouse.process_event :connect
     end
   end
 end

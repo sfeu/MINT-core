@@ -3,11 +3,11 @@ class BindAction < Action
 
   def initialize(params)
     @action = params
-    @initiated_callback=nil
+    @cb_observation_has_subscribed=nil
   end
 
   def initiated_callback(cb)
-    @initiated_callback = cb
+    @cb_observation_has_subscribed = cb
   end
 
   def id
@@ -53,7 +53,7 @@ class BindAction < Action
 
   def start(observation_results)            # TODO handle observation_variables
     RedisConnector.sub.subscribe(channelIn).callback do
-      @initiated_callback.call(elementIn) if @initiated_callback
+      @cb_observation_has_subscribed.call(elementIn) if @cb_observation_has_subscribed
     end
 
 

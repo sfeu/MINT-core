@@ -30,7 +30,7 @@ describe 'MappingManager' do
       end
 
       m.register_callback("Reset Click", method(:my_callback))
-      m.load("examples/mim_streaming_example.xml")
+      m.load("./examples/mim_streaming_example.xml")
       d = @data.shift
       d[:mapping_state].should == :loaded
       @data.length.should == 0
@@ -52,7 +52,7 @@ describe 'MappingManager' do
       end
 
       m.register_callback("Mouse Interactor Highlighting", method(:my_callback))
-      m.load("examples/mim_streaming_example.xml")
+      m.load("./examples/mim_streaming_example.xml")
 
       d = @data.shift
       d[:mapping_state].should == :loaded
@@ -66,6 +66,7 @@ describe 'MappingManager' do
   end
 
   it 'should activate observations after mapping has been started' do
+    pending "Needs to be fixed by Jessica"
     connect true do |redis|
       m = MappingManager.new
       @counter = 0
@@ -108,7 +109,7 @@ describe 'MappingManager' do
       end
 
       m.register_callback("Mouse Interactor Highlighting",method(:my_callback))
-      m.load("examples/mim_streaming_example.xml")
+      m.load("./examples/mim_streaming_example.xml")
       mouse = MINT::Mouse.create(:name =>"mouse")  # previously activated observation should be false
       mouse.process_event :connect # observation should be true
     end

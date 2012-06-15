@@ -134,210 +134,209 @@ describe 'CUI' do
         end
       end
 
+
+    end
+    describe "layout calculation" do
       def checkSizes(cio,x,y,width,height)
-        cio.x.should == x
-        cio.y.should == y
-        cio.width.should == width
-        cio.height.should ==height
+              cio.x.should == x
+              cio.y.should == y
+              cio.width.should == width
+              cio.height.should ==height
+            end
+      it "should calculate sizes for CIC" do
+        connect do |redis|
+          @solver = Cassowary::ClSimplexSolver.new
+
+          CUIHelper.layout_setup
+          a_parent = MINT::AIContainer.create(:name=>"parent", :children =>"left|right|up|down")
+
+          parent_cic = MINT::CIC.create(:name =>"parent",:cols=>2,:rows=>2,:x=>0,:y=>0,:width=>800,:height=>600)
+
+          parent_cic.calculate_container(@solver,10)
+
+          checkSizes(MINT::CIO.first(:name=>"left"),10,10,385,285)
+          checkSizes(MINT::CIO.first(:name=>"right"),405,10,385,285)
+          checkSizes(MINT::CIO.first(:name=>"up"),10,305,385,285)
+          checkSizes(MINT::CIO.first(:name=>"down"),405,305,385,285)
+        end
       end
 
-      describe "layout calculation" do
+      it "should calculate sizes for nested CICs" do
+        connect do |redis|
+          @solver = Cassowary::ClSimplexSolver.new
 
-        it "should calculate sizes for CIC" do
-          connect do |redis|
-            @solver = Cassowary::ClSimplexSolver.new
+          CUIHelper.layout_setup
+          MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
+          MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right|up|down",:states =>[:organized] )
+          MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
-            CUIHelper.layout_setup
-            a_parent = MINT::AIContainer.create(:name=>"parent", :children =>"left|right|up|down")
+          top_cic = MINT::CIC.create(:name =>"top",:cols=>2,:rows=>1,:x=>0,:y=>0,:width=>800,:height=>600)
+          parent_left_cic = MINT::CIC.create(:name =>"parent_left",:cols=>2,:rows=>2)
+          parent_right_cic = MINT::CIC.create(:name =>"parent_right",:cols=>2,:rows=>2)
 
-            parent_cic = MINT::CIC.create(:name =>"parent",:cols=>2,:rows=>2,:x=>0,:y=>0,:width=>800,:height=>600)
+          top_cic.calculate_container(@solver,10)
 
-            parent_cic.calculate_container(@solver,10)
+          checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,385,580)
+          checkSizes(MINT::CIO.first(:name=>"parent_right"),405,10,385,580)
 
-            checkSizes(MINT::CIO.first(:name=>"left"),10,10,385,285)
-            checkSizes(MINT::CIO.first(:name=>"right"),405,10,385,285)
-            checkSizes(MINT::CIO.first(:name=>"up"),10,305,385,285)
-            checkSizes(MINT::CIO.first(:name=>"down"),405,305,385,285)
-          end
+          checkSizes(MINT::CIO.first(:name=>"left"),20,20,177,275)
+          checkSizes(MINT::CIO.first(:name=>"right"),207,20,177,275)
+          checkSizes(MINT::CIO.first(:name=>"up"),20,305,177,275)
+          checkSizes(MINT::CIO.first(:name=>"down"),207,305,177,275)
         end
+      end
 
-        it "should calculate sizes for nested CICs" do
-          connect do |redis|
-            @solver = Cassowary::ClSimplexSolver.new
+      it "should consider CIC definitions without column or row definition to be positioned vertically" do
+        connect do |redis|
+          @solver = Cassowary::ClSimplexSolver.new
 
-            CUIHelper.layout_setup
-            MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
-            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right|up|down",:states =>[:organized] )
-            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
+          CUIHelper.layout_setup
 
-            top_cic = MINT::CIC.create(:name =>"top",:cols=>2,:rows=>1,:x=>0,:y=>0,:width=>800,:height=>600)
-            parent_left_cic = MINT::CIC.create(:name =>"parent_left",:cols=>2,:rows=>2)
-            parent_right_cic = MINT::CIC.create(:name =>"parent_right",:cols=>2,:rows=>2)
+          a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
+          MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
 
-            top_cic.calculate_container(@solver,10)
+          MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
-            checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,385,580)
-            checkSizes(MINT::CIO.first(:name=>"parent_right"),405,10,385,580)
+          top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
+          parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
+          parent_right_cic = MINT::CIC.create(:name =>"parent_right").save!
 
-            checkSizes(MINT::CIO.first(:name=>"left"),20,20,177,275)
-            checkSizes(MINT::CIO.first(:name=>"right"),207,20,177,275)
-            checkSizes(MINT::CIO.first(:name=>"up"),20,305,177,275)
-            checkSizes(MINT::CIO.first(:name=>"down"),207,305,177,275)
-          end
+          top_cic.calculate_container(@solver,10)
+
+          checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,780,385)
+          checkSizes(MINT::CIO.first(:name=>"parent_right"),10,405,780,385)
+
+          checkSizes(MINT::CIO.first(:name=>"left"),20,20,760,177)
+          checkSizes(MINT::CIO.first(:name=>"right"),20,207,760,177)
         end
+      end
 
-        it "should consider CIC definitions without column or row definition to be positioned vertically" do
-          connect do |redis|
-            @solver = Cassowary::ClSimplexSolver.new
+      it "should create CIC definitions that are missing and position them vertically vertically" do
+        connect do |redis|
+          @solver = Cassowary::ClSimplexSolver.new
 
-            CUIHelper.layout_setup
+          CUIHelper.layout_setup
 
-            a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
-            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
 
-            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
+          a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
+          MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
 
-            top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
-            parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
-            parent_right_cic = MINT::CIC.create(:name =>"parent_right").save!
+          MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
-            top_cic.calculate_container(@solver,10)
+          top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
 
-            checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,780,385)
-            checkSizes(MINT::CIO.first(:name=>"parent_right"),10,405,780,385)
+          top_cic.calculate_container(@solver,10)
 
-            checkSizes(MINT::CIO.first(:name=>"left"),20,20,760,177)
-            checkSizes(MINT::CIO.first(:name=>"right"),20,207,760,177)
-          end
+          checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,780,385)
+          checkSizes(MINT::CIO.first(:name=>"parent_right"),10,405,780,385)
+
+          checkSizes(MINT::CIO.first(:name=>"left"),20,20,760,177)
+          checkSizes(MINT::CIO.first(:name=>"right"),20,207,760,177)
         end
+      end
 
-        it "should create CIC definitions that are missing and position them vertically vertically" do
-          connect do |redis|
-            @solver = Cassowary::ClSimplexSolver.new
+      it "should handle nested AIContainer definitions" do
+        connect do |redis|
+          solver = Cassowary::ClSimplexSolver.new
 
-            CUIHelper.layout_setup
+          CUIHelper.layout_setup
 
+          CUIHelper.layout_scenario2(solver)
 
-            a_top = MINT::AIContainer.create(:name=>"top", :children =>"parent_left|parent_right")
-            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
-
-            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
-
-            top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
-
-            top_cic.calculate_container(@solver,10)
-
-            checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,780,385)
-            checkSizes(MINT::CIO.first(:name=>"parent_right"),10,405,780,385)
-
-            checkSizes(MINT::CIO.first(:name=>"left"),20,20,760,177)
-            checkSizes(MINT::CIO.first(:name=>"right"),20,207,760,177)
-          end
+          checkSizes(MINT::CIO.first(:name=>"RecipeFilter_content"),20,305,760,275)
+          MINT::AIO.first(:name=>"RecipeFilter_label").label.should=="Suchkriterien"
         end
+      end
 
-        it "should handle nested AIContainer definitions" do
-          connect do |redis|
-            solver = Cassowary::ClSimplexSolver.new
+      it "should calculate the layer  level for nested containers" do
+        connect do |redis|
+          solver = Cassowary::ClSimplexSolver.new
+          CUIHelper.layout_setup
 
-            CUIHelper.layout_setup
+          @test = CUIHelper.layout_scenario2(solver)
 
-            CUIHelper.layout_scenario2(solver)
+          @test.calculate_container(solver,10)
 
-            checkSizes(MINT::CIO.first(:name=>"RecipeFilter_content"),20,305,760,275)
-            MINT::AIO.first(:name=>"RecipeFilter_label").label.should=="Suchkriterien"
-          end
+          MINT::CIO.first(:name=>"RecipeFilter_content").layer.should ==2
+          MINT::CIO.first(:name=>"RecipeFilter_label").layer.should== 3
         end
+      end
 
-        it "should calculate the layer  level for nested containers" do
-          connect do |redis|
-            solver = Cassowary::ClSimplexSolver.new
-            CUIHelper.layout_setup
 
-            @test = CUIHelper.layout_scenario2(solver)
 
-            @test.calculate_container(solver,10)
+      it "should end up with all cios set to state  >positioned< after layout calculation" do
+        connect do |redis|
+          CUIHelper.layout_setup
+          @solver = Cassowary::ClSimplexSolver.new
 
-            MINT::CIO.first(:name=>"RecipeFilter_content").layer.should ==2
-            MINT::CIO.first(:name=>"RecipeFilter_label").layer.should== 3
-          end
+          a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
+
+          MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+          MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
+
+          top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
+          parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
+          parent_right_cic = MINT::CIC.create(:name =>"parent_right").save!
+
+          top_cic.calculate_container(@solver,10)
+
+          MINT::CIC.first(:name=>"top").states.should==[:positioned]
+          MINT::CIC.first(:name=>"parent_left").states.should==[:positioned]
+          MINT::CIC.first(:name=>"parent_right").states.should==[:positioned]
         end
+      end
 
+      it "should layout only elements that have not been calculated - case uncalculated leaf cios" do
+        connect do |redis|
+          CUIHelper.layout_setup
+          @solver = Cassowary::ClSimplexSolver.new
+          a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
 
+          MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+          MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
-        it "should end up with all cios set to state  >positioned< after layout calculation" do
-          connect do |redis|
-            CUIHelper.layout_setup
-            @solver = Cassowary::ClSimplexSolver.new
+          top_cic = MINT::CIC.create(:name =>"top",:states=>[:positioned],:x=>0,:y=>0,:width=>800,:height=>800)
+          parent_left_cic = MINT::CIC.create(:name =>"parent_left",:states=>[:positioned],:x=>10,:y=>10,:width=>300,:height=>800).save!
+          parent_right_cic = MINT::CIC.create(:name =>"parent_right",:states=>[:positioned],:x=>310,:y=>10,:width=>470,:height=>800).save!
 
-            a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
+          top_cic.calculate_container(@solver,10)
 
-            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
-            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
+          MINT::CIC.first(:name=>"parent_left").states.should==[:positioned]
+          checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,300,800)
+          checkSizes(MINT::CIO.first(:name=>"left"),20,20,280,385)
+          checkSizes(MINT::CIO.first(:name=>"right"),20,415,280,385)
 
-            top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
-            parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
-            parent_right_cic = MINT::CIC.create(:name =>"parent_right").save!
-
-            top_cic.calculate_container(@solver,10)
-
-            MINT::CIC.first(:name=>"top").states.should==[:positioned]
-            MINT::CIC.first(:name=>"parent_left").states.should==[:positioned]
-            MINT::CIC.first(:name=>"parent_right").states.should==[:positioned]
-          end
+          MINT::CIO.first(:name=>"left").states.should==[:positioned]
+          MINT::CIO.first(:name=>"right").states.should==[:positioned]
         end
+      end
 
-        it "should layout only elements that have not been calculated - case uncalculated leaf cios" do
-          connect do |redis|
-            CUIHelper.layout_setup
-            @solver = Cassowary::ClSimplexSolver.new
-            a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
+      it "should layout uncalculated parental elements based on calculated leaf cios" do
+        pending("get the right container calculation working that has no children!")
+        connect do |redis|
+          CUIHelper.layout_setup
+          @solver = Cassowary::ClSimplexSolver.new
+          a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
 
-            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
-            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
+          MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
+          MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
 
-            top_cic = MINT::CIC.create(:name =>"top",:states=>[:positioned],:x=>0,:y=>0,:width=>800,:height=>800)
-            parent_left_cic = MINT::CIC.create(:name =>"parent_left",:states=>[:positioned],:x=>10,:y=>10,:width=>300,:height=>800).save!
-            parent_right_cic = MINT::CIC.create(:name =>"parent_right",:states=>[:positioned],:x=>310,:y=>10,:width=>470,:height=>800).save!
+          top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
+          parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
+          parent_right_cic = MINT::CIC.create(:name =>"parent_right").save!
+          MINT::CIO.first(:name=>"left").update(:x =>20,:y=>20,:width=>280,:height=>385,:states=>[:positioned])
+          MINT::CIO.first(:name=>"right").update(:x =>20,:y=>415,:width=>280,:height=>385,:states=>[:positioned])
 
-            top_cic.calculate_container(@solver,10)
+          top_cic.calculate_position(nil,nil,@solver,0,10)
 
-            MINT::CIC.first(:name=>"parent_left").states.should==[:positioned]
-            checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,300,800)
-            checkSizes(MINT::CIO.first(:name=>"left"),20,20,280,385)
-            checkSizes(MINT::CIO.first(:name=>"right"),20,415,280,385)
+          checkSizes(MINT::CIO.first(:name=>"right"),20,415,280,385)
+          checkSizes(MINT::CIO.first(:name=>"left"),20,20,280,385)
 
-            MINT::CIO.first(:name=>"left").states.should==[:positioned]
-            MINT::CIO.first(:name=>"right").states.should==[:positioned]
-          end
-        end
+          MINT::CIO.first(:name=>"parent_left").states.should==[:positioned]
+          MINT::CIO.first(:name=>"parent_right").states.should==[:positioned]
 
-        it "should layout uncalculated parental elements based on calculated leaf cios" do
-          pending("get the right container calculation working that has no children!")
-          connect do |redis|
-            CUIHelper.layout_setup
-            @solver = Cassowary::ClSimplexSolver.new
-            a_top = MINT::AIContainer.create(:name=>"top",:states =>[:organized], :children =>"parent_left|parent_right")
-
-            MINT::AIContainer.create(:name=>"parent_left", :children =>"left|right",:states =>[:organized])
-            MINT::AIContainer.create(:name=>"parent_right",:states =>[:organized])
-
-            top_cic = MINT::CIC.create(:name =>"top",:x=>0,:y=>0,:width=>800,:height=>800)
-            parent_left_cic = MINT::CIC.create(:name =>"parent_left").save!
-            parent_right_cic = MINT::CIC.create(:name =>"parent_right").save!
-            MINT::CIO.first(:name=>"left").update(:x =>20,:y=>20,:width=>280,:height=>385,:states=>[:positioned])
-            MINT::CIO.first(:name=>"right").update(:x =>20,:y=>415,:width=>280,:height=>385,:states=>[:positioned])
-
-            top_cic.calculate_position(nil,nil,@solver,0,10)
-
-            checkSizes(MINT::CIO.first(:name=>"right"),20,415,280,385)
-            checkSizes(MINT::CIO.first(:name=>"left"),20,20,280,385)
-
-            MINT::CIO.first(:name=>"parent_left").states.should==[:positioned]
-            MINT::CIO.first(:name=>"parent_right").states.should==[:positioned]
-
-            checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,300,800) # results are wrong border missing!
-            checkSizes(MINT::CIO.first(:name=>"parent_right"),10,10,0,0)
-          end
+          checkSizes(MINT::CIO.first(:name=>"parent_left"),10,10,300,800) # results are wrong border missing!
+          checkSizes(MINT::CIO.first(:name=>"parent_right"),10,10,0,0)
         end
       end
     end

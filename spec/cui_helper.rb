@@ -9,11 +9,11 @@ class CUIHelper
   end
 
   def self.create_structure_w_highlighted
-  @up = MINT::CIO.create(:name => "up",:down =>"center",:states => [:displayed])
-  @down = MINT::CIO.create(:name => "down",:up=>"center",:states => [:displayed])
-  @left = MINT::CIO.create(:name => "left",:right=>"center",:states => [:displayed])
-  @right = MINT::CIO.create(:name => "right",:left=>"center",:states => [:displayed])
-  @center = MINT::CIO.create(:name => "center",:left=>"left",:right =>"right",:up =>"up", :down=>"down",:states => [:highlighted])
+    @up = MINT::CIO.create(:name => "up",:down =>"center",:states => [:displayed])
+    @down = MINT::CIO.create(:name => "down",:up=>"center",:states => [:displayed])
+    @left = MINT::CIO.create(:name => "left",:right=>"center",:states => [:displayed])
+    @right = MINT::CIO.create(:name => "right",:left=>"center",:states => [:displayed])
+    @center = MINT::CIO.create(:name => "center",:left=>"left",:right =>"right",:up =>"up", :down=>"down",:states => [:highlighted])
   end
 
   def self.set_highlighted
@@ -45,6 +45,16 @@ class CUIHelper
     @a_center = MINT::AIO.new(:name => "center",:states =>[:focused], :next =>"down")
     @a_center.save!
     center
+  end
+
+  def self.create_sync_mappings
+    o1 = Observation.new(:element =>"Interactor.CIO", :states =>[:displaying], :result=> "cio")
+    o2 = Observation.new(:eval => "AIO.get('aui',@cio.name)",:result=>"aio")
+    o3 = Observation.new(:eval =>"not @aio.is_in(:presenting)")
+    a = EventAction.new(:event => :present, :target => "aio")
+    s = Sequence.new([o1,o2,o3],a)
+    s.start
+
   end
 
   def self.layout_setup

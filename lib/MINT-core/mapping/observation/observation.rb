@@ -1,8 +1,9 @@
 class Observation
+  attr_accessor :cb_observation_has_subscribed
 
   def initialize(parameters)
     @observation = parameters
-    @initiated_callback = nil
+    @cb_observation_has_subscribed = nil
     @result = nil
   end
 
@@ -38,9 +39,6 @@ class Observation
     @observation[:name]
   end
 
-  def initiated_callback(cb)
-    @initiated_callback = cb
-  end
 
   def check_true_at_startup(cb)
     # check if observation is already true at startup
@@ -58,7 +56,7 @@ class Observation
     check_true_at_startup(cb)
     r = RedisConnector.sub
     r.subscribe("#{element}").callback {
-      @initiated_callback.call(element) if @initiated_callback
+      @cb_observation_has_subscribed.call(element) if @cb_observation_has_subscribed
     }
 
     r.on(:message) do |channel, message|

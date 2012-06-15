@@ -96,7 +96,7 @@ describe "Mapping server" do
 
         socket.onregistered= lambda {
 
-        m.load("examples/mim_streaming_example.xml")
+        m.load("./examples/mim_streaming_example.xml")
         mouse = MINT::Mouse.create(:name =>"mouse")  # previously activated observation should be false
         #mouse.process_event :connect # observation should be true
 }

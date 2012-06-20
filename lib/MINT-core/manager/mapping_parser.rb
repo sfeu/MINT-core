@@ -2,7 +2,7 @@ require 'rubygems'
 require "bundler/setup"
 require 'rexml/document'
 require 'rexml/streamlistener'
-
+module MINT
 class MappingParser
   include REXML
   include StreamListener
@@ -78,3 +78,4 @@ class MappingParser
   def xmldecl(version, encoding, standalone)
   end
 end
+           end

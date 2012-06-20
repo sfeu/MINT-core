@@ -11,10 +11,10 @@ module MINT
 
     def initialize(params)
       @mapping = params
-      resetObservations
+
 
       # to fire callback if all observations have been successfully initialized
-      @observation_init ={}
+      @observation_init = 0
 
       @activated_callback = nil
       @action_activated = {}
@@ -24,6 +24,8 @@ module MINT
 
       # stores variables assigned by observations
       @observation_results = {}
+
+      @observation_state = {}
     end
 
     def mapping_name
@@ -43,25 +45,114 @@ module MINT
       @mapping[:actions]
     end
 
+    def start
+      return self
+    end
 
     def startAction(observation_results)
+      @action_init = 0
       p "Mapping #{mapping_name} executed"
       actions.each do |action|
-        @action_activated[action.identifier] = false
-        action.initiated_callback(self.method :activated_cb)
-        p "Action activated"
+        @action_init += 1
         @state_callback.call(@mapping[:name], {:id => action.id, :state => :activated}) if @state_callback
-        action.start observation_results   # pass observation variables
+        action.start(observation_results).finished_callback {
+          @state_callback.call(@mapping[:name], {:id => action.id, :state => :succeeded}) if @state_callback
+          @action_init -= 1
+          if @action_init == 0
+            @action_activated = true
+            call_actions_succeeded_callbacks
+          end
+        }   # pass observation variables
+      end
+      self
+    end
+
+
+
+
+    # This callback is used to inform that all observations have been successfully activated (subscribed)
+    def activated_callback(&block)
+      return unless block
+
+      if @mapping_activated
+        block.call(self)
+      else
+        @activated_callbacks ||= []
+        @activated_callbacks.unshift block # << block
       end
     end
 
-    def resetObservations(check=false)
-      @observation_state = {}
-      @mapping[:observations].each do |observation|
-        @observation_state[observation.element] = false
-        observation.check_true_at_startup self.method(:callback) if check and observation.is_continuous?
+    def call_activated_callbacks
+      @activated_callbacks ||= []
+
+      while cb = @activated_callbacks.pop
+        cb.call(self)
       end
+      @activated_callbacks.clear if @activated_callbacks
+    end
+
+    # This callback is used to inform that all actions have been finished
+    def actions_succeeded_callback(&block)
+      return unless block
+
+      if @action_activated
+        block.call(self)
+      else
+        @actions_succeeded_callbacks ||= []
+        @actions_succeeded_callbacks.unshift block # << block
+      end
+    end
+
+
+    def call_actions_succeeded_callbacks
+      @actions_succeeded_callbacks ||= []
+
+      while cb = @actions_succeeded_callbacks.pop
+        cb.call(self)
+      end
+      @actions_succeeded_callbacks.clear if @actions_succeeded_callbacks
+    end
+
+    # function is called every time an observation has been fulfilled
+    def cb_activate_action(element,in_state,result,id)
+      @state_callback.call(@mapping[:name], {:id => id, :state => in_state.to_s.to_sym}) if @state_callback
+
+      @observation_state[element] = in_state
+      if in_state
+        @observation_results.merge! result
+        # check if already all other observations have been matched
+        if not @observation_state.values.include? false
+          stop_observations # unsubscribe observations
+
+          startAction(@observation_results).actions_succeeded_callback { |m|
+            @state_callback.call(@mapping[:name], {:id => @mapping[:id], :mapping_state => :finished}) if @state_callback
+
+            # TODO -clean restart and move check_at_startup inside observation
+            # - add callback for action if succeeded & implement parallel action execution
+            m.restart
+
+          }
+        end
+      end
+    end
+
+    def restart
+      @observation_state = {}
+      observations.each do |observation|
+        @observation_state[observation.element] = false
+        observation.start
+      end
+
+    end
+
+    def stop_observations
+      observations.each do |observation|
+        observation.stop
+      end
+
     end
 
   end
+
+
 end

@@ -28,7 +28,7 @@ class EventAction < Action
 
     interactor = interactor.method(selector).call if not selector.nil?
     interactor.process_event event
-
+    self
   end
 
 end

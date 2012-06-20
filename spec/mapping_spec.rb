@@ -14,7 +14,7 @@ describe 'Mapping' do
     connect do |redis|
       require "MINT-core"
       require "support/redis_connector_monkey_patch"  # TODO dirty patch for a bug that i have not found :(
-
+      include MINT
       class InteractorTest < MINT::Interactor
 
         def show_states c
@@ -37,9 +37,9 @@ describe 'Mapping' do
       describe 'with EventAction' do
         it 'should fire event if the observation is true' do
           connect true do |redis|
-            o = Observation.new(:element =>"Interactor.InteractorTest", :name => "test", :states =>[:initialized], :result => "p")
+            o = Observation.new(:element =>"Interactor.InteractorTest", :name => "test", :result => "p", :states =>[:initialized])
             a = EventAction.new(:event => :organize,:target => "p")
-            m = ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o],:actions =>[a])
+            m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o],:actions =>[a])
             m.start
 
             test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
@@ -53,7 +53,7 @@ describe 'Mapping' do
             o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized])
             o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p")
             a = EventAction.new(:event => :organize, :target => "p")
-            m = ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
+            m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
             m.start
 
             test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
@@ -72,7 +72,7 @@ describe 'Mapping' do
             o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name=>"test_2", :states =>[:presenting])
             a = BindAction.new(:elementIn => "Interactor.InteractorTest",:nameIn => "test", :attrIn =>"data",:attrOut=>"data",
                                 :elementOut =>"Interactor.InteractorTest.InteractorTest_2", :nameOut=>"test_2" )
-            m = ComplementaryMapping.new(:name => "BindAction test", :observations => [o1,o2],:actions =>[a])
+            m = MINT::ComplementaryMapping.new(:name => "BindAction test", :observations => [o1,o2],:actions =>[a])
             m.start
 
             test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
@@ -93,7 +93,7 @@ describe 'Mapping' do
             b = InteractorTest.new
             o = Observation.new(:element =>"Interactor.InteractorTest",:name => "test", :states =>[:organized], :result => "c")
             a = BackendAction.new(:call => b.method(:show_states), :parameter => "c")
-            m = ComplementaryMapping.new(:name=>"BackendAction test",:observations => [o],:actions =>[a])
+            m = MINT::ComplementaryMapping.new(:name=>"BackendAction test",:observations => [o],:actions =>[a])
             m.start
 
             test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
@@ -112,7 +112,7 @@ describe 'Mapping' do
       describe 'with EventAction' do
         it 'should fire event if the observation is true' do
           connect true do |redis|
-            parser = MappingParser.new
+            parser = MINT::MappingParser.new
             scxml = <<EOS
 <mapping name="Interactor.InteractorTest Observation" xmlns="http://www.multi-access.de"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -139,7 +139,7 @@ EOS
 
         it 'should fire event if both observations are true' do
           connect true do |redis|
-            parser = MappingParser.new
+            parser = MINT::MappingParser.new
             scxml = <<EOS
 <mapping name="Interactor.InteractorTest Observation" xmlns="http://www.multi-access.de"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

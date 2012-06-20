@@ -66,7 +66,7 @@ describe 'MappingManager' do
   end
 
   it 'should activate observations after mapping has been started' do
-    pending "Needs to be fixed by Jessica"
+   # pending "Needs to be fixed by Jessica"
     connect true do |redis|
       m = MappingManager.new
       @counter = 0
@@ -97,7 +97,7 @@ describe 'MappingManager' do
             when 7
               data[:mapping_state].should == :finished
             when 8
-              data[:mapping_state].should == :started #cool would be :restarted for this case
+              data[:mapping_state].should == :restarted #cool would be :restarted for this case
             when 9
               data[:id].should == "111"
               data[:state].should == :activated

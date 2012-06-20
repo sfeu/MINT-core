@@ -1,4 +1,5 @@
 class Action
+
  def identifier
 
  end
@@ -8,7 +9,14 @@ class Action
  end
 
  def start (observation_results)
-
+   self
  end
+
+
+  # This callback is used to inform that the action has been successfully finished
+  def finished_callback (&block)
+    block.call(self)
+  end
+
 
 end

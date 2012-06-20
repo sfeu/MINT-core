@@ -45,7 +45,7 @@ class MappingManager
       when 'mim'
          #Do I have to store its name?
       when 'include'
-         parser = MappingParser.new
+         parser = MINT::MappingParser.new
          mapping = parser.build_from_scxml("examples/"+ attributes['href'])
          @mappings[mapping.mapping_name] = mapping
 

@@ -23,5 +23,6 @@ class BackendAction < Action
   def start(observation_results)
     p = observation_results[parameter]
     call_function.call p
+    self
   end
 end

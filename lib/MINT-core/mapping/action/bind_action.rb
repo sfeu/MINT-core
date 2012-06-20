@@ -83,6 +83,7 @@ class BindAction < Action
         end
       end
     end
+    self
   end
 
   def unbind

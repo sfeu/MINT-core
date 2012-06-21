@@ -88,6 +88,21 @@ describe 'Mapping' do
           end
         end
 
+        it 'should handle a non continuous observation' do
+                  connect true do |redis|
+                    o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p")
+                    a = EventAction.new(:event => :step, :target => "p")
+                    m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
+                    m.start
+
+                    test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2"] do
+                     test = InteractorTest2.create(:name => "test")
+                     test.process_event :present
+
+                    end
+
+                  end
+                end
 
       end
 

@@ -21,7 +21,7 @@ describe 'Mapping' do
         def show_states c
           puts "States #{c['states']}"
         end
-        
+
         def getSCXML
           "#{File.dirname(__FILE__)}/interactor_test.scxml"
         end
@@ -30,7 +30,7 @@ describe 'Mapping' do
       end
       class InteractorTest2 <InteractorTest
         def getSCXML
-                  "#{File.dirname(__FILE__)}/interactor_test_2.scxml"
+          "#{File.dirname(__FILE__)}/interactor_test_2.scxml"
         end
       end
 
@@ -80,8 +80,8 @@ describe 'Mapping' do
             m.start
 
             test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2","step3","initialized"] do
-             test = InteractorTest2.create(:name => "test")
-             test.process_event :present
+              test = InteractorTest2.create(:name => "test")
+              test.process_event :present
 
             end
 
@@ -89,20 +89,20 @@ describe 'Mapping' do
         end
 
         it 'should handle a non continuous observation' do
-                  connect true do |redis|
-                    o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p")
-                    a = EventAction.new(:event => :step, :target => "p")
-                    m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
-                    m.start
+          connect true do |redis|
+            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p")
+            a = EventAction.new(:event => :step, :target => "p")
+            m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
+            m.start
 
-                    test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2"] do
-                     test = InteractorTest2.create(:name => "test")
-                     test.process_event :present
+            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2"] do
+              test = InteractorTest2.create(:name => "test")
+              test.process_event :present
 
-                    end
+            end
 
-                  end
-                end
+          end
+        end
 
       end
 
@@ -112,7 +112,7 @@ describe 'Mapping' do
             o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test", :states =>[:organized])
             o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name=>"test_2", :states =>[:presenting])
             a = BindAction.new(:elementIn => "Interactor.InteractorTest",:nameIn => "test", :attrIn =>"data",:attrOut=>"data",
-                                :elementOut =>"Interactor.InteractorTest.InteractorTest_2", :nameOut=>"test_2" )
+                               :elementOut =>"Interactor.InteractorTest.InteractorTest_2", :nameOut=>"test_2" )
             m = MINT::ComplementaryMapping.new(:name => "BindAction test", :observations => [o1,o2],:actions =>[a])
             m.start
 

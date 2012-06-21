@@ -1,0 +1,16 @@
+<scxml initial="initialized" name="InteractorTest" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=630.0 h=510.0  -->
+ <state id="initialized"><!--   node-size-and-position x=10.0 y=40.0 w=80.0 h=30.0  -->
+  <transition event="present" target="presenting"></transition>
+ </state>
+ <state id="presenting" initial="step1"><!--   node-size-and-position x=60.0 y=180.0 w=530.0 h=330.0  -->
+  <state id="step1"><!--   node-size-and-position x=30.0 y=70.0 w=100.0 h=100.0  -->
+   <transition event="step" target="step2"></transition>
+  </state>
+  <state id="step2"><!--   node-size-and-position x=190.0 y=70.0 w=100.0 h=100.0  -->
+   <transition event="step" target="step3"></transition>
+  </state>
+  <state id="step3"><!--   node-size-and-position x=350.0 y=60.0 w=100.0 h=100.0  -->
+   <transition event="step" target="initialized"></transition>
+  </state>
+ </state>
+</scxml>

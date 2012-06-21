@@ -15,6 +15,7 @@ describe 'Mapping' do
       require "MINT-core"
       require "support/redis_connector_monkey_patch"  # TODO dirty patch for a bug that i have not found :(
       include MINT
+
       class InteractorTest < MINT::Interactor
 
         def show_states c
@@ -27,6 +28,13 @@ describe 'Mapping' do
       end
       class InteractorTest_2 <InteractorTest
       end
+      class InteractorTest2 <InteractorTest
+        def getSCXML
+                  "#{File.dirname(__FILE__)}/interactor_test_2.scxml"
+        end
+      end
+
+
       DataMapper.finalize
       DataMapper::Model.raise_on_save_failure = true
     end
@@ -63,6 +71,24 @@ describe 'Mapping' do
             end
           end
         end
+
+        it 'should handle a continuous observation' do
+          connect true do |redis|
+            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p",:continuous=>true)
+            a = EventAction.new(:event => :step, :target => "p")
+            m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
+            m.start
+
+            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2","step3","initialized"] do
+             test = InteractorTest2.create(:name => "test")
+             test.process_event :present
+
+            end
+
+          end
+        end
+
+
       end
 
       describe 'with BindAction' do

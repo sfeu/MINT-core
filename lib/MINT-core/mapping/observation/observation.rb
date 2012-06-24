@@ -42,11 +42,14 @@ class Observation
     # check if observation is already true at startup
     model = MINT::Interactor.class_from_channel_name(element)
     e = model.first(:name=>name)
+    e_states= e.states.map &:to_s
     if e
-      if ((e.states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
+      if ((e_states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
         cb.call element, true, result(JSON.parse e.to_json),id
+        return true
       end
     end
+    return false
   end
 
   def stop
@@ -56,7 +59,9 @@ class Observation
   end
 
   def start(cb)
-    check_true_at_startup(cb) if is_continuous?
+    res = check_true_at_startup(cb) if is_continuous?
+
+    if not res
     r = RedisConnector.sub
     r.subscribe("#{element}").callback {
       @cb_observation_has_subscribed = true
@@ -86,6 +91,7 @@ class Observation
         end
       end
     end
+    end
     self
   end
 
@@ -104,6 +110,7 @@ class Observation
   end
 
   def call_subscribed_callbacks
+    @subscribed_callbacks ||= []
     while cb = @subscribed_callbacks.pop
       cb.call(self)
     end

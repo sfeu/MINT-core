@@ -41,6 +41,47 @@ describe 'Mapping' do
   end
 
   describe 'without Parser' do
+
+
+    describe 'Sequential' do
+      describe 'with EventAction' do
+        it 'should fire event if all observations have been true' do
+          connect true do |redis|
+            o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized])
+            o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p",:continuous => true)
+            a = EventAction.new(:event => :organize, :target => "p")
+            m = MINT::SequentialMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
+            m.start
+
+            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
+              test_1 = InteractorTest.create(:name => "test_1")
+              test_1.process_event :organize
+              test_2 = InteractorTest_2.create(:name => "test_2")
+            end
+          end
+        end
+        describe "sync mapping"    do
+          it 'should fire event if all observations have been true' do
+            connect true do |redis|
+              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting])
+              o2 = Observation.new(:element =>"Interactor.CIO", :states =>[:initialized], :result => "p",:continuous => true)
+              a = EventAction.new(:event => :organize, :target => "p")
+              m = MINT::SequentialMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
+              m.start
+
+              test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
+                test_1 = InteractorTest.create(:name => "test_1")
+                test_1.process_event :organize
+                test_2 = InteractorTest_2.create(:name => "test_2")
+              end
+            end
+          end
+        end
+
+      end
+    end
+
+
     describe 'Complementary' do
       describe 'with EventAction' do
         it 'should fire event if the observation is true' do

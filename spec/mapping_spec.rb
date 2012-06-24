@@ -78,7 +78,32 @@ describe 'Mapping' do
               end
             end
           end
+          it 'should support not end up in cycles for sync mappings' do
+            connect true do |redis|
+              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio")
+              o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio",:continuous => true)
+              a = EventAction.new(:event => :display, :target => "cio")
+              m = MINT::SequentialMapping.new(:name=>"Sync CIO to display", :observations => [o1,o2],:actions =>[a])
+              m.start
+
+              o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displaying],:result=>"cio")
+              o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:presenting], :result => "aio",:continuous => true)
+              a1 = EventAction.new(:event => :present, :target => "aio")
+              m1 = MINT::SequentialMapping.new(:name=>"Sync CIO display to AIO presenting", :observations => [o3,o4],:actions =>[a1])
+              m1.start
+
+              test_state_flow RedisConnector.sub,"Interactor.AIO" ,[["presenting", "defocused"]] do
+                aio = MINT::AIO.create(:name => "test", :states => [:organized])
+                cio = MINT::CIO.create(:name => "test", :states=>[:positioned])
+                cio.process_event :display
+
+              end
+            end
+          end
         end
+
+
+
       end
     end
 

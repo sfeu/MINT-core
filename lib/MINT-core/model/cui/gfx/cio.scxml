@@ -12,9 +12,6 @@
   <transition event="hide" target="hidden"></transition>
  </state>
  <state id="displaying" initial="displayed"><!--   node-size-and-position x=380.0 y=270.0 w=350.0 h=200.0  -->
-  <onentry>
-   <invoke src="sync_aio_to_presented" type="x-mint"></invoke>
-  </onentry>
   <transition event="disable" target="disabled"></transition>
   <transition event="hide" target="hidden"></transition>
   <state id="displayed"><!--   node-size-and-position x=140.0 y=50.0 w=100.0 h=30.0  -->

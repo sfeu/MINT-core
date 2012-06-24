@@ -60,24 +60,25 @@ describe 'Mapping' do
             end
           end
         end
+
         describe "sync mapping"    do
-          it 'should fire event if all observations have been true' do
+          it 'should support name selector and not observations for sync mappings' do
             connect true do |redis|
-              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting])
-              o2 = Observation.new(:element =>"Interactor.CIO", :states =>[:initialized], :result => "p",:continuous => true)
-              a = EventAction.new(:event => :organize, :target => "p")
-              m = MINT::SequentialMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
+              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio")
+              o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio",:continuous => true)
+              a = EventAction.new(:event => :display, :target => "cio")
+              m = MINT::SequentialMapping.new(:name=>"Sync CIO to display", :observations => [o1,o2],:actions =>[a])
               m.start
 
-              test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
-                test_1 = InteractorTest.create(:name => "test_1")
-                test_1.process_event :organize
-                test_2 = InteractorTest_2.create(:name => "test_2")
+              test_state_flow RedisConnector.sub,"Interactor.CIO" ,[["displaying", "displayed"]] do
+                aio = MINT::AIO.create(:name => "test", :states => [:organized])
+                cio = MINT::CIO.create(:name => "test", :states=>[:positioned])
+                aio.process_event :present
+
               end
             end
           end
         end
-
       end
     end
 

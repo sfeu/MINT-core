@@ -35,15 +35,27 @@ class Observation
   end
 
   def name
-    @observation[:name]
+    if @observation[:name] =~ /\./ # check if refers to variable used in sync mappings
+      variable,attribute = @observation[:name].split "."
+      if (@observation_results and @observation_results.has_key? variable)
+        interactor_data= @observation_results[variable]
+        interactor = MINT::Interactor.get(interactor_data["mint_model"],interactor_data["name"])
+
+        r = interactor.method(attribute).call
+        return r
+      end
+    else
+      return @observation[:name]
+    end
   end
 
   def check_true_at_startup(cb)
     # check if observation is already true at startup
     model = MINT::Interactor.class_from_channel_name(element)
     e = model.first(:name=>name)
-    e_states= e.states.map &:to_s
+
     if e
+      e_states= e.states.map &:to_s
       if ((e_states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
         cb.call element, true, result(JSON.parse e.to_json),id
         return true
@@ -58,7 +70,8 @@ class Observation
 
   end
 
-  def start(cb)
+  def start(observations_results,cb)
+    @observation_results=observations_results
     res = check_true_at_startup(cb) if is_continuous?
 
     if not res

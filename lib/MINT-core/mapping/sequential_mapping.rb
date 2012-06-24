@@ -8,7 +8,7 @@ module MINT
 
       p "Observation #{observations[@active_observation].name} activated"
 
-      observations[@active_observation].start(self.method(:cb_activate_action)).is_subscribed_callback { |observation|
+      observations[@active_observation].start(@observation_results,self.method(:cb_activate_action)).is_subscribed_callback { |observation|
         @observation_state[observation.element] = false
         @state_callback.call(@mapping[:name], {:id => observation.id, :state => :activated}) if @state_callback
         call_activated_callbacks
@@ -34,7 +34,7 @@ module MINT
 
           }
         else # start next observation
-          observations[@active_observation].start(self.method(:cb_activate_action))
+          observations[@active_observation].start(@observation_results,self.method(:cb_activate_action))
         end
       end
     end

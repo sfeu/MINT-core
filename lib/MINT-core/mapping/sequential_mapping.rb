@@ -6,8 +6,6 @@ module MINT
     def start_observations
       @active_observation = 0
 
-      p "Observation #{observations[@active_observation].name} activated"
-
       observations[@active_observation].start(@observation_results,self.method(:cb_activate_action)).is_subscribed_callback { |observation|
         @observation_state[observation.element] = false
         @state_callback.call(@mapping[:name], {:id => observation.id, :state => :activated}) if @state_callback
@@ -19,6 +17,11 @@ module MINT
     def cb_activate_action(element,in_state,result,id)
       @state_callback.call(@mapping[:name], {:id => id, :state => in_state.to_s.to_sym}) if @state_callback
 
+      if in_state == :fail
+             stop_observations # unsubscribe observations
+             restart # restart mapping
+             return
+           end
       if in_state
         @observation_results.merge! result
         observations[@active_observation].stop # unsubscribe observation

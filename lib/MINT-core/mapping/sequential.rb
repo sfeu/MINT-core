@@ -19,7 +19,6 @@ module MINT
 
     def execute
       t1 = @source_model_1.notify("write", {  :new_states=> /(^|\|)#{Regexp.quote(@state_1)}/},self.method(:save_state_1_happened))
-      p "registered for model #{@source_model_1} writes on state #{@state_1}"
       #    t2 = @source_model_2.notify("write", {  :abstract_states=> /#{Regexp.quote(@state_2)}/},self.method(:check_sequence))
       #   p "registered for model #{@source_model_2} writes on state #{@state_2}"
       return t1

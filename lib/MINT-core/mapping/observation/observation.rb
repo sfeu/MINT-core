@@ -7,8 +7,17 @@ class Observation
   end
 
   def is_continuous?
-    @observation[:continuous]
+    @observation[:process] == :continuous
   end
+
+  def is_instant?
+    @observation[:process] == :instant
+  end
+
+  def is_onchange?
+    @observation[:process] == :onchange
+  end
+
 
   def id
     @observation[:id]
@@ -70,11 +79,22 @@ class Observation
 
   end
 
+  def fail(cb)
+    cb.call element, :fail , nil, id
+  end
+
   def start(observations_results,cb)
     @observation_results=observations_results
-    res = check_true_at_startup(cb) if is_continuous?
 
-    if not res
+    res = false
+
+    res = check_true_at_startup(cb) if is_continuous? or is_instant?
+
+    if not res and is_instant? # instant checks do not require a subscribe and directly fail if false
+      fail(cb)
+      return self
+    end
+
     r = RedisConnector.sub
     r.subscribe("#{element}").callback {
       @cb_observation_has_subscribed = true
@@ -89,28 +109,23 @@ class Observation
 
           if found.has_key? "new_states"
             if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
-
-              p "observation true: #{element}:#{name}"
-              # Observation state == true
-              cb.call element, true , result(found),id
+                cb.call element, true , result(found),id
             else
               if (found["states"] & states).length == 0
-                # Observation state == false
-                p "observation false: #{element}:#{name}"
                 cb.call element, false, {},id
               end
             end
           end
         end
       end
-    end
+
     end
     self
   end
 
 
 
-   # This callback is used to inform that the observation has been successfully subscribed
+  # This callback is used to inform that the observation has been successfully subscribed
   def is_subscribed_callback(&block)
     return unless block
 

@@ -15,15 +15,9 @@
   <transition event="disable" target="disabled"></transition>
   <transition event="hide" target="hidden"></transition>
   <state id="displayed"><!--   node-size-and-position x=140.0 y=50.0 w=100.0 h=30.0  -->
-   <onentry>
-    <invoke src="sync_aio_to_defocus" type="x-mint"></invoke>
-   </onentry>
    <transition event="highlight" target="highlighted"><!--   edge-path [highlighted]  x=130.0 y=110.0 pointx=0.0 pointy=18.0 offsetx=19.0 offsety=-14.0  --></transition>
   </state>
   <state id="highlighted"><!--   node-size-and-position x=140.0 y=140.0 w=100.0 h=30.0  -->
-   <onentry>
-    <invoke src="sync_aio_to_focused" type="x-mint"></invoke>
-   </onentry>
    <transition event="unhighlight" target="displayed"><!--   edge-path [displayed]  x=230.0 y=110.0  --></transition>
    <transition event="up" target="displayed">
     <invoke src="highlight_up" type="x-mint"></invoke>
@@ -43,9 +37,6 @@
   <transition event="hide" target="hidden"></transition>
  </state>
  <state id="hidden"><!--   node-size-and-position x=400.0 y=140.0 w=110.0 h=40.0  -->
-  <onentry>
-   <invoke src="sync_aio_to_suspended" type="x-mint"></invoke>
-  </onentry>
   <transition event="position" target="positioning"></transition>
   <transition event="display" target="displaying"><!--   edge-path [displaying]  x=410.0 y=240.0  --></transition>
  </state>

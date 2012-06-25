@@ -51,7 +51,6 @@ module MINT
 
     def startAction(observation_results)
       @action_init = 0
-      p "Mapping #{mapping_name} executed"
       actions.each do |action|
         @action_init += 1
         @state_callback.call(@mapping[:name], {:id => action.id, :state => :activated}) if @state_callback
@@ -113,11 +112,17 @@ module MINT
       @actions_succeeded_callbacks.clear if @actions_succeeded_callbacks
     end
 
-    # function is called every time an observation has been fulfilled
+    # function is called every time an observation has been fulfilled or failed (in_state == :fail)
     def cb_activate_action(element,in_state,result,id)
       @state_callback.call(@mapping[:name], {:id => id, :state => in_state.to_s.to_sym}) if @state_callback
 
       @observation_state[element] = in_state
+
+      if in_state == :fail
+        stop_observations # unsubscribe observations
+        restart # restart mapping
+        return
+      end
       if in_state
         @observation_results.merge! result
         # check if already all other observations have been matched

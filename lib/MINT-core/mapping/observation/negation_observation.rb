@@ -15,39 +15,43 @@ class NegationObservation < Observation
   end
 
   def start(observations_results,cb)
-      @observation_results=observations_results
-    res = check_true_at_startup(cb) if is_continuous?
+    @observation_results=observations_results
 
-    if not res
-      r = RedisConnector.sub
-      r.subscribe("#{element}").callback {
-        @cb_observation_has_subscribed = true
-        call_subscribed_callbacks
-      }
+    res = false
 
-      r.on(:message) do |channel, message|
-        if channel.eql? element
-          found=JSON.parse message
+    res = check_true_at_startup(cb) if is_continuous? or is_instant?
 
-          if name.nil? or name.eql? found["name"]
+    if not res and is_instant? # instant checks do not require a subscribe and directly fail if false
+      fail(cb)
+      return self
+    end
 
-            if found.has_key? "new_states"
-              if (found["new_states"] & states).length==0 # checks if both arrays share no element
 
-                p "observation true: #{element}:#{name}"
-                # Observation state == true
-                cb.call element, true , result(found),id
-              else
-                if (found["states"] & states).length > 0
-                  # Observation state == false
-                  p "observation false: #{element}:#{name}"
-                  cb.call element, false, {},id
-                end
+    r = RedisConnector.sub
+    r.subscribe("#{element}").callback {
+      @cb_observation_has_subscribed = true
+      call_subscribed_callbacks
+    }
+
+    r.on(:message) do |channel, message|
+      if channel.eql? element
+        found=JSON.parse message
+
+        if name.nil? or name.eql? found["name"]
+
+          if found.has_key? "new_states"
+            if (found["new_states"] & states).length==0 # checks if both arrays share no element
+
+              cb.call element, true , result(found),id
+            else
+              if (found["states"] & states).length > 0
+                cb.call element, false, {},id
               end
             end
           end
         end
       end
+
     end
     self
   end

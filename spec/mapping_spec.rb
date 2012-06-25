@@ -34,7 +34,11 @@ describe 'Mapping' do
         end
       end
 
-
+      class Logging
+      def self.log(mapping,data)
+        p "log: #{mapping} #{data}"
+      end
+      end
       DataMapper.finalize
       DataMapper::Model.raise_on_save_failure = true
     end
@@ -48,7 +52,7 @@ describe 'Mapping' do
         it 'should fire event if all observations have been true' do
           connect true do |redis|
             o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized])
-            o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p",:continuous => true)
+            o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p",:process=> :continuous )
             a = EventAction.new(:event => :organize, :target => "p")
             m = MINT::SequentialMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
             m.start
@@ -65,7 +69,7 @@ describe 'Mapping' do
           it 'should support name selector and not observations for sync mappings' do
             connect true do |redis|
               o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio")
-              o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio",:continuous => true)
+              o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio", :process => :continuous )
               a = EventAction.new(:event => :display, :target => "cio")
               m = MINT::SequentialMapping.new(:name=>"Sync CIO to display", :observations => [o1,o2],:actions =>[a])
               m.start
@@ -80,16 +84,18 @@ describe 'Mapping' do
           end
           it 'should support not end up in cycles for sync mappings' do
             connect true do |redis|
-              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio")
-              o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio",:continuous => true)
+              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio",:process => :continuous)
+              o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio",:process => :instant )
               a = EventAction.new(:event => :display, :target => "cio")
               m = MINT::SequentialMapping.new(:name=>"Sync CIO to display", :observations => [o1,o2],:actions =>[a])
+              m.state_callback = Logging.method(:log)
               m.start
 
-              o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displaying],:result=>"cio")
-              o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:presenting], :result => "aio",:continuous => true)
+              o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displaying],:result=>"cio",:process => :continuous)
+              o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:presenting], :result => "aio",:process => :instant)
               a1 = EventAction.new(:event => :present, :target => "aio")
               m1 = MINT::SequentialMapping.new(:name=>"Sync CIO display to AIO presenting", :observations => [o3,o4],:actions =>[a1])
+              m1.state_callback = Logging.method(:log)
               m1.start
 
               test_state_flow RedisConnector.sub,"Interactor.AIO" ,[["presenting", "defocused"]] do
@@ -141,7 +147,7 @@ describe 'Mapping' do
 
         it 'should handle a continuous observation' do
           connect true do |redis|
-            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p",:continuous=>true)
+            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p",:process => :continuous)
             a = EventAction.new(:event => :step, :target => "p")
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
             m.start

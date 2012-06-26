@@ -76,7 +76,7 @@ class Observation
   def stop
     RedisConnector.sub.unsubscribe("#{element}")
     @cb_observation_has_subscribed = false
-
+    @subscribed_callbacks = []
   end
 
   def fail(cb)

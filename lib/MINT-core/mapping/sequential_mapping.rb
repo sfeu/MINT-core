@@ -18,7 +18,7 @@ module MINT
       @state_callback.call(@mapping[:name], {:id => id, :state => in_state.to_s.to_sym}) if @state_callback
 
       if in_state == :fail
-             stop_observations # unsubscribe observations
+            observations[@active_observation].stop # unsubscribe observation
              restart # restart mapping
              return
            end

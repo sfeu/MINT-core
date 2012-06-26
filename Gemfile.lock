@@ -8,6 +8,12 @@ PATH
       redis (~> 2.2)
 
 PATH
+  remote: ../em-hiredis
+  specs:
+    em-hiredis (0.1.0)
+      hiredis (~> 0.4.0)
+
+PATH
   remote: ../scxml
   specs:
     MINT-scxml (1.0.0)
@@ -42,8 +48,6 @@ GEM
       multi_json (~> 1.0.3)
       stringex (~> 1.3.0)
       uuidtools (~> 2.1.2)
-    em-hiredis (0.1.1)
-      hiredis (~> 0.4.0)
     em-spec (0.2.5)
       bacon
       eventmachine
@@ -85,7 +89,7 @@ DEPENDENCIES
   dm-redis-adapter!
   dm-serializer
   dm-types (~> 1.2.0)
-  em-hiredis (= 0.1.1)
+  em-hiredis!
   em-spec (~> 0.2.5)
   eventmachine (~> 0.12.10)
   hoe

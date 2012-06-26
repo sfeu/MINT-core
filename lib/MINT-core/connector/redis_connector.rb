@@ -1,11 +1,9 @@
 class RedisConnector
 
+  def self.redis
 
-  def self.sub
-    @@subscriber ||= EM::Hiredis.connect
+    @@redis ||= EventMachine::Hiredis.connect
   end
 
-  def self.pub
-      @@publisher ||= EM::Hiredis.connect
-  end
+
 end

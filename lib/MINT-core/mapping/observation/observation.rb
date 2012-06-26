@@ -74,7 +74,7 @@ class Observation
   end
 
   def stop
-    RedisConnector.sub.unsubscribe("#{element}")
+    RedisConnector.redis.pubsub.unsubscribe("#{element}")
     @cb_observation_has_subscribed = false
     @subscribed_callbacks = []
   end
@@ -95,31 +95,26 @@ class Observation
       return self
     end
 
-    r = RedisConnector.sub
-    r.subscribe("#{element}").callback {
-      @cb_observation_has_subscribed = true
-      call_subscribed_callbacks
-    }
+    redis = RedisConnector.redis
 
-    r.on(:message) do |channel, message|
-      if channel.eql? element
-        found=JSON.parse message
+    redis.pubsub.subscribe("#{element}") { |message|
+      found=JSON.parse message
 
-        if name.nil? or name.eql? found["name"]
-
-          if found.has_key? "new_states"
-            if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
-                cb.call element, true , result(found),id
-            else
-              if (found["states"] & states).length == 0
-                cb.call element, false, {},id
-              end
+      if name.nil? or name.eql? found["name"]
+        if found.has_key? "new_states"
+          if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
+            cb.call element, true , result(found),id
+          else
+            if (found["states"] & states).length == 0
+              cb.call element, false, {},id
             end
           end
         end
       end
-
-    end
+    }.callback {
+      @cb_observation_has_subscribed = true
+      call_subscribed_callbacks
+    }
     self
   end
 

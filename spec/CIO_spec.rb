@@ -16,10 +16,10 @@ describe 'CUI' do
     connect do |redis|
       require "MINT-core"
       class Logging
-            def self.log(mapping,data)
-              p "log: #{mapping} #{data}"
-            end
-            end
+        def self.log(mapping,data)
+          p "log: #{mapping} #{data}"
+        end
+      end
       DataMapper.finalize
       DataMapper::Model.raise_on_save_failure = true
     end
@@ -109,23 +109,37 @@ describe 'CUI' do
 
       it 'should sync highlight movements to AUI' do
         connect true do |redis|
-         # Sync AIO to focused
-         o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:highlighted],:result=>"cio",:process => :onchange)
-         o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:focused], :result => "aio",:process => :instant)
-         a1 = EventAction.new(:event => :focus, :target => "aio")
-         m1 = MINT::SequentialMapping.new(:name=>"Sync AIO to focused", :observations => [o3,o4],:actions =>[a1])
-         m1.state_callback = Logging.method(:log)
 
-         m1.start
-         center = CUIHelper.scenario2
-          test_state_flow RedisConnector.sub,"Interactor" ,["initialized","initialized","initialized","initialized","initialized","highlighted",["presenting", "defocused"]] do
+          # Sync AIO to defocused
+          o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displayed],:result=>"cio",:process => :onchange)
+          o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:defocused], :result => "aio",:process => :instant)
+          a2 = EventAction.new(:event => :defocus, :target => "aio")
+          m2 = MINT::SequentialMapping.new(:name=>"Sync AIO to defocused", :observations => [o3,o4],:actions =>[a2])
+          m2.state_callback = Logging.method(:log)
+          m2.start
+
+           # Sync AIO to focused
+                     o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:highlighted],:result=>"cio",:process => :onchange)
+                     o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:focused], :result => "aio",:process => :instant)
+                     a1 = EventAction.new(:event => :focus, :target => "aio")
+                     m1 = MINT::SequentialMapping.new(:name=>"Sync AIO to focused", :observations => [o3,o4],:actions =>[a1])
+
+                     m1.start
+
+          check_result = Proc.new {
+            MINT::AIO.first(:name=>"left").states.should ==[:focused]
+            MINT::CIO.first(:name=>"left").states.should ==[:highlighted]
+            MINT::AIO.first(:name=>"center").states.should ==[:defocused]
+
+            done
+          }
+
+          test_state_flow_w_name RedisConnector.redis,"Interactor.CIO","left" ,["initialized","highlighted"],check_result do
+            center = CUIHelper.scenario2
             center.process_event(:left).should ==[:displayed]
+          end
 
-                       end
-
-#          MINT::AIO.first(:name=>"center").states.should ==[:defocused]
-#          MINT::AIO.first(:name=>"left").states.should ==[:focused]
-#          MINT::CIO.first(:name=>"left").states.should ==[:highlighted]
+#
         end
       end
 
@@ -154,11 +168,11 @@ describe 'CUI' do
     end
     describe "layout calculation" do
       def checkSizes(cio,x,y,width,height)
-              cio.x.should == x
-              cio.y.should == y
-              cio.width.should == width
-              cio.height.should ==height
-            end
+        cio.x.should == x
+        cio.y.should == y
+        cio.width.should == width
+        cio.height.should ==height
+      end
       it "should calculate sizes for CIC" do
         connect do |redis|
           @solver = Cassowary::ClSimplexSolver.new

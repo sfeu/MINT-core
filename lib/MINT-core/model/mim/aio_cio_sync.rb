@@ -38,14 +38,14 @@ m1 = MINT::SequentialMapping.new(:name=>"Sync AIO to presenting", :observations 
 m1.start
 
 # Sync AIO to defocused
-o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displayed],:result=>"cio",:process => :continuous)
+o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displayed],:result=>"cio",:process => :onchange)
 o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:defocused], :result => "aio",:process => :instant)
-a1 = EventAction.new(:event => :defocus, :target => "aio")
-m1 = MINT::SequentialMapping.new(:name=>"Sync AIO to defocused", :observations => [o3,o4],:actions =>[a1])
-m1.start
+a2 = EventAction.new(:event => :defocus, :target => "aio")
+m2 = MINT::SequentialMapping.new(:name=>"Sync AIO to defocused", :observations => [o3,o4],:actions =>[a2])
+m2.start
 
 # Sync AIO to focused
-o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:highlighted],:result=>"cio",:process => :continuous)
+o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:highlighted],:result=>"cio",:process => :onchange)
 o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:focused], :result => "aio",:process => :instant)
 a1 = EventAction.new(:event => :focus, :target => "aio")
 m1 = MINT::SequentialMapping.new(:name=>"Sync AIO to focused", :observations => [o3,o4],:actions =>[a1])

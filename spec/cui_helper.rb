@@ -47,6 +47,14 @@ class CUIHelper
     center
   end
 
+  def self.scenario3
+    @center = MINT::CIO.create(:name => "center",:left=>"left",:states => [:highlighted])
+    @left = MINT::CIO.create(:name => "left",:states => [:displayed])
+
+    @a_center = MINT::AIO.create(:name => "center",:states =>[:focused], :next =>"left")
+    @a_left = MINT::AIO.create(:name => "left",:states =>[:defocused])
+  end
+
   def self.create_sync_mappings
     o1 = Observation.new(:element =>"Interactor.CIO", :states =>[:displaying], :result=> "cio")
     o2 = Observation.new(:eval => "AIO.get('aui',@cio.name)",:result=>"aio")

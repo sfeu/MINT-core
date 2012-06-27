@@ -26,29 +26,36 @@ class NegationObservation < Observation
       return self
     end
 
+    return self if res and is_instant?
+
     redis = RedisConnector.redis
+    @proc_observation = Proc.new { |message|
+      if @should_listen
+        found=JSON.parse message
 
-    redis.pubsub.subscribe("#{element}") { |message|
-      found=JSON.parse message
+        if name.nil? or name.eql? found["name"]
 
-      if name.nil? or name.eql? found["name"]
+          if found.has_key? "new_states"
+            if (found["new_states"] & states).length==0 # checks if both arrays share no element
 
-        if found.has_key? "new_states"
-          if (found["new_states"] & states).length==0 # checks if both arrays share no element
-
-            cb.call element, true , result(found),id
-          else
-            if (found["states"] & states).length > 0
-              cb.call element, false, {},id
+              cb.call element, true , result(found),id
+            else
+              if (found["states"] & states).length > 0
+                cb.call element, false, {},id
+              end
             end
           end
         end
       end
-    }.callback {
-      @cb_observation_has_subscribed = true
-      call_subscribed_callbacks
     }
 
+    if not    @cb_observation_has_subscribed
+      @should_listen = true
+      redis.pubsub.subscribe("#{element}",@proc_observation).callback {
+        @cb_observation_has_subscribed = true
+        call_subscribed_callbacks
+      }
+    end
     self
   end
 

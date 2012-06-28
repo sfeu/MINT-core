@@ -8,18 +8,19 @@ module MINT
     property :max, Integer,:default  => 100
 
     def getSCXML
-          "#{File.dirname(__FILE__)}/aiincontinuous.scxml"
-        end
+      "#{File.dirname(__FILE__)}/aiincontinuous.scxml"
+    end
 
     # functions called from scxml
 
     def publish(attribute)
       channel_name =  create_attribute_channel_name(attribute)
 
-      r = RedisConnector.sub
-      r.psubscribe('Interactor.AIO.AIIN.AIINContinuous.'+self.name.to_s+":*") # TODO all users
-      r.on(:pmessage) { |key, channel, message|
-        if key.eql?  'Interactor.AIO.AIIN.AIINContinuous.'+self.name.to_s+":*"
+      redis = RedisConnector.redis
+
+      fiber = Fiber.current
+
+      redis.pubsub.psubscribe('Interactor.AIO.AIIN.AIINContinuous.'+self.name.to_s+":*") { |key,message|
         if message.eql? "stop"
           process_event("halt")
         else
@@ -37,10 +38,12 @@ module MINT
           end
 
           attribute_set(:data,message.to_i)
-          RedisConnector.pub.publish channel_name,{:name=>self.name,:data => data}.to_json
+          RedisConnector.redis.publish channel_name,{:name=>self.name,:data => data}.to_json
         end
-        end
-      }
+
+      }.callback {  fiber.resume}
+      Fiber.yield
+
 
     end
 

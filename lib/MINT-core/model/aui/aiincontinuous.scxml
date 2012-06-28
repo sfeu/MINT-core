@@ -7,9 +7,6 @@
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=176.66281848634637 y=158.0  --></transition>
  </state>
  <state id="suspended"><!--   node-size-and-position x=131.66281848634637 y=183.0 w=70.0 h=20.0  -->
-  <onentry>
-   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
-  </onentry>
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=156.66281848634637 y=158.0  --></transition>
   <transition event="present" target="presenting"><!--   edge-path [presenting]  x=176.66281848634637 y=228.0  --></transition>
  </state>
@@ -19,15 +16,9 @@
   </onentry>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=156.66281848634637 y=228.0  --></transition>
   <state id="defocused"><!--   node-size-and-position x=113.28781848634637 y=43.0 w=70.0 h=20.0  -->
-   <onentry>
-    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-   </onentry>
    <transition event="focus" target="focused"><!--   edge-path [focused]  x=158.28781848634637 y=88.0  --></transition>
   </state>
   <state id="focused" initial="waiting"><!--   node-size-and-position x=20.0 y=113.0 w=256.57563697269273 h=426.0  -->
-   <onentry>
-    <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
-   </onentry>
    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=138.28781848634637 y=88.0  --></transition>
    <state id="moving"><!--   node-size-and-position x=20.0 y=113.0 w=182.15127394538547 h=293.0  -->
     <transition event="halt" target="waiting"></transition>

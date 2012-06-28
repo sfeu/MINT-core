@@ -50,8 +50,8 @@ describe 'AUI' do
 
     it 'should transform to progressing and regressing state and consume value' do
       connect true  do |redis|
-        test_state_flow RedisConnector.sub,"Interactor.AIO.AIOUT.AIOUTContinuous" , [ "initialized", "organized",  ["presenting", "f", "p", "defocused", "waiting"],"focused",["moving", "progressing"],"regressing"] do
-
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" , [ "initialized", "organized",  ["presenting", "f", "p", "defocused", "waiting"],"focused",["moving", "progressing"],"regressing"] do
+          Fiber.new{
           MINT::AIOUTContinuous.new(:name=>"a").save
           @a = MINT::AIOUTContinuous.first
 
@@ -62,8 +62,9 @@ describe 'AUI' do
 
           channel_name = @a.create_attribute_channel_name('data')
 
-          RedisConnector.pub.publish(channel_name,{:data=>10,:name=>"a"}.to_json)
-          RedisConnector.pub.publish(channel_name,{:data=>5,:name=>"a"}.to_json)
+          redis.publish(channel_name,{:data=>10,:name=>"a"}.to_json)
+          redis.publish(channel_name,{:data=>5,:name=>"a"}.to_json)
+          }.resume
         end
       end
       #@a.process_event(:move).should ==[:focused, :progressing]

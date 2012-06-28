@@ -7,29 +7,19 @@
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=234.09468754677746 y=158.0 pointx=0.0 pointy=0.0 offsetx=47.0 offsety=0.0  --></transition>
  </state>
  <state id="suspended"><!--   node-size-and-position x=189.09468754677746 y=183.0 w=70.0 h=20.0  -->
-  <onentry>
-   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
-  </onentry>
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=214.09468754677746 y=158.0 pointx=0.0 pointy=0.0 offsetx=70.0 offsety=0.0  --></transition>
   <transition event="present" target="presenting"><!--   edge-path [presenting]  x=234.09468754677746 y=228.0  --></transition>
  </state>
  <parallel id="presenting"><!--   node-size-and-position x=20.0 y=253.0 w=408.18937509355493 h=509.0  -->
   <onentry>
-   <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
    <script>@d = consume(&quot;data&quot;)</script>
   </onentry>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=214.09468754677746 y=228.0  --></transition>
   <state id="f" initial="defocused"><!--   node-size-and-position x=278.18937509355493 y=43.0 w=110.0 h=153.0  -->
    <state id="defocused"><!--   node-size-and-position x=20.0 y=43.0 w=70.0 h=20.0  -->
-    <onentry>
-     <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-    </onentry>
     <transition event="focus" target="focused"><!--   edge-path [focused]  x=69.0 y=88.0  --></transition>
    </state>
    <state id="focused"><!--   node-size-and-position x=30.0 y=113.0 w=50.0 h=20.0  -->
-    <onentry>
-     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
-    </onentry>
     <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=49.0 y=88.0  --></transition>
    </state>
   </state>

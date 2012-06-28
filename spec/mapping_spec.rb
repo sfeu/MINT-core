@@ -57,7 +57,7 @@ describe 'Mapping' do
             m = MINT::SequentialMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
               test_1 = InteractorTest.create(:name => "test_1")
               test_1.process_event :organize
               test_2 = InteractorTest_2.create(:name => "test_2")
@@ -74,7 +74,7 @@ describe 'Mapping' do
               m = MINT::SequentialMapping.new(:name=>"Sync CIO to display", :observations => [o1,o2],:actions =>[a])
               m.start
 
-              test_state_flow RedisConnector.sub,"Interactor.CIO" ,[["displaying", "displayed"]] do
+              test_state_flow redis,"Interactor.CIO" ,[["displaying", "displayed"]] do
                 aio = MINT::AIO.create(:name => "test", :states => [:organized])
                 cio = MINT::CIO.create(:name => "test", :states=>[:positioned])
                 aio.process_event :present
@@ -98,7 +98,7 @@ describe 'Mapping' do
               m1.state_callback = Logging.method(:log)
               m1.start
 
-              test_state_flow RedisConnector.sub,"Interactor.AIO" ,[["presenting", "defocused"]] do
+              test_state_flow redis,"Interactor.AIO" ,[["presenting", "defocused"]] do
                 aio = MINT::AIO.create(:name => "test", :states => [:organized])
                 cio = MINT::CIO.create(:name => "test", :states=>[:positioned])
                 cio.process_event :display
@@ -123,7 +123,7 @@ describe 'Mapping' do
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized"] do
               @a = InteractorTest.create(:name => "test")
             end
           end
@@ -137,7 +137,7 @@ describe 'Mapping' do
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
               test_1 = InteractorTest.create(:name => "test_1")
               test_2 = InteractorTest_2.create(:name => "test_2")
               test_1.process_event :organize
@@ -152,7 +152,7 @@ describe 'Mapping' do
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2","step3","initialized"] do
+            test_state_flow redis,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2","step3","initialized"] do
               test = InteractorTest2.create(:name => "test")
               test.process_event :present
 
@@ -168,7 +168,7 @@ describe 'Mapping' do
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2"] do
+            test_state_flow redis,"Interactor.InteractorTest.InteractorTest2" ,["initialized", ["presenting", "step1"],"step2"] do
               test = InteractorTest2.create(:name => "test")
               test.process_event :present
 
@@ -189,7 +189,7 @@ describe 'Mapping' do
             m = MINT::ComplementaryMapping.new(:name => "BindAction test", :observations => [o1,o2],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized"] do
               test_1 = InteractorTest.create(:name => "test")
               test_2 = InteractorTest_2.create(:name => "test_2")
               test_1.process_event :organize
@@ -210,7 +210,7 @@ describe 'Mapping' do
             m = MINT::ComplementaryMapping.new(:name=>"BackendAction test",:observations => [o],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized"] do
               test = InteractorTest.create(:name => "test")
               test.process_event :organize
             end
@@ -245,7 +245,7 @@ EOS
             m = parser.build_from_scxml_string scxml
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized"] do
               @a = InteractorTest.create(:name => "test")
             end
           end
@@ -273,7 +273,7 @@ EOS
             m = parser.build_from_scxml_string scxml
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest.InteractorTest_2" ,["initialized", "organized"] do
               test_1 = InteractorTest.create(:name => "test_1")
               test_2 = InteractorTest_2.create(:name => "test_2")
               test_1.process_event :organize
@@ -293,7 +293,7 @@ describe 'with BindAction' do
             m = ComplementaryMapping.new(:name => "BindAction test", :observations => [o1,o2],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized"] do
               test_1 = InteractorTest.create(:name => "test")
               test_2 = InteractorTest_2.create(:name => "test_2")
               test_1.process_event :organize
@@ -314,7 +314,7 @@ describe 'with BindAction' do
             m = ComplementaryMapping.new(:name=>"BackendAction test",:observations => [o],:actions =>[a])
             m.start
 
-            test_state_flow RedisConnector.sub,"Interactor.InteractorTest" ,["initialized", "organized"] do
+            test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized"] do
               test = InteractorTest.create(:name => "test")
               test.process_event :organize
             end

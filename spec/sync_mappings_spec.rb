@@ -28,7 +28,6 @@ describe 'Sync wth AIO' do
 
   it 'should sync highlight movements of CIO  to AUI' do
     connect true do |redis|
-      RedisConnector.reset
 
       # Sync AIO to defocused
       o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displayed],:result=>"cio",:process => :onchange)
@@ -55,7 +54,7 @@ describe 'Sync wth AIO' do
       }
 
 
-      test_state_flow_w_name RedisConnector.redis,"Interactor.CIO","center" ,["initialized","displayed"],check_result do  |count|
+      test_state_flow_w_name redis,"Interactor.CIO","center" ,["initialized","displayed"],check_result do  |count|
         center = CUIHelper.scenario2
         p "testcound:#{count}"
         center.process_event(:left).should ==[:displayed]
@@ -67,7 +66,6 @@ describe 'Sync wth AIO' do
 
   it 'should sync AUI focus movements to CUI' do
     connect true do |redis|
-      RedisConnector.reset
       # Sync CIO to displayed
       o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:defocused],:result=>"aio",:process => :onchange)
       o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displayed], :result => "cio",:process => :instant )
@@ -94,7 +92,7 @@ describe 'Sync wth AIO' do
         done
       }
 
-      test_state_flow_w_name RedisConnector.redis,"Interactor.AIO","center" ,["defocused"],check_result do  |count|
+      test_state_flow_w_name redis,"Interactor.AIO","center" ,["defocused"],check_result do  |count|
         center = CUIHelper.scenario3
         a_center = MINT::AIO.first(:name => "center")
         a_center.process_event("next").should ==[:defocused]

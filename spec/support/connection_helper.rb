@@ -1,20 +1,19 @@
+$:.unshift(File.dirname(__FILE__)) unless
+  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+require "MINT-core/connector/redis_connector"
+
 
 module ConnectionHelper
-  def connect(wait = false, &blk)
+  def connect(wait = false, timeout = 3 , &blk)
+    em(timeout) do
+      RedisConnector.reset
+      redis = RedisConnector.redis
 
-    em do
-      redis =EM::Hiredis.connect
-      redis.callback{
         redis.flushall.callback {
           blk.call(redis)
           EM.stop_event_loop if not wait
-          EM.add_timer(3) {
-                raise "Timeout. Test failed after waiting 3 seconds for an event that not occurred."
-                done
-
-              }
         }
-      }
+
     end
   end
 end

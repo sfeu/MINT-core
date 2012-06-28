@@ -65,7 +65,7 @@ describe 'Interactor' do
     it 'should initialize with initiated' do
       connect true do |redis|
 
-        test_state_flow redis,"Interactor.InteractorTest" ,%w(initialized) do
+        test_state_flow RedisConnector.redis,"Interactor.InteractorTest" ,%w(initialized) do
 
           @a = InteractorTest.create(:name => "test")
         end

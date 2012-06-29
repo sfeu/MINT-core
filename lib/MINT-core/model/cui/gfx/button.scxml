@@ -9,9 +9,6 @@
   <transition event="display" target="p"></transition>
  </state>
  <state id="hidden"><!--   node-size-and-position x=270.0 y=60.0 w=130.0 h=40.0  -->
-  <onentry>
-   <invoke src="sync_aio_to_suspended" type="x-mint"></invoke>
-  </onentry>
   <transition event="position" target="positioning"></transition>
  </state>
  <state id="disabled"><!--   node-size-and-position x=490.0 y=60.0 w=130.0 h=40.0  -->
@@ -21,19 +18,10 @@
   <transition event="disable" target="disabled"></transition>
   <transition event="hide" target="hidden"></transition>
   <state id="displaying" initial="displayed"><!--   node-size-and-position x=20.0 y=30.0 w=280.0 h=200.0  -->
-   <onentry>
-    <invoke src="sync_aio_to_presented" type="x-mint"></invoke>
-   </onentry>
    <state id="displayed"><!--   node-size-and-position x=90.0 y=50.0 w=100.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_aio_to_defocus" type="x-mint"></invoke>
-    </onentry>
     <transition event="highlight" target="highlighted"><!--   edge-path [highlighted]  x=80.0 y=110.0 pointx=0.0 pointy=18.0 offsetx=19.0 offsety=-14.0  --></transition>
    </state>
    <state id="highlighted"><!--   node-size-and-position x=90.0 y=140.0 w=100.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_aio_to_focused" type="x-mint"></invoke>
-    </onentry>
     <transition event="unhighlight" target="displayed"><!--   edge-path [displayed]  x=180.0 y=110.0  --></transition>
     <transition event="up" target="displayed">
      <invoke src="highlight_up" type="x-mint"></invoke>
@@ -51,15 +39,9 @@
   </state>
   <state id="b" initial="released"><!--   node-size-and-position x=330.0 y=23.0 w=170.0 h=210.0  -->
    <state id="pressed"><!--   node-size-and-position x=30.0 y=140.0 w=100.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_aio_to_activated" type="x-mint"></invoke>
-    </onentry>
     <transition event="release" target="released"><!--   edge-path [released]  x=120.0 y=100.0 pointx=0.0 pointy=-40.0 offsetx=0.0 offsety=5.0  --></transition>
    </state>
    <state id="released"><!--   node-size-and-position x=30.0 y=40.0 w=100.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_aio_to_deactivated" type="x-mint"></invoke>
-    </onentry>
     <transition event="press" target="pressed"><!--   edge-path [pressed]  x=40.0 y=100.0  --></transition>
    </state>
   </state>

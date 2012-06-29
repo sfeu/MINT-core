@@ -58,3 +58,36 @@ a1 = EventAction.new(:event => :suspend, :target => "aio")
 m1 = MINT::SequentialMapping.new(:name=>"Sync AIO to suspended", :observations => [o3,o4],:actions =>[a1])
 m1.start
 
+
+#Sync AICommand to activated
+
+o3 = Observation.new(:element =>"Interactor.CIO.Button", :states =>[:pressed],:result=>"cio",:process => :continuous)
+o4 = NegationObservation.new(:element =>"Interactor.AIO.AIIN.AIINDiscrete.AICommand", :name =>"cio.name" ,:states =>[:activated], :result => "aio",:process => :instant)
+a1 = EventAction.new(:event => :activate, :target => "aio")
+m1 = MINT::SequentialMapping.new(:name=>"Sync AICommand to activated", :observations => [o3,o4],:actions =>[a1])
+m1.start
+
+#Sync AICommand to deactivated
+
+o3 = Observation.new(:element =>"Interactor.CIO.Button", :states =>[:released],:result=>"cio",:process => :continuous)
+o4 = NegationObservation.new(:element =>"Interactor.AIO.AIIN.AIINDiscrete.AICommand", :name =>"cio.name" ,:states =>[:deactivated], :result => "aio",:process => :instant)
+a1 = EventAction.new(:event => :deactivate, :target => "aio")
+m1 = MINT::SequentialMapping.new(:name=>"Sync AICommand to deactivated", :observations => [o3,o4],:actions =>[a1])
+m1.start
+
+#Sync Button to pressed
+
+o3 = Observation.new(:element =>"Interactor.AIO.AIIN.AIINDiscrete.AICommand", :states =>[:activated],:result=>"aio",:process => :continuous)
+o4 = NegationObservation.new(:element =>"Interactor.CIO.Button", :name =>"aio.name" ,:states =>[:released], :result => "cio",:process => :instant)
+a1 = EventAction.new(:event => :press, :target => "cio")
+m1 = MINT::SequentialMapping.new(:name=>"Sync Button to pressed", :observations => [o3,o4],:actions =>[a1])
+m1.start
+
+
+#Sync Button to released
+
+o3 = Observation.new(:element =>"Interactor.AIO.AIIN.AIINDiscrete.AICommand", :states =>[:deactivated],:result=>"aio",:process => :continuous)
+o4 = NegationObservation.new(:element =>"Interactor.CIO.Button", :name =>"aio.name" ,:states =>[:pressed], :result => "cio",:process => :instant)
+a1 = EventAction.new(:event => :release, :target => "cio")
+m1 = MINT::SequentialMapping.new(:name=>"Sync Button to released", :observations => [o3,o4],:actions =>[a1])
+m1.start

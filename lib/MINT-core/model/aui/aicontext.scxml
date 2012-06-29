@@ -9,9 +9,6 @@
   </onentry>
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=94.0 y=228.0  --></transition>
   <state id="focused"><!--   node-size-and-position x=59.5 y=113.0 w=60.0 h=20.0  -->
-   <onentry>
-    <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
-   </onentry>
    <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=61.0 y=88.0 pointx=0.0 pointy=0.0 offsetx=-5.0 offsety=0.0  --></transition>
    <transition cond="exists_next" event="next" target="defocused">
     <invoke src="focus_next" type="x-mint"></invoke>
@@ -24,16 +21,10 @@
 <!--   edge-path [defocused]  x=81.0 y=88.0  --></transition>
   </state>
   <state id="defocused"><!--   node-size-and-position x=59.5 y=43.0 w=60.0 h=20.0  -->
-   <onentry>
-    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-   </onentry>
    <transition event="focus" target="focused"><!--   edge-path [focused]  x=141.0 y=88.0  --></transition>
   </state>
  </state>
  <state id="suspended"><!--   node-size-and-position x=74.0 y=183.0 w=60.0 h=20.0  -->
-  <onentry>
-   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
-  </onentry>
   <transition event="present" target="presenting"><!--   edge-path [presenting]  x=114.0 y=228.0  --></transition>
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=94.0 y=158.0  --></transition>
  </state>

@@ -51,7 +51,7 @@ describe 'Mapping' do
       describe 'with EventAction' do
         it 'should fire event if all observations have been true' do
           connect true do |redis|
-            o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized])
+            o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized],:process=> :onchange)
             o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p",:process=> :continuous )
             a = EventAction.new(:event => :organize, :target => "p")
             m = MINT::SequentialMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
@@ -118,7 +118,7 @@ describe 'Mapping' do
       describe 'with EventAction' do
         it 'should fire event if the observation is true' do
           connect true do |redis|
-            o = Observation.new(:element =>"Interactor.InteractorTest", :name => "test", :result => "p", :states =>[:initialized])
+            o = Observation.new(:element =>"Interactor.InteractorTest", :name => "test", :result => "p", :states =>[:initialized], :process=>"onchange")
             a = EventAction.new(:event => :organize,:target => "p")
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o],:actions =>[a])
             m.start
@@ -131,7 +131,7 @@ describe 'Mapping' do
 
         it 'should fire event if both observations are true' do
           connect true do |redis|
-            o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized])
+            o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized], :process=>"onchange")
             o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p")
             a = EventAction.new(:event => :organize, :target => "p")
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
@@ -163,7 +163,7 @@ describe 'Mapping' do
 
         it 'should handle a non continuous observation' do
           connect true do |redis|
-            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p")
+            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p", :process=>"onchange")
             a = EventAction.new(:event => :step, :target => "p")
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
             m.start
@@ -183,7 +183,7 @@ describe 'Mapping' do
         it 'should call the Backend Action if observation is true' do
           connect true do |redis|
             b = InteractorTest.new
-            o = Observation.new(:element =>"Interactor.InteractorTest",:name => "test", :states =>[:organized], :result => "c")
+            o = Observation.new(:element =>"Interactor.InteractorTest",:name => "test", :states =>[:organized], :result => "c", :process=>"onchange")
             a = BackendAction.new(:call => b.method(:show_states), :parameter => "c")
             m = MINT::ComplementaryMapping.new(:name=>"BackendAction test",:observations => [o],:actions =>[a])
             m.start
@@ -211,7 +211,7 @@ describe 'Mapping' do
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
   <operator type="complementary">
     <observations>
-      <observation interactor="Interactor.InteractorTest" name="test" states="initialized" result="p"/>
+      <observation interactor="Interactor.InteractorTest" name="test" states="initialized" result="p" process="onchange"/>
     </observations>
     <actions>
       <event type="organize" target="p"/>
@@ -238,7 +238,7 @@ EOS
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
   <operator type="complementary">
     <observations>
-      <observation interactor="Interactor.InteractorTest" name="test_1" states="organized"/>
+      <observation interactor="Interactor.InteractorTest" name="test_1" states="organized" process="onchange"/>
       <observation interactor="Interactor.InteractorTest.InteractorTest_2" name="test_2" states="initialized" result="p"/>
     </observations>
     <actions>

@@ -67,13 +67,16 @@ describe 'MappingManager' do
 
   it 'should activate observations after mapping has been started' do
    # pending "Needs to be fixed by Jessica"
-    connect true do |redis|
+    connect true,120 do |redis|
+
+
       m = MappingManager.new
       @counter = 0
 
       # we need to move all checks into the callback, since after the mapping is started, we are async...
       def my_callback(mapping_name,data)
         if mapping_name.eql? "Mouse Interactor Highlighting"
+          p @counter
           case @counter
             when 0
               data[:mapping_state].should == :loaded
@@ -82,9 +85,13 @@ describe 'MappingManager' do
             when 2
               data[:id].should == "111"
               data[:state].should == :activated
+
+              @mouse = MINT::Mouse.create(:name =>"mouse")  # previously activated observation should be false
+
             when 3
               data[:id].should == "111"
               data[:state].should == :false
+              @mouse.process_event :connect # observation should be true
             when 4
               data[:id].should == "111"
               data[:state].should == :true
@@ -110,8 +117,8 @@ describe 'MappingManager' do
 
       m.register_callback("Mouse Interactor Highlighting",method(:my_callback))
       m.load("./examples/mim_streaming_example.xml")
-      mouse = MINT::Mouse.create(:name =>"mouse")  # previously activated observation should be false
-      mouse.process_event :connect # observation should be true
+
+
     end
   end
 end

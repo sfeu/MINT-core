@@ -44,7 +44,7 @@ class MappingParser
         observation_hash[:id] = attributes['id']
         attributes['states'].split("|").each do |s| observation_states << s.to_sym end
         observation_hash[:states] = observation_states
-        observation_hash[:continuous] = attributes['continuous']
+        observation_hash[:process] = attributes['process'].to_s.to_sym if attributes['process']
         observation_hash[:result] = attributes['result'] if attributes['result']
         @observations << Observation.new(observation_hash)
       when 'backend'

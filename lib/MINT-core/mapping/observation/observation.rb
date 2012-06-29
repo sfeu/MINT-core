@@ -11,7 +11,7 @@ class Observation
   end
 
   def is_continuous?
-    @observation[:process] == :continuous
+    @observation[:process].nil? or @observation[:process] == :continuous
   end
 
   def is_instant?
@@ -90,6 +90,18 @@ class Observation
 
   def start(observations_results,cb)
     @observation_results=observations_results
+
+    if @cb_observation_has_subscribed # restart!!
+      @should_listen = true
+
+      if is_instant?
+        fail(cb)  if not check_true_at_startup(cb)
+      elsif is_continuous?
+        check_true_at_startup(cb)
+      end
+      return self
+    end
+
     @proc_observation = Proc.new { |message|
       if @should_listen
         found=JSON.parse message

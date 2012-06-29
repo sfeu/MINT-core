@@ -86,9 +86,8 @@ describe 'AUI' do
 
       it 'should forward focus' do
         connect true do |redis|
-          @a = MINT::AIReference.create(:name=>"ref")
 
-          test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,["initialized",["presenting", "defocused"],"focused", "defocused"]     do
+          test_state_flow redis,"Interactor.AIO.AIIN.AIINDiscrete.AIReference" ,[["presenting", "defocused"],"focused", "defocused"]     do
             @r = MINT::AIO.create(:name => "test",:states=>[:defocused])
             @a = MINT::AIReference.create(:name=>"reference", :refers => "test",:states=>[:organized])
             @a.process_event :present

@@ -8,8 +8,11 @@ module MINT
 
     def consume(id)
       subscription = self.class.create_channel_name+"."+id.to_s+":*"
-      RedisConnector.sub.psubscribe(subscription) # TODO all users
-      RedisConnector.sub.on(:pmessage) { |key, channel, message|
+
+      redis = RedisConnector.redis
+
+      redis.pubsub.psubscribe(subscription) { |key,message|
+
         if (key.eql? subscription)
           data = JSON.parse message
 

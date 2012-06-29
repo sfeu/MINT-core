@@ -37,6 +37,28 @@ module StatemachineHelper
     }
   end
 
+  def test_complex_state_flow_w_name(redis, interactors, cb,  &blk)
+
+    @counter = interactors.size
+    res_cb_new = Proc.new do
+      @counter -=1
+      cb.call if @counter == 0
+    end
+
+    @subcounter = interactors.size
+    sub_cb_new = Proc.new do
+          @subcounter -=1
+          blk.call if @subcounter == 0
+        end
+
+    interactors.each do |i|
+      channel, name, expected_states = i
+      test_state_flow_w_name(redis, channel, name, expected_states, res_cb_new,  &sub_cb_new)
+    end
+
+
+  end
+
 
   def test_msg_flow (redis,channel,interactor,attribute,value, publish_data)
 

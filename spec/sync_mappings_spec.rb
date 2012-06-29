@@ -54,7 +54,7 @@ describe 'Sync wth AIO' do
       }
 
 
-      test_state_flow_w_name redis,"Interactor.CIO","center" ,["initialized","displayed"],check_result do  |count|
+      test_complex_state_flow_w_name redis,[["Interactor.CIO","center" ,["initialized","displayed"]],["Interactor.AIO","center" ,["defocused"]]],check_result do  |count|
         center = CUIHelper.scenario2
         p "testcound:#{count}"
         center.process_event(:left).should ==[:displayed]
@@ -92,7 +92,7 @@ describe 'Sync wth AIO' do
         done
       }
 
-      test_state_flow_w_name redis,"Interactor.AIO","center" ,["defocused"],check_result do  |count|
+      test_complex_state_flow_w_name  redis,[["Interactor.AIO","center" ,["defocused"]],["Interactor.CIO","center" ,["displayed"]]],check_result do  |count|
         center = CUIHelper.scenario3
         a_center = MINT::AIO.first(:name => "center")
         a_center.process_event("next").should ==[:defocused]

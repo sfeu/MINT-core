@@ -179,28 +179,6 @@ describe 'Mapping' do
 
       end
 
-      describe 'with BindAction' do
-        it 'should bind if both observation are true' do
-          connect true do |redis|
-            o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test", :states =>[:organized])
-            o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name=>"test_2", :states =>[:presenting])
-            a = BindAction.new(:elementIn => "Interactor.InteractorTest",:nameIn => "test", :attrIn =>"data",:attrOut=>"data",
-                               :elementOut =>"Interactor.InteractorTest.InteractorTest_2", :nameOut=>"test_2" )
-            m = MINT::ComplementaryMapping.new(:name => "BindAction test", :observations => [o1,o2],:actions =>[a])
-            m.start
-
-            test_state_flow redis,"Interactor.InteractorTest" ,["initialized", "organized"] do
-              test_1 = InteractorTest.create(:name => "test")
-              test_2 = InteractorTest_2.create(:name => "test_2")
-              test_1.process_event :organize
-              test_2.process_event :organize
-              test_2.process_event :present
-            end
-          end
-        end
-
-      end
-
       describe 'with BackendAction' do
         it 'should call the Backend Action if observation is true' do
           connect true do |redis|

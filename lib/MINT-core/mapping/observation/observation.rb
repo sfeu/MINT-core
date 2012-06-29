@@ -102,7 +102,7 @@ class Observation
       return self
     end
 
-    @proc_observation = Proc.new { |message|
+    @proc_observation = Proc.new { |key, message|
       if @should_listen
         found=JSON.parse message
 
@@ -132,7 +132,7 @@ class Observation
       @should_listen = true
       redis = RedisConnector.redis
 
-      redis.pubsub.subscribe("#{element}",@proc_observation).callback { |count|
+      redis.pubsub.psubscribe("#{element}*",@proc_observation).callback { |count|
         @cb_observation_has_subscribed = true
         call_subscribed_callbacks
       }

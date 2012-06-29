@@ -29,7 +29,7 @@ class NegationObservation < Observation
     return self if res and is_instant?
 
     redis = RedisConnector.redis
-    @proc_observation = Proc.new { |message|
+    @proc_observation = Proc.new { |key,message|
       if @should_listen
         found=JSON.parse message
 
@@ -51,7 +51,7 @@ class NegationObservation < Observation
 
     if not    @cb_observation_has_subscribed
       @should_listen = true
-      redis.pubsub.subscribe("#{element}",@proc_observation).callback {
+      redis.pubsub.psubscribe("#{element}*",@proc_observation).callback {
         @cb_observation_has_subscribed = true
         call_subscribed_callbacks
       }

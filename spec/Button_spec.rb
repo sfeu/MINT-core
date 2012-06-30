@@ -40,33 +40,57 @@ describe 'CUI' do
     it 'should highlight based on AICommand update to focus' do
       connect true,120 do |redis|
 
-        # Sync CIO to displaying
-        o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio",:process => :onchange)
-        o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio",:process => :instant )
-        a = EventAction.new(:event => :display, :target => "cio")
-        m = MINT::SequentialMapping.new(:name=>"Sync CIO to displaying", :observations => [o1,o2],:actions =>[a])
-        m.start
-        # Sync CIO to highlighted
-        o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:focused],:result=>"aio",:process => :onchange)
-        o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:highlighted], :result => "cio",:process => :instant )
-        a = EventAction.new(:event => :highlight, :target => "cio")
-        m = MINT::SequentialMapping.new(:name=>"Sync CIO to highlighted", :observations => [o1,o2],:actions =>[a])
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_present_to_cio_display.xml"
         m.start
 
+        # Sync AIO to focused
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
+        m.start
 
         test_state_flow redis,"Interactor.CIO.Button" ,[["p", "displaying", "b", "displayed", "released"],"highlighted"] do
           MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
-
           c = MINT::AICommand.create(:name=>"reset", :states=>[:organized])
-
           c.process_event :present
           c.process_event :focus
-
         end
-
       end
-
     end
+
+    it 'should sync to pressed and released based on AICommand' do
+      connect true,120 do |redis|
+
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_present_to_cio_display.xml"
+        m.start
+
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
+        m.start
+
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aicommand_activate_to_button_press.xml"
+        m.start
+
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aicommand_deactivate_to_button_release.xml"
+        m.start
+
+
+        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "displaying", "b", "displayed", "released"],"highlighted","pressed","released"] do
+          MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
+          c = MINT::AICommand.create(:name=>"reset", :states=>[:organized])
+          c.process_event :present
+          c.process_event :focus
+          c.process_event :activate
+          c.process_event :deactivate
+        end
+      end
+    end
+
+
+
     it 'should highlight' do
       connect true do |redis|
         require "MINT-core"

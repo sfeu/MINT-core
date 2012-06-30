@@ -15,7 +15,7 @@ share_examples_for 'An AIO interactor' do
 
   it 'should publish initialize when created' do
     connect true  do |redis|
-      test_state_flow redis,"Interactor.AIO" ,%w(initialized) do
+      test_state_flow redis,@interactor_class.create_channel_name ,%w(initialized) do
         @interactor_class.create(:name => "test")
       end
     end
@@ -75,61 +75,69 @@ share_examples_for 'An AIO interactor' do
       a.process_event(:present)
       b.process_event(:present)
 
-      a.process_event(:focus).should == [:focused]
-      a.process_event(:next).should == [:defocused]
+      a.process_event(:focus).should include :focused
+      a.process_event(:next).should include :defocused
 
       b = @interactor_class.first(:name=>"next")
-      b.states.should ==[:focused]
-      a.states.should ==[:defocused]
+      b.states.should include :focused
+      a.states.should include :defocused
     end
 
     it 'should move focus to previous element upon previous' do
-         a = @interactor_class.create(:name => "test",:next => "next")
-         b = @interactor_class.create(:name=>"next",:previous => "test")
+      a = @interactor_class.create(:name => "test",:next => "next")
+      b = @interactor_class.create(:name=>"next",:previous => "test")
 
-         a.process_event(:organize)
-         b.process_event(:organize)
+      a.process_event(:organize)
+      b.process_event(:organize)
 
-         a.process_event(:present)
-         b.process_event(:present)
+      a.process_event(:present)
+      b.process_event(:present)
 
-         b.process_event(:focus).should == [:focused]
-         b.process_event(:prev).should == [:defocused]
+      b.process_event(:focus).should include :focused
+      b.process_event(:prev).should include :defocused
 
-         a = @interactor_class.first(:name=>"test")
-         a.states.should ==[:focused]
-         b.states.should ==[:defocused]
-       end
+      a = @interactor_class.first(:name=>"test")
+      a.states.should include :focused
+      b.states.should include :defocused
+    end
 
     it 'should not defocus on next if there is no next element' do
-        a = @interactor_class.create(:name => "test")
-        a.states=[:focused]
-        a.process_event(:next)
-        a.states.should == [:focused]
-      end
+      a = @interactor_class.create(:name => "test")
+      a.process_event(:organize)
+
+      a.process_event(:present)
+
+      a.process_event(:focus).should include :focused
+      a.process_event(:next)
+      a.states.should include :focused
+    end
 
     it 'should not defocus on previous if there is no previous element' do
-        @a = @interactor_class.create(:name => "test")
-        @a.states=[:focused]
-        @a.process_event(:prev).should ==[:focused]
-      end
+      a = @interactor_class.create(:name => "test")
+      a.process_event(:organize)
+
+      a.process_event(:present)
+
+      a.process_event(:focus).should include :focused
+      a.process_event(:prev).should include :focused
+    end
 
     it 'should move focus to parent upon parent' do
-        a = @interactor_class.create(:name => "test",:parent =>"parent")
-        b =  MINT::AIContainer.create(:name=>"parent",:children =>["test"])
+      a = @interactor_class.create(:name => "test",:parent =>"parent")
+      b =  MINT::AIContainer.create(:name=>"parent",:children =>["test"])
 
-        a.process_event(:organize)
-        b.process_event(:organize)
+      a.process_event(:organize)
+      b.process_event(:organize)
 
-        a.process_event(:present)
-        b.process_event(:present)
+      a.process_event(:present)
+      b.process_event(:present)
 
-        a.process_event(:focus).should == [:focused]
-        a.process_event(:parent).should == [:defocused]
+      a.process_event(:focus).should include :focused
+      a.process_event(:parent).should include :defocused
 
-        b = MINT::AIContainer.first(:name=>"parent")
-        b.states.should ==[:focused]
-        a.states.should ==[:defocused]
+      b = MINT::AIContainer.first(:name=>"parent")
+      b.states.should include :focused
+      a.states.should include :defocused
 
     end
   end

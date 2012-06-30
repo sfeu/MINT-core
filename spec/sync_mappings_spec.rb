@@ -30,20 +30,14 @@ describe 'Sync wth AIO' do
     connect true do |redis|
 
       # Sync AIO to defocused
-      o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displayed],:result=>"cio",:process => :onchange)
-      o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:defocused], :result => "aio",:process => :instant)
-      a2 = EventAction.new(:event => :defocus, :target => "aio")
-      m2 = MINT::SequentialMapping.new(:name=>"Sync AIO to defocused", :observations => [o3,o4],:actions =>[a2])
-      m2.state_callback = Logging.method(:log)
-      m2.start
+      parser = MINT::MappingParser.new
+      m = parser.build_from_scxml "../lib/MINT-core/model/mim/cio_display_to_aio_defocus.xml"
+      m.start
 
       # Sync AIO to focused
-      o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:highlighted],:result=>"cio",:process => :onchange)
-      o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:focused], :result => "aio",:process => :instant)
-      a1 = EventAction.new(:event => :focus, :target => "aio")
-      m1 = MINT::SequentialMapping.new(:name=>"Sync AIO to focused", :observations => [o3,o4],:actions =>[a1])
-
-      m1.start
+      parser = MINT::MappingParser.new
+      m = parser.build_from_scxml "../lib/MINT-core/model/mim/cio_highlight_to_aio_focus.xml"
+      m.start
 
       check_result = Proc.new {
         MINT::AIO.first(:name=>"left").states.should ==[:focused]
@@ -66,21 +60,16 @@ describe 'Sync wth AIO' do
 
   it 'should sync AUI focus movements to CUI' do
     connect true do |redis|
+
       # Sync CIO to displayed
-      o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:defocused],:result=>"aio",:process => :onchange)
-      o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displayed], :result => "cio",:process => :instant )
-      a = EventAction.new(:event => :unhighlight, :target => "cio")
-      m = MINT::SequentialMapping.new(:name=>"Sync CIO to displayed", :observations => [o1,o2],:actions =>[a])
-      m.state_callback = Logging.method(:log)
+      parser = MINT::MappingParser.new
+      m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_defocus_to_cio_unhighlight.xml"
       m.start
 
       # Sync CIO to highlighted
-      o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:focused],:result=>"aio",:process => :onchange)
-      o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:highlighted], :result => "cio",:process => :instant )
-      a = EventAction.new(:event => :highlight, :target => "cio")
-      m = MINT::SequentialMapping.new(:name=>"Sync CIO to highlighted", :observations => [o1,o2],:actions =>[a])
+      parser = MINT::MappingParser.new
+      m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
       m.start
-
 
       check_result = Proc.new {
         MINT::AIO.first(:name=>"left").states.should ==[:focused]

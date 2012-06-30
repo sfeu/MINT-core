@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
   <operator type="sequential" id="1">
     <observations>
-      <observation id="2" interactor="Interactor.CIO" states="displayed" result="cio" process="onchange"/>
-      <observation id="3" type="negation" interactor="Interactor.AIO" name="cio.name" states="defocused" result="aio" process="instant"/>
+      <observation id="2" interactor="Interactor.CIO" states="displaying" result="cio" process="onchange"/>
+      <observation id="3" type="negation" interactor="Interactor.AIO" name="cio.name" states="presenting" result="aio" process="instant"/>
     </observations>
     <actions>
-      <event id="4" type="defocus" target="aio"/>
+      <event id="4" type="present" target="aio"/>
     </actions>
   </operator>
 </mapping>

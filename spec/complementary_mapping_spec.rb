@@ -65,7 +65,7 @@ describe "Complementary mapping" do
             slider.process_event(:organize).should ==[:organized]
             slider.process_event(:present).should ==[:defocused]
             slider.process_event(:focus).should ==[:waiting]
-            redis.publish  'Interactor.AIO.AIIN.AIINContinuous.slider:test', 20
+            redis.publish  'data:Interactor.AIO.AIIN.AIINContinuous.slider:test', 20
 
           }.resume
 

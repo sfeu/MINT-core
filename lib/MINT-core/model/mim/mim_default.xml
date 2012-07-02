@@ -1,0 +1,24 @@
+<?xml version='1.0'?>
+<mim name="Default Sync Mappings" xmlns="http://www.multi-access.de"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+
+  <include href="mouse_stop_to_cio_highlight.xml" start="true" />
+  <include href="mouse_release_to_aicommand_deactivate.xml" start="true" />
+  <include href="mouse_press_to_aicommand_activate.xml" start="true" />
+  <include href="aicommand_activate_to_button_press.xml" start="true" />
+  <include href="aicommand_deactivate_to_button_release.xml" start="true" />
+  <include href="aio_defocus_to_cio_unhighlight.xml" start="true" />
+  <include href="aio_focus_to_cio_highlight.xml" start="true" />
+  <include href="aio_present_to_cio_display.xml" start="true" />
+  <include href="aio_suspend_to_cio_hide.xml" start="true" />
+  <include href="button_press_to_aicommand_activate.xml" start="true" />
+  <include href="button_release_to_aicommand_deactivate.xml" start="true" />
+  <include href="cio_display_to_aio_defocus.xml" start="true" />
+  <include href="cio_display_to_aio_present.xml" start="true" />
+  <include href="cio_hide_to_aio_suspend.xml" start="true" />
+  <include href="cio_highlight_to_aio_focus.xml" start="true" />
+</mim>
+
+        
+

@@ -7,13 +7,13 @@ module MINT
     end
 
     def consume(id)
-      subscription = self.class.create_channel_name+"."+id.to_s+":*"
+      subscription = "data:"+self.class.create_channel_name+"."+id.to_s+":*"
 
       redis = RedisConnector.redis
 
       redis.pubsub.psubscribe(subscription) { |key,message|
 
-        if (key.eql? subscription)
+       # if (key.eql? subscription)
           data = JSON.parse message
 
           if data["cmd"].eql? "pointer"
@@ -36,7 +36,7 @@ module MINT
             end
 
           end
-        end
+       # end
       }
     end
 

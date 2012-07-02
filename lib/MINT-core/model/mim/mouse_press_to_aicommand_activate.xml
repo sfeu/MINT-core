@@ -1,4 +1,4 @@
-<mapping name="Reset Click" xmlns="http://www.multi-access.de"
+<mapping name="Sync Mouse press to AICommand activate" xmlns="http://www.multi-access.de"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
 

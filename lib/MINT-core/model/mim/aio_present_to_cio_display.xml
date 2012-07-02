@@ -1,4 +1,4 @@
-<mapping name="Sync AIO focus to CIO highlight" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<mapping name="Sync AIO present to CIO display" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
   <operator type="sequential" id="1">
     <observations>

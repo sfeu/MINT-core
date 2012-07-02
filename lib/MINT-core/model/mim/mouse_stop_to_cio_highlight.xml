@@ -1,4 +1,4 @@
-<mapping name="Mouse Interactor Highlighting" xmlns="http://www.multi-access.de"
+<mapping name="Sync Mouse stop to CIO highlight" xmlns="http://www.multi-access.de"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
 
@@ -12,11 +12,3 @@
   </operator>
 
 </mapping>
-
-        <!--
-  o3 = Observation.new(:element =>"Interactor.Pointer.Mouse",:name => "mouse", :states =>[:stopped], :result => "p")
-  a2 = BackendAction.new(:call => CUIControl.method(:find_cio_from_coordinates),:parameter => "p")
-  m2 = ComplementaryMapping.new(:name=>"Mouse Interactor Highlighting", :observations => [o3],:actions =>[a2])
-  m2.start
-
-                        -->

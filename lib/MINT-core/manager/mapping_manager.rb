@@ -10,6 +10,7 @@ class MappingManager
   def initialize()
     @mappings = {}
     @callbacks = {}
+    @file_path = nil
   end
 
   # This function parses scxml from a file
@@ -26,6 +27,7 @@ class MappingManager
   end
 
   def load(xml_file)
+    @file_path = File.expand_path(File.dirname(xml_file))
     @mappings = build_from_scxml(xml_file)
   end
 
@@ -46,7 +48,7 @@ class MappingManager
          #Do I have to store its name?
       when 'include'
          parser = MINT::MappingParser.new
-         mapping = parser.build_from_scxml("examples/"+ attributes['href'])
+         mapping = parser.build_from_scxml(@file_path +"/"+ attributes['href'])
          @mappings[mapping.mapping_name] = mapping
 
          #If a callback has already been register, add it.

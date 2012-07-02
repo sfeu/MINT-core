@@ -33,7 +33,6 @@ class ComplementaryMapping
     p "Mapping #{@mapping[:name]} started"
     @state_callback.call(@mapping[:name], {:id => @mapping[:id], :mapping_state => :started}) if @state_callback
     observations.each do |observation|
-      observation.mapping = {:mapping => @mapping, :state_callback => @state_callback}
       @observation_init[observation.element] = false
       observation.initiated_callback(self.method :init_cb)
       p "Observation #{observation.name} activated"
@@ -81,21 +80,17 @@ class ComplementaryMapping
         startAction @observation_results
         resetObservations true
       end
-      p "Mapping #{@mapping[:name]} finished"
-      @state_callback.call(@mapping[:name], {:id => @mapping[:id], :mapping_state => :finished}) if @state_callback
-
     end
   end
 
   def startAction(observation_results)
+    p "Mapping #{mapping_name} executed"
     actions.each do |action|
       @action_activated[action.identifier] = false
       action.initiated_callback(self.method :activated_cb)
       p "Action activated"
       @state_callback.call(@mapping[:name], {:id => action.id, :state => :activated}) if @state_callback
       action.start observation_results   # pass observation variables
-      p "Action finished"
-      @state_callback.call(@mapping[:name], {:id => action.id, :state => :succeeded}) if @state_callback
     end
   end
 

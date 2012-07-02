@@ -4,7 +4,7 @@
 
   <operator type="complementary"  id="33113" >
     <observations>
-      <observation id="111" interactor="Interactor.Pointer.Mouse" name="mouse" states="stopped" result="p"/>
+      <observation id="111" interactor="Interactor.Pointer.Mouse" name="mouse" states="stopped" result="p" process="onchange"/>
     </observations>
     <actions>
       <backend id="2222" call="find_cio_from_coordinates" class="CUIControl" parameter="p"/>

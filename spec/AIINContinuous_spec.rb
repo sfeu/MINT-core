@@ -60,7 +60,7 @@ describe 'AUI' do
           @a.process_event(:present).should ==[:defocused]
           @a.process_event(:focus).should ==[:waiting]
 
-          channel_name = "data:Interactor.AIO.AIIN.AIINContinuous.a:testuser"
+          channel_name = "in_channel:Interactor.AIO.AIIN.AIINContinuous.a:testuser"
 
           RedisConnector.redis.publish(channel_name,"10")
           RedisConnector.redis.publish(channel_name,"5")

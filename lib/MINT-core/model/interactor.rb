@@ -50,7 +50,7 @@ module MINT
     end
 
     def create_attribute_channel_name(attribute)
-      self.class.create_channel_name+".#{attribute}.#{self.name}"
+      "#{attribute}:"+self.class.create_channel_name+".#{self.name}"
     end
 
     def create_channel_w_name

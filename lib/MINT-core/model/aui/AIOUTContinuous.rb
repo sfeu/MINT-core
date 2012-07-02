@@ -19,7 +19,7 @@ module MINT
     end
 
     def publish_update_new
-      RedisConnector.pub.publish create_channel_w_name, self.to_json(:only => self.class::PUBLISH_ATTRIBUTES)
+      RedisConnector.redis.publish create_channel_w_name, self.to_json(:only => self.class::PUBLISH_ATTRIBUTES)
     end
 
 

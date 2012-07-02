@@ -4,6 +4,7 @@ class BindAction < Action
   def initialize(params)
     @action = params
     @cb_observation_has_subscribed=nil
+    @is_bound = false
   end
 
   def initiated_callback(cb)
@@ -43,15 +44,21 @@ class BindAction < Action
   end
 
   def channelIn
-    "#{elementIn}.#{attrIn}.#{nameIn}"
+    "#{attrIn}:#{elementIn}.#{nameIn}"
   end
 
   def channelOut
-    "#{elementOut}.#{attrOut}.#{nameOut}"
+    "#{attrOut}:#{elementOut}.#{nameOut}"
   end
 
 
   def start(observation_results)            # TODO handle observation_variables
+
+    if @is_bound
+      @cb_observation_has_subscribed.call(elementIn) if @cb_observation_has_subscribed
+      return self
+    end
+
     redis = RedisConnector.redis
     redis.pubsub.subscribe(channelIn) { |message|
 
@@ -63,12 +70,13 @@ class BindAction < Action
         if found.has_key? @action[:attrIn]
           result =  found[@action[:attrIn]]
           result = @action[:transform].call result if @action[:transform]
-          RedisConnector.pub.publish channelOut, {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
+          redis.publish channelOut, {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
 
         end
 
       end
     }.callback do
+      @is_bound = true
       @cb_observation_has_subscribed.call(elementIn) if @cb_observation_has_subscribed
     end
     self

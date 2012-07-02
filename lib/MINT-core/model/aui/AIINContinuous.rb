@@ -20,7 +20,7 @@ module MINT
 
       fiber = Fiber.current
 
-      redis.pubsub.psubscribe('data:Interactor.AIO.AIIN.AIINContinuous.'+self.name.to_s+":*") { |key,message|
+      redis.pubsub.psubscribe('in_channel:Interactor.AIO.AIIN.AIINContinuous.'+self.name.to_s+":*") { |key,message|
         if message.eql? "stop"
           process_event("halt")
         else

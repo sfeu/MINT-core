@@ -40,16 +40,19 @@ class MappingServer
     end
   end
 
-  def initialize(hsh = {})
+  def initialize(hsh = {:host=>"0.0.0.0",:port=>8000})
     @host = hsh[:host]
     @port = hsh[:port]
     @connections =[]
   end
 
-  def start
-    EventMachine::run do
+  def start(manager = nil)
 
-      @manager = MappingManager.new
+      if (manager)
+        @manager = manager
+      else
+        @manager = MappingManager.new
+      end
       EventMachine::start_server @host, @port, StatefulProtocol do |conn|
         @connections << conn
         conn.send_data("READY\r\n")
@@ -58,7 +61,7 @@ class MappingServer
       end
       puts "Started server on #{@host}:#{@port}"
     end
-  end
+
 end
 
 

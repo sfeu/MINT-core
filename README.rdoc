@@ -154,8 +154,8 @@ include into file .gemrc in home folder
 
 * change to MINT-nodejs folder and start the MINT platform
 
- cd MINT-nodeJS
- socketstream
+ cd MINT-nodejs
+ socketstream start
 
 * check if platform has been started by accessing the following url with google chrome
 

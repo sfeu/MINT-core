@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.multi-access.de" xmlns:mint="http://www.multi-access.de" elementFormDefault="qualified">
+
+  <xs:element name="event">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="type" type="xs:string" use="required"/>
+      <xs:attribute name="target" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="backend">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="call" type="xs:string" use="required"/>
+      <xs:attribute name="class" type="xs:string" use="required"/>
+      <xs:attribute name="parameter" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="processType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="onchange"/>
+      <xs:enumeration value="continuous"/>
+      <xs:enumeration value="instant"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="observationType">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="negation"/>
+      </xs:restriction>
+    </xs:simpleType>
+
+
+  <xs:element name="observation"  >
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="interactor" type="xs:string" use="required"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="states" type="xs:string" use="required"/>
+      <xs:attribute name="result" type="xs:string"/>
+      <xs:attribute name="type" type="observationType"/>
+      <xs:attribute name="process" type="processType"/>
+    </xs:complexType>
+
+  </xs:element>
+
+  <xs:element name="bind" >
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="interactor_in" type="xs:string" use="required"/>
+      <xs:attribute name="name_in" type="xs:string" use="required"/>
+      <xs:attribute name="attr_in" type="xs:string" use="required"/>
+      <xs:attribute name="interactor_out" type="xs:string" use="required"/>
+      <xs:attribute name="name_out" type="xs:string" use="required"/>
+      <xs:attribute name="attr_out" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="observations">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:element ref="mint:observation"  />
+      </xs:sequence>
+    </xs:complexType>
+    <!-- TODO unique check does not work yet -->
+    <!--xs:key name="key_Participant">
+           <xs:selector xpath="./observation"/>
+           <xs:field xpath="@id"/>
+         </xs:key-->
+  </xs:element>
+
+  <xs:element name="actions">
+    <xs:complexType>                           <xs:choice minOccurs="1" maxOccurs="unbounded">
+        <xs:element ref="mint:bind" />
+        <xs:element ref="mint:event" />
+        <xs:element ref="mint:backend" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="operator">
+    <xs:complexType>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="mint:observations"/>
+        <xs:element ref="mint:actions"/>
+      </xs:sequence>
+      <xs:attribute name="type" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="mapping">
+     <xs:complexType>
+       <xs:sequence>
+         <xs:element minOccurs="1" maxOccurs="unbounded" ref="mint:operator"/>
+       </xs:sequence>
+       <xs:attribute name="name" type="xs:string" use="required"/>
+
+     </xs:complexType>
+
+
+   </xs:element>
+
+  <xs:element name="include" >
+      <xs:complexType>
+        <xs:attribute name="href" type="xs:string" use="required"/>
+        <xs:attribute name="start" type="xs:string" default="false"/>
+      </xs:complexType>
+    </xs:element>
+
+  <xs:element name="mim">
+     <xs:complexType>
+       <xs:choice minOccurs="1" maxOccurs="unbounded">
+         <xs:element ref="mint:mapping" />
+         <xs:element ref="mint:include"/>
+       </xs:choice>
+       <xs:attribute name="name" type="xs:string" use="required"/>
+
+     </xs:complexType>
+   </xs:element>
+
+
+</xs:schema>

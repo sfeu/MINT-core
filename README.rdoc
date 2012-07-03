@@ -124,26 +124,59 @@ include into file .gemrc in home folder
 
  sudo apt-get install libcassowary0
 
+* create a directory inside your home folder and change into it
 
-* checkout an example app (TBD) and let bundle install all gem dependencies (this will take a while if you have not disabled doc generation - see above)
+ mkdir rails-projects
+ cd rails-projects
 
-* start the example app (this will start a new tabbed console terminal 
+* checkout statemachine, scxml, em-hiredis, dm-redis-adapter, MINT-core, MINT-nodejs, MINT-debugger
 
- TBD...
+ git clone ssh://git@multi-access.de/statemachine
+ git clone ssh://git@multi-access.de/scxml
+ git clone -b experimental git://github.com/mloughran/em-hiredis.git
+ git clone -b test_natural_keys ssh://git@multi-access.de/dm-redis-adapter
+ git clone ssh://git@multi-access.de/MINT-core
+ git clone ssh://git@multi-access.de/MINT-nodejs
+ git clone ssh://git@multi-access.de/MINT-debugger
 
-* wait some seconds then use the latest google chrome or chromium browser to access the platform:
 
- http://localhost:3000
+* install all the requried dependencies of MINT-core
 
-* This should show a table with a letter in each cell above the MINT framework logo. You should also realize the server-sided mouse synchronisation that prints a green/red dot under the current mouse pointer location. You can test the synchronisation by opening another browser window and access the same url. While you are moving the mouse in one window, that dot should be synced on both browsers.
+ sudo gem install bundler
+ cd MINT-core
+ sudo bundle install
+ cd ../MINT-nodeJS
+ sudo bundle install
 
-* If you just see the MINT-Logo without a table your computer you should wait a bit more an reload the url.
+* start redis-server in separate terminal (if not already started)
+
+ redis-server
+
+* change to MINT-nodejs folder and start the MINT platform
+
+ cd MINT-nodeJS
+ socketstream
+
+* check if platform has been started by accessing the following url with google chrome
+
+http://localhost:3000
+
+* log in with user "testuser" and you shold see the server-sided mouse pointer synchronization by a green dot following
+  the mouse pointer
+
+* start the example app in separate terminals
+
+ bundle exec ruby agents/mappings.rb
+
+ bundle exec ruby agents/model.rb
 
 * If it is stil not working - write us an email.
 
 * Now you can play around with the debugger ( see http://github.com/sfeu/MINT-debugger for source code ) to observe all interactors state changes during runtime within the tuple space
 
- ./schript/mint/debugger.sh
+ cd MINT-debugger
+ sudo bundle install
+ bundle exec ./schript/mint/debugger.sh
 
 * Check if the sound is working ( see http://github.com/sfeu/MINT-sdl for source code ) - a clicking sound should be played while pointing to the different cells.
 

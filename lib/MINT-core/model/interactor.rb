@@ -158,9 +158,9 @@ module MINT
       states = process_event!(event,callback,vars)
       if states
         save_statemachine
-        states
+        return states
       else
-        false
+        return false
       end
     end
 

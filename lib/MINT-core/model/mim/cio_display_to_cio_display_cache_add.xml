@@ -1,0 +1,11 @@
+<mapping name="Add CIO display to CIO display cache" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.CIO" states="displaying" result="cio" process="onchange"/>
+    </observations>
+    <actions>
+      <backend id="2222" call="add_to_cache" class="CUIControl" parameter="cio"/>
+    </actions>
+  </operator>
+</mapping>

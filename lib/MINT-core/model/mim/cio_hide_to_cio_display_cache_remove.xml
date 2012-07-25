@@ -1,0 +1,12 @@
+<mapping name="CIO hide to display cache remove" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.CIO" states="hidden" result="cio" process="onchange"/>
+      <observation id="3" type="negation" interactor="Interactor.AIO" name="cio.name" states="suspended" result="aio" process="instant"/>
+    </observations>
+    <actions>
+      <backend id="2222" call="remove_from_cache" class="CUIControl" parameter="cio"/>
+    </actions>
+  </operator>
+</mapping>

@@ -1,4 +1,4 @@
-<scxml initial="initialized" name="AISinglePresence" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=370.0 h=420.0  -->
+<scxml initial="initialized" name="AISinglePresence" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=470.0 h=480.0  -->
  <state id="initialized"><!--   node-size-and-position x=10.0 y=30.0 w=100.0 h=30.0  -->
   <transition event="organize" target="organized"></transition>
  </state>
@@ -7,42 +7,27 @@
   <transition event="suspend" target="suspended"></transition>
  </state>
  <state id="suspended"><!--   node-size-and-position x=230.0 y=30.0 w=100.0 h=30.0  -->
-  <onentry>
-   <invoke src="sync_cio_to_hidden" type="x-mint"></invoke>
-  </onentry>
   <transition event="present" target="presenting"><!--   edge-path [presenting]  x=220.0 y=90.0 pointx=0.0 pointy=-5.0 offsetx=0.0 offsety=0.0  --></transition>
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=150.0 y=60.0  --></transition>
  </state>
- <state id="presenting" initial="defocused"><!--   node-size-and-position x=130.0 y=120.0 w=230.0 h=290.0  -->
-  <onentry>
-   <invoke src="present_first_child" type="x-mint"></invoke>
-  </onentry>
-  <onexit>
-   <invoke src="suspend_children" type="x-mint"></invoke>
-  </onexit>
+ <state id="presenting" initial="wait_for_children"><!--   node-size-and-position x=130.0 y=120.0 w=330.0 h=350.0  -->
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=330.0 y=90.0  --></transition>
-  <state id="defocused"><!--   node-size-and-position x=10.0 y=30.0 w=100.0 h=30.0  -->
-   <onentry>
-    <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-   </onentry>
-   <transition event="focus" target="focused"><!--   edge-path [focused]  x=20.0 y=90.0  --></transition>
+  <state id="defocused"><!--   node-size-and-position x=120.0 y=90.0 w=100.0 h=30.0  -->
+   <transition event="focus" target="focused"><!--   edge-path [focused]  x=130.0 y=150.0  --></transition>
   </state>
-  <state id="focused" initial="waiting"><!--   node-size-and-position x=10.0 y=120.0 w=180.0 h=160.0  -->
-   <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=93.0 y=93.0  --></transition>
+  <state id="focused" initial="waiting"><!--   node-size-and-position x=120.0 y=180.0 w=180.0 h=160.0  -->
+   <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=203.0 y=153.0  --></transition>
    <state id="waiting"><!--   node-size-and-position x=10.0 y=30.0 w=100.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
-    </onentry>
     <transition event="enter" target="entered"><!--   edge-path [entered]  x=20.0 y=90.0  --></transition>
     <transition cond="exists_next" event="next" target="defocused">
      <invoke src="focus_next" type="x-mint"></invoke>
-<!--   edge-path [defocused]  x=150.0 y=170.0 x=150.0 y=40.0  --></transition>
+<!--   edge-path [defocused]  x=260.0 y=230.0 x=260.0 y=100.0  --></transition>
     <transition cond="exists_prev" event="prev" target="defocused">
      <invoke src="focus_previous" type="x-mint"></invoke>
-<!--   edge-path [defocused]  x=180.0 y=170.0 x=180.0 y=40.0  --></transition>
+<!--   edge-path [defocused]  x=290.0 y=230.0 x=290.0 y=100.0  --></transition>
     <transition event="parent" target="defocused">
      <invoke src="focus_parent" type="x-mint"></invoke>
-<!--   edge-path [defocused]  x=210.0 y=170.0 x=210.0 y=40.0  --></transition>
+<!--   edge-path [defocused]  x=320.0 y=230.0 x=320.0 y=100.0  --></transition>
    </state>
    <state id="entered"><!--   node-size-and-position x=10.0 y=110.0 w=100.0 h=30.0  -->
     <transition event="leave" target="waiting"><!--   edge-path [waiting]  x=100.0 y=90.0  --></transition>
@@ -53,6 +38,12 @@
      <invoke src="present_previous_child" type="x-mint"></invoke>
 <!--   edge-path [entered]  x=150.0 y=40.0  --></transition>
    </state>
+  </state>
+  <state id="wait_for_children"><!--   node-size-and-position x=10.0 y=30.0 w=100.0 h=40.0  -->
+   <transition event="children_finished" target="children_finished"></transition>
+  </state>
+  <state id="children_finished"><!--   node-size-and-position x=200.0 y=30.0 w=100.0 h=40.0  -->
+   <transition target="defocused"></transition>
   </state>
  </state>
 </scxml>

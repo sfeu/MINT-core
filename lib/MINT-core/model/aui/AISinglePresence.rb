@@ -6,41 +6,42 @@ module MINT
       "#{File.dirname(__FILE__)}/aisinglepresence.scxml"
     end
 
-    # hook that is called from a child if it enters presenting state
-    def child_to_presenting(child)
-      children.each do |e|
-        e.process_event(:suspend) if e.name != child.name and not e.is_in? :suspended
+    def active_child
+      p = super
+
+      if p == nil
+        p = children.first
+        active_child = p.name
+        return p
+      else
+        r = AIO.get("aui",p)
+        return r
       end
-      attribute_set(:active_child, child.name)
+
     end
 
-    def present_first_child
-      children[0].process_event :present
-      attribute_set(:active_child, children[0].name)
+    def active_child= (p)
+      if p.nil? or p.is_a? String
+        super(p)
+      else
+        super(p.name)
+      end
+    end
+
+    # hook that is called from a child if it enters presenting state
+    def child_to_presenting(child)
     end
 
     def present_next_child
-      active = false
-      children.each do |c|
-        if active
-          c.process_event(:present)
-          active = false
-        else
-          active = true if c.states!=[:suspended]
-        end
-      end
+      active_child.process_event :suspend
+      active_child = active_child.next
+      active_child.process_event :present
     end
 
     def present_previous_child
-      active = false
-      children.reverse_each do |c|
-        if active
-          c.process_event(:present)
-          active = false
-        else
-          active = true if c.states!=[:suspended]
-        end
-      end
+      active_child.process_event :suspend
+      active_child = active_child.previous
+      active_child.process_event :present
     end
 
     def add_element
@@ -52,19 +53,13 @@ module MINT
     end
 
     def exists_next_child
-      if attribute_get(:active_child)
-        c = MINT::AIO.get("aui",attribute_get(:active_child))
-        return true if c.next
-      end
-  false
-      end
+    #  return true if active_child and active_child.next
+      false
+    end
 
     def exists_prev_child
-      if attribute_get(:active_child)
-             c = MINT::AIO.get("aui",attribute_get(:active_child))
-             return true if c.previous
-           end
-       false
+     # return true if active_child and active_child.previous
+      false
     end
 
   end

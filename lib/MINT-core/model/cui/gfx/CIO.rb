@@ -62,7 +62,7 @@ module MINT
     public
 
 
-    PUBLISH_ATTRIBUTES += [:x,:y,:width,:height]
+    PUBLISH_ATTRIBUTES += [:x,:y,:width,:height,:highlightable]
 
     def left
       p = super

@@ -1,0 +1,51 @@
+<scxml initial="initialized" name="CarouFredSel" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=885.0 h=723.0  -->
+ <state id="initialized"><!--   node-size-and-position x=220.0 y=130.0 w=100.0 h=40.0  -->
+  <transition event="position" target="positioning"></transition>
+ </state>
+ <state id="positioning"><!--   node-size-and-position x=220.0 y=220.0 w=100.0 h=40.0  -->
+  <transition event="calculated" target="positioned">
+   <invoke src="store_calculated_values_in_model" type="x-mint"></invoke>
+  </transition>
+ </state>
+ <state id="positioned"><!--   node-size-and-position x=220.0 y=320.0 w=100.0 h=40.0  -->
+  <transition event="display" target="displaying">
+   <invoke src="display_children" type="x-mint"></invoke>
+<!--   edge-path [displaying]  pointx=0.0 pointy=22.0 offsetx=12.0 offsety=-1.0  --></transition>
+  <transition event="hide" target="hidden"></transition>
+ </state>
+ <state id="displaying" initial="wait_for_children"><!--   node-size-and-position x=380.0 y=260.0 w=410.0 h=280.0  -->
+  <transition event="disable" target="disabled"></transition>
+  <transition event="hide" target="hidden"></transition>
+  <state id="displayed"><!--   node-size-and-position x=140.0 y=120.0 w=100.0 h=30.0  -->
+   <transition event="highlight" target="highlighted"><!--   edge-path [highlighted]  x=140.0 y=180.0 pointx=0.0 pointy=-1.0 offsetx=11.0 offsety=-11.0  --></transition>
+  </state>
+  <state id="highlighted"><!--   node-size-and-position x=140.0 y=210.0 w=100.0 h=30.0  -->
+   <transition event="unhighlight" target="displayed"><!--   edge-path [displayed]  x=230.0 y=180.0  --></transition>
+   <transition event="up" target="displayed">
+    <invoke src="highlight_up" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=270.0 y=220.0 x=270.0 y=140.0 pointx=0.0 pointy=-10.0 offsetx=0.0 offsety=5.0  --></transition>
+   <transition event="down" target="displayed">
+    <invoke src="highlight_down" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=100.0 y=220.0 x=100.0 y=140.0  --></transition>
+   <transition event="left" target="displayed">
+    <invoke src="highlight_left" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=70.0 y=230.0 x=70.0 y=130.0  --></transition>
+   <transition event="right" target="displayed">
+    <invoke src="highlight_right" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=310.0 y=230.0 x=310.0 y=130.0  --></transition>
+  </state>
+  <state id="wait_for_children"><!--   node-size-and-position x=20.0 y=40.0 w=100.0 h=30.0  -->
+   <transition event="init_js" target="init_js"></transition>
+  </state>
+  <state id="init_js"><!--   node-size-and-position x=230.0 y=50.0 w=100.0 h=30.0  -->
+   <transition target="displayed"></transition>
+  </state>
+ </state>
+ <state id="disabled"><!--   node-size-and-position x=570.0 y=140.0 w=110.0 h=40.0  -->
+  <transition event="hide" target="hidden"></transition>
+ </state>
+ <state id="hidden"><!--   node-size-and-position x=400.0 y=140.0 w=110.0 h=40.0  -->
+  <transition event="position" target="positioning"></transition>
+  <transition event="display" target="displaying"><!--   edge-path [displaying]  x=410.0 y=240.0  --></transition>
+ </state>
+</scxml>

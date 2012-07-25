@@ -1,7 +1,15 @@
 
 module AUIControl
  include MINT
-  
+
+
+  def AUIControl.suspend_others(ais)
+    ais = AISinglePresence.first(:name=>ais['name'])
+    ais.children.each do |aio|
+      aio.process_event :suspend if not aio.name.eql? ais.active_child.name
+    end
+  end
+
   # ensures that all prev/next relationships are setup properlyin one complete sequence
   def AUIControl.organize_sub(aio,parent_aio = nil, layer = 0)
 

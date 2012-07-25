@@ -18,6 +18,10 @@
   <include href="cio_display_to_aio_present.xml" start="true" />
   <include href="cio_hide_to_aio_suspend.xml" start="true" />
   <include href="cio_highlight_to_aio_focus.xml" start="true" />
+  <include href="cio_hide_to_cio_display_cache_remove.xml" start="true" />
+  <include href="cio_display_to_cio_display_cache_add.xml" start="true" />
+  <include href="aisinglepresence_present_to_child_present.xml" start="true" />
+  <include href="aisinglepresence_children_finished_to_caroufredsel_init_js.xml" start="true" />
 </mim>
 
         

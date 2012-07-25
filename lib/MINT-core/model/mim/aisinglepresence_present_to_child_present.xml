@@ -1,0 +1,15 @@
+<mapping name="AISinglePresence present to present active child" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.AIO.AIOUT.AIContainer.AISinglePresence" states="presenting" result="ais" process="onchange"/>
+      <observation id="3" type="negation" interactor="Interactor.AIO" name="ais.active_child.name" states="presenting" result="active_child" process="instant"/>
+    </observations>
+    <actions>
+      <event id="4" type="present" target="active_child"/>
+      <backend id="5" call="suspend_others" class="AUIControl" parameter="ais"/>
+      <event id="6" type="children_finished" target="ais"/>
+    </actions>
+  </operator>
+</mapping>
+

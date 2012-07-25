@@ -2,6 +2,7 @@
   require "MINT-core/model/cui/gfx/CIC"
   require "MINT-core/model/cui/gfx/button"
 
+
   module MINT
     class Image < CIO
       property :path, String
@@ -11,9 +12,7 @@
 
     end
 
-    class CarouFredSelImage < Image
 
-    end
     class Slider < CIO
 
     end
@@ -171,17 +170,7 @@
     # multiple items simultaneously,horizontal or vertical, infinite and circular, automatically or by user interaction.
     # It is dual licensed under the MIT and GPL licenses.
 
-    class CarouFredSel < CIC
-      property :items,            Integer,  :default => 1
-   		property :circular,         Boolean,  :default => false
-      property :infinite,         Boolean,  :default => false
-      property :width,            Integer
-      property :height,           Integer
-      property :auto,             Boolean,  :default => false
-      property :scroll_items,     String,   :default => "page"
-      property :scroll_fx,        String,   :default => "uncover"
-      property :scroll_duration,  Integer,  :default => 300
-    end
+
 
 
     class ARFrame <  CIO
@@ -275,3 +264,4 @@
 
   require "MINT-core/model/cui/gfx/screen"
 
+  require "MINT-core/model/cui/gfx/caroufredsel"

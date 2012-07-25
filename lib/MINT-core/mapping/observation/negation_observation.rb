@@ -7,7 +7,7 @@ class NegationObservation < Observation
     e_states= e.states.map &:to_s
     if e
       if ((e_states & states).length == 0) and ((e.abstract_states.split('|') & states).length == 0)
-        cb.call element, true, result(JSON.parse e.to_json),id
+        cb.call element, true, result(JSON.parse e.to_json(:only => e.class::PUBLISH_ATTRIBUTES)),id
         return true
       end
     end

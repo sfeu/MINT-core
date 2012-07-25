@@ -31,6 +31,10 @@ class MappingManager
     @mappings = build_from_scxml(xml_file)
   end
 
+  def get_mappings
+    @mappings.keys
+  end
+
   def register_callback(mapping_name, callback)
     #If mapping already exists add callback
     #Otherwise save it for later

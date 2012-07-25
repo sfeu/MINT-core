@@ -1,12 +1,10 @@
 class BackendAction < Action
   # BackendAction.new(:call => CUIControl.method(:find_cio_from_coordinates))
   def initialize(params)
+      super()
       @action = params
   end
 
-  def id
-    @action[:id]
-  end
 
   def parameter
     @action[:parameter]
@@ -21,8 +19,9 @@ class BackendAction < Action
   end
 
   def start(observation_results)
+    @result = false
     p = observation_results[parameter]
-    call_function.call p
+    @result = call_function.call p
     self
   end
 end

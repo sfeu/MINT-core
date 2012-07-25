@@ -2,6 +2,7 @@ class BindAction < Action
 
 
   def initialize(params)
+    super()
     @action = params
     @cb_observation_has_subscribed=nil
     @is_bound = false
@@ -11,9 +12,7 @@ class BindAction < Action
     @cb_observation_has_subscribed = cb
   end
 
-  def id
-    @action[:id]
-  end
+
 
   def elementIn
     @action[:elementIn]
@@ -53,7 +52,7 @@ class BindAction < Action
 
 
   def start(observation_results)            # TODO handle observation_variables
-
+    @result = false
     if @is_bound
       @cb_observation_has_subscribed.call(elementIn) if @cb_observation_has_subscribed
       return self
@@ -79,6 +78,7 @@ class BindAction < Action
       @is_bound = true
       @cb_observation_has_subscribed.call(elementIn) if @cb_observation_has_subscribed
     end
+    @result = true
     self
   end
 

@@ -1,11 +1,8 @@
 class EventAction < Action
   # BackendAction.new(:call => CUIControl.method(:find_cio_from_coordinates))
   def initialize(params)
-      @action = params
-  end
-
-  def id
-    @action[:id]
+    super()
+    @action = params
   end
 
   def event
@@ -21,13 +18,15 @@ class EventAction < Action
   end
 
   def start(observation_results)
+    @result = false
     interactor_data= observation_results[target]
 
 
     interactor = MINT::Interactor.get(interactor_data["mint_model"],interactor_data["name"])
 
     interactor = interactor.method(selector).call if not selector.nil?
-    interactor.process_event event
+    @result = true if interactor.process_event event
+
     self
   end
 

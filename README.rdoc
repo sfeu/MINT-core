@@ -82,19 +82,15 @@ To start a new project:
 
 The following instructions work only with Ubuntu 10.04 - we have chosen this release because it is an officially long-term supported release (LTS).  
 
-* Install ruby 1.9, rubygems and bundler on your Ubuntu 12.04 machine and set a symlink
+* Install ruby 1.9.3 on your Ubuntu 12.04 machine and set a symlink
   
- sudo apt-get install ruby1.9 rubygems bundler
+ sudo apt-get install ruby1.9.3
 
 * Install redis-server 2.2.11
 
  sudo apt-get install redis-server
 
-* install native library dependencies that some gems like eventmachine, SDL or Magick or our framework requires and a working C compiler to compile them
- 
- sudo apt-get install build-essential curl libsdl-dev libsdl-mixer1.2-dev libmagickcore-dev libmagickwand-dev libwxbase2.8-0 libwxgtk2.8-0 libssl-dev libfreetype6-dev gsfonts libjpeg62-dev
-
-* prevent installation of docs for all dependend gems (optional - but this will save you a lot of time) 
+* prevent installation of docs for all dependend gems (optional - but this will save you a lot of time)
 
 include into file .gemrc in home folder  
  
@@ -102,11 +98,12 @@ include into file .gemrc in home folder
 
 * install latest stable git
 
+ sudo gem install bundler
  sudo apt-get install git-core
 
 * Install node.js and the node package manager
 
- apt-get install nodejs npm
+ sudo apt-get install nodejs npm
 
 * Install socketstream version 0.2 and dependencies using npm
 
@@ -119,6 +116,11 @@ include into file .gemrc in home folder
 * update system to consider new repository
 
  sudo aptitude update
+
+* install native library dependencies that some gems like eventmachine, SDL or Magick or our framework requires and a working C compiler to compile them
+
+ sudo apt-get install build-essential curl libsdl-dev libsdl-mixer1.2-dev libmagickcore-dev libmagickwand-dev libwxbase2.8-0 libwxgtk2.8-0 libssl-dev libfreetype6-dev gsfonts libjpeg62-dev
+
 
 * install cassowary library
 

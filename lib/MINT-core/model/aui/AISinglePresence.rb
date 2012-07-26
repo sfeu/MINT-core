@@ -33,6 +33,7 @@ module MINT
     end
 
     def present_next_child
+      p "in present next child"
       active_child.process_event :suspend
       active_child = active_child.next
       active_child.process_event :present
@@ -53,12 +54,12 @@ module MINT
     end
 
     def exists_next_child
-    #  return true if active_child and active_child.next
+      return true if active_child and active_child.next
       false
     end
 
     def exists_prev_child
-     # return true if active_child and active_child.previous
+      return true if active_child and active_child.previous
       false
     end
 

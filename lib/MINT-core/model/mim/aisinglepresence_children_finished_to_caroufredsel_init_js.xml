@@ -4,9 +4,10 @@
     <observations>
       <observation id="2" interactor="Interactor.AIO.AIOUT.AIContainer.AISinglePresence" states="children_finished" result="ais" process="onchange"/>
       <observation id="3" interactor="Interactor.CIO.CarouFredSel" name="ais.name" states="wait_for_children" result="cio" process="instant"/>
+      <observation id="4" interactor="Interactor.CIO.CarouFredSelImage" name="ais.active_child.name" states="displaying" result="page" process="continuous"/>
     </observations>
     <actions>
-      <event id="4" type="init_js" target="cio"/>
+      <event id="5" type="init_js" target="cio"/>
     </actions>
   </operator>
 </mapping>

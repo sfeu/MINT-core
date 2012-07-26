@@ -55,74 +55,105 @@ describe 'AUI' do
     end
 
     it 'should transform first child to presented if presented and rest to suspended' do
-      connect do |redis|
-        @a = AISinglePresenceHelper.create_data
+      connect true do |redis|
+        # Sync AIO to defocused
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m.start
 
-        AUIControl.organize(@a,nil,0)
-        # @a.process_event(:organize).should ==[:organized]
-        @a.states.should == [:organized]
-        @a.new_states.should == [:organized]
-        @a.process_event(:present).should ==[:defocused]
-        children = @a.children
-        children[0].states.should == [:defocused]
-        children[1].states.should == [:suspended]
-        children[2].states.should == [:suspended]
+
+        check_result = Proc.new {
+          MINT::AIO.first(:name=>"e1").states.should ==[:defocused]
+          MINT::AIO.first(:name=>"e2").states.should ==[:suspended]
+          MINT::AIO.first(:name=>"e3").states.should ==[:suspended]
+
+          done
+        }
+
+        test_complex_state_flow_w_name redis,[["Interactor.AIO.AIOUT.AIContainer.AISinglePresence","a" ,["initialized","organized",["presenting", "wait_for_children"],"children_finished","defocused"]],["Interactor.AIO","e1" ,["initialized","organized",["presenting", "defocused"]]]],check_result do  |count|
+          @a = AISinglePresenceHelper.create_data
+
+          AUIControl.organize(@a,nil,0)
+          # @a.process_event(:organize).should ==[:organized]
+          @a.states.should == [:organized]
+          @a.new_states.should == [:organized]
+          @a.process_event(:present).should ==[:wait_for_children]
+
+        end
       end
     end
 
-    it 'should hide the other elements if a child is presented' do
-      connect do |redis|
-        @a = AISinglePresenceHelper.create_data
+    it 'should hide the other elements if a child is presented using present' do
+      pending "requires child to inform parent about presenting"
+      connect true do |redis|
+        # Sync AIO to defocused
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m.start
 
-        AUIControl.organize(@a,nil,0)
-        @a.process_event(:present).should == [:defocused]
 
-        MINT::AIO.first(:name => "e1").states.should == [:defocused]
-        MINT::AIO.first(:name => "e2").states.should == [:suspended]
-        MINT::AIO.first(:name => "e3").states.should == [:suspended]
+        check_result = Proc.new {
+          MINT::AIO.first(:name => "e1").states.should == [:suspended]
+          MINT::AIO.first(:name => "e2").states.should == [:defocused]
+          MINT::AIO.first(:name => "e3").states.should == [:suspended]
 
-        e3 = MINT::AIO.first(:name => "e3")
-        e3.states.should ==[:suspended]
-        e3.process_event(:present).should == [:defocused]
+          done
+        }
 
-        MINT::AIO.first(:name => "e1").states.should == [:suspended]
-        MINT::AIO.first(:name => "e2").states.should == [:suspended]
-        MINT::AIO.first(:name => "e3").states.should == [:defocused]
+#                                                      ["Interactor.AIO","e2" ,["initialized","organized","suspended",["presenting", "defocused"]]],
+#                                                     ["Interactor.AIO","e3" ,["initialized","organized","suspended",["presenting", "defocused"],"suspended"]]
 
-        e2 = MINT::AIO.first(:name => "e2")
-        e2.states.should ==[:suspended]
-        e2.process_event(:present).should == [:defocused]
+        test_complex_state_flow_w_name redis,[["Interactor.AIO","e1" ,["initialized","organized",["presenting", "defocused"],"suspended"]]],check_result do  |count|
+          @a = AISinglePresenceHelper.create_data
 
-        MINT::AIO.first(:name => "e1").states.should == [:suspended]
-        MINT::AIO.first(:name => "e2").states.should == [:defocused]
-        MINT::AIO.first(:name => "e3").states.should == [:suspended]
+          AUIControl.organize(@a,nil,0)
+          @a.process_event(:present).should == [:wait_for_children]
+
+          e3 = MINT::AIO.first(:name => "e3")
+          e3.process_event(:present).should == [:defocused]
+          e2 = MINT::AIO.first(:name => "e2")
+          e2.process_event(:present).should == [:defocused]
+        end
       end
+
     end
 
-    it 'should hide the other elements if a child is presented (using next and prev events)' do
-      connect do |redis|
-        @a = AISinglePresenceHelper.create_data
-        AUIControl.organize(@a,nil,0)
-        @a.process_event(:present).should == [:defocused]
+    it 'should hide the other elements if a child is presented with next and prev events' do
+      connect true do |redis|
+        # Sync AIO to defocused
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m.start
 
-        MINT::AIO.first(:name => "e1").states.should == [:defocused]
-        MINT::AIO.first(:name => "e2").states.should == [:suspended]
-        MINT::AIO.first(:name => "e3").states.should == [:suspended]
+        check_result2 = Proc.new {
+          MINT::AIO.first(:name => "e1").states.should == [:defocused]
+          MINT::AIO.first(:name => "e2").states.should == [:suspended]
+          MINT::AISinglePresence.first(:name => "a").active_child == "e1"
+          done
+        }
 
-        @a.process_event(:focus).should == [:waiting]
-        @a.process_event(:enter).should == [:entered]
-        @a.process_event(:next).should == [:entered]
+        check_result = Proc.new {
+          redis.pubsub.unsubscribe("Interactor.AIO.AIOUT.AIContainer.AISinglePresence")
 
-        MINT::AIO.first(:name => "e1").states.should == [:suspended]
-        MINT::AIO.first(:name => "e2").states.should == [:defocused]
-        MINT::AIO.first(:name => "e3").states.should == [:suspended]
+          a = MINT::AISinglePresence.first(:name => "a")
+          a.process_event(:focus).should == [:waiting]
 
-        @a.process_event(:prev).should == [:entered]
+          test_complex_state_flow_w_name redis,[["Interactor.AIO","e1" ,["suspended",["presenting", "defocused"]]],["Interactor.AIO","e2" ,[["presenting", "defocused"],"suspended"]]],check_result2 do  |count|
+            a.process_event(:enter).should == [:entered]
+            a.process_event(:next).should == [:entered]
+            a.process_event(:prev).should == [:entered]
+          end
+        }
 
-        MINT::AIO.first(:name => "e1").states.should == [:defocused]
-        MINT::AIO.first(:name => "e2").states.should == [:suspended]
-        MINT::AIO.first(:name => "e3").states.should == [:suspended]
+        test_complex_state_flow_w_name redis,[["Interactor.AIO.AIOUT.AIContainer.AISinglePresence","a" ,["initialized","organized",["presenting", "wait_for_children"],"children_finished","defocused"]]],check_result do  |count|
+          @a = AISinglePresenceHelper.create_data
+
+          AUIControl.organize(@a,nil,0)
+          @a.process_event(:present).should == [:wait_for_children]
+        end
       end
+
+
     end
 
     describe 'synchronized with Redis-PubSub' do
@@ -135,7 +166,7 @@ describe 'AUI' do
                           ["initialized", "organized", ["presenting", "defocused"] ,["focused", "waiting"], "entered"] do
 
             @a = AISinglePresenceHelper.create_data
-                      AUIControl.organize(@a,nil,0)
+            AUIControl.organize(@a,nil,0)
 
             @a.process_event(:present)
 

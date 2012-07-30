@@ -21,8 +21,8 @@ module MINT
     property :infinite,         Boolean,  :default => false
     property :auto,             Boolean,  :default => false
     property :scroll_items,     String,   :default => "page"
-    property :scroll_fx,        String,   :default => "uncover"
-    property :scroll_duration,  Integer,  :default => 300
+    property :scroll_fx,        String,   :default => "none"
+    property :scroll_duration,  Integer,  :default => 200
 
     def getSCXML
       "#{File.dirname(__FILE__)}/CarouFredSel.scxml"

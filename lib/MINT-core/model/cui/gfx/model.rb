@@ -127,51 +127,6 @@
     class SingleHighlight < CIC
     end
 
-    # adaptation of jCarousel http://sorgalla.com/projects/jcarousel/
-    class JCarousel < CIC
-
-      # Specifies whether the carousel appears in horizontal or vertical orientation. Changes the carousel from a left/right style to a up/down style carousel.
-      property :vertical	, Boolean, :default  => false
-
-      # Specifies whether the carousel appears in RTL (Right-To-Left) mode.
-      property :rtl	, Boolean	, :default  => false
-
-      #	The index of the item to start with.
-      property :start	, Integer	, :default  => 1
-
-      #The index of the first available item at initialisation.
-      property :jacrousel_offset	, Integer	, :default  => 1
-
-      # Number of existing <li> elements if size is not passed explicitly	The number of total items.
-      property :size	, Integer
-
-      # The number of items to scroll by.
-      property :scroll	, Integer	, :default  => 3
-
-      #If passed, the width/height of the items will be calculated and set depending on the width/height of the clipping, so that exactly that number of items will be visible.
-      property :visible	, Integer	# , :default  => nil
-
-      #The speed of the scroll animation as string in jQuery terms ("slow" or "fast") or milliseconds as integer (See jQuery Documentation). If set to 0, animation is turned off.
-      property :animation	, String	, :default  => "fast"
-
-      #The name of the easing effect that you want to use (See jQuery Documentation).
-      property :easing	, String	#, :default  => nil
-
-      # Specifies how many seconds to periodically autoscroll the content. If set to 0 (default) then autoscrolling is turned off.
-      property :auto	, Integer	, :default  => 0
-
-      #Specifies whether to wrap at the first/last item (or both) and jump back to the start/end. Options are "first", "last", "both" or "circular" as string. If set to null, wrapping is turned off (default).
-      property :wrap	, String	#, :default  => nil
-    end
-
-
-    # http://caroufredsel.frebsite.nl/
-    # jQuery.carouFredSel is a plugin that turns any kind of HTML element into a carousel. It can scroll one or
-    # multiple items simultaneously,horizontal or vertical, infinite and circular, automatically or by user interaction.
-    # It is dual licensed under the MIT and GPL licenses.
-
-
-
 
     class ARFrame <  CIO
 
@@ -183,8 +138,8 @@
     class CheckBoxGroup < CIC
     end
 
-    class RadioButton < Selectable
-    end
+    require "MINT-core/model/cui/gfx/RadioButton"
+    require "MINT-core/model/cui/gfx/RadioButtonGroup"
 
     class MarkableRadioButton < RadioButton
       def initialize_statemachine
@@ -252,8 +207,6 @@
       end
     end
 
-    class RadioButtonGroup < CIC
-    end
 
     class BasicText < CIO
     end

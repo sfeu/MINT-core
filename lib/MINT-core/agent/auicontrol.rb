@@ -1,7 +1,14 @@
 
 module AUIControl
- include MINT
+  include MINT
 
+  # called from AISingleChoice mapping
+  def AUIControl.present_children(aisc)
+    sc = AISingleChoice.first(:name=>aisc['name'])
+    sc.children.each do |aio|
+      aio.process_event :present
+    end
+  end
 
   def AUIControl.suspend_others(ais)
     ais = AISinglePresence.first(:name=>ais['name'])
@@ -15,7 +22,7 @@ module AUIControl
 
     last_child = nil
     if (aio.kind_of? MINT::AIContainer)
-     # aio.entry = aio.children[0]
+      # aio.entry = aio.children[0]
       prev = aio
       aio.children.each do |child|
         prev.next = child.name
@@ -34,10 +41,10 @@ module AUIControl
     end
   end
 
- def AUIControl.organize(aio,parent_aio = nil, layer = 0)
-  r= organize_sub(aio,parent_aio, layer )
-  r.process_event("organize")
- end
+  def AUIControl.organize(aio,parent_aio = nil, layer = 0)
+    r= organize_sub(aio,parent_aio, layer )
+    r.process_event("organize")
+  end
 
   def AUIControl.organize_new (aio,prev = nil, layer = 0)
     aio.previous=prev.name  if prev
@@ -58,19 +65,19 @@ module AUIControl
 
   # connects all  aios on the same level 
   def AUIControl.organize2(aio,parent_aio = nil, layer = 0)
-   # if layer == 0 
+    # if layer == 0
     #  aio.next = aio
     #  aio.previous = aio
-   # end
- 
+    # end
+
     if (aio.kind_of? MINT::AIContainer)
       first = aio.children.first
       last = nil
 
       aio.children.each do |child|
         if last
-        last.next = child.name
-        child.previous = last.name
+          last.next = child.name
+          child.previous = last.name
         end
         copy = child
         organize2(copy,nil,layer+1)
@@ -82,7 +89,7 @@ module AUIControl
     end
     p "organized #{aio.name}"
   end
- 
+
   # Searches for the common root aic that contains all tasks of {elements}.
   # During the search towards the root it activates all relevant containters in the 
   # {Layout}model in case {activate} is set to true. 
@@ -92,11 +99,11 @@ module AUIControl
   # @return [String] name of common root aic
   #
   def AUIControl.find_common_aic(tasks,activate=false, parents ={ })
-    
+
     if tasks.length==1
       return tasks[0]
     end
-    
+
     tasks.each do |e|
       p "processing #{e}"
       aio = AIO.first(:name=>e)
@@ -108,20 +115,20 @@ module AUIControl
       end
       if aio.parent and not parents[aio.parent.name]
         parents[aio.parent.name]=aio.name
-      elsif aio.parent and parents[aio.parent.name]  
+      elsif aio.parent and parents[aio.parent.name]
         # already existing parent, thus all further saved parents of this task needs to be removed
         puts "parents  #{parents.inspect}"
-        parents.each {|k,v| 
+        parents.each {|k,v|
           if (v.eql? parents[aio.parent.name] or v.eql? aio.name)
             parents.delete(k)
-            p "delete key #{k} value #{v}" 
+            p "delete key #{k} value #{v}"
           end
         }
         parents[aio.parent.name]=aio.name
         #        parents.delete(parents.invert[ parents[aio.parent.name]])
       end
     end
-    
+
     p "next step"
     if parents.length>0
       return find_common_aic(parents.keys,activate,parents)
@@ -129,26 +136,26 @@ module AUIControl
       return tasks.first
     end
   end
-  
+
   def AUIControl.find_common(tasks)
-    
+
     if tasks.length==1
       return tasks[0]
     end
-    
+
     parents ={ }
-    
+
     tasks.each do |name|
       t = AIO.first(:name=>name)
       tname = t.name
       parents[tname] = [tname]
-      
+
       while (t.parent)
         parents[tname].push t.parent.name
         t = t.parent
       end
     end
-    
+
     lasttaskname = nil
     while 1==1
       taskname = nil
@@ -157,7 +164,7 @@ module AUIControl
           taskname = parents[k].pop
         else
           comp = parents[k].pop
-          if not comp.eql? taskname 
+          if not comp.eql? taskname
             return lasttaskname
           end
         end

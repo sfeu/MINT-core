@@ -22,6 +22,11 @@
   <include href="cio_display_to_cio_display_cache_add.xml" start="true" />
   <include href="aisinglepresence_present_to_child_present.xml" start="true" />
   <include href="aisinglepresence_children_finished_to_caroufredsel_init_js.xml" start="true" />
+  <include href="aisinglechoice_present_to_child_present.xml" start="true" />
+  <include href="aisinglechoiceelement_listed_to_radiobutton_unselect.xml" start="true" />
+  <include href="aisinglechoiceelement_chosen_to_radiobutton_select.xml" start="true" />
+  <include href="radiobutton_unselected_to_aisinglechoiceelement_unchoose.xml" start="true" />
+  <include href="radiobutton_selected_to_aisinglechoiceelement_choose.xml" start="true" />
 </mim>
 
         

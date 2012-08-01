@@ -46,15 +46,26 @@ module CUIControl
   end
 
   def CUIControl.add_to_cache(cio)
-
-    p "add cache #{cio.inspect}"
-    if cio['highlightable'] and not @active_cios.index{|x|x.name==cio["name"]}
-      @active_cios << CIO.get("cui-gfx",cio["name"])
-      puts "Added #{cio['name']} to CIO cache "
+  if cio['highlightable'] and not @active_cios.index{|x|x.name==cio["name"]}
+     c =  CIO.get("cui-gfx",cio["name"])
+     @active_cios << c
+     puts "Added #{cio['name']} to CIO cache #{c.x}/#{c.y}"
 
     end
     return true
   end
+
+  def CUIControl.update_cache(cio)
+    index = @active_cios.index{|x|x.name==cio["name"]}
+    if index
+     c =  CIO.get("cui-gfx",cio["name"])
+     @active_cios[index] = c
+     puts "Updated#{cio['name']} to CIO cache #{c.x}/#{c.y} #{c.width}/#{c.height}"
+
+    end
+    return true
+  end
+
 
   def CUIControl.remove_from_cache(cio)
     p "remove cache"

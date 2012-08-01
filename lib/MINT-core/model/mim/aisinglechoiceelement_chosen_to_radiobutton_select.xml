@@ -1,0 +1,13 @@
+<mapping name="Sync AISingeChoiceElement chosen to RadioButton select" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.AIO.AIIN.AIINDiscrete.AISingleChoiceElement" states="chosen" result="aio" process="onchange"/>
+      <observation id="3" type="negation" interactor="Interactor.CIO.RadioButton" name="aio.name" states="selected" result="cio" process="instant"/>
+    </observations>
+    <actions>
+      <event id="4" type="select" target="cio"/>
+    </actions>
+  </operator>
+</mapping>
+

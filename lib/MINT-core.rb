@@ -58,5 +58,6 @@ require "MINT-core/manager/mapping_manager"
 require "MINT-core/manager/mapping_server"
 require "MINT-core/manager/scxml_server"
 require "MINT-core/manager/scxml_client"
+require "MINT-core/manager/position_updater"
 
 

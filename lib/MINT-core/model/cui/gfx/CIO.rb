@@ -140,7 +140,7 @@ module MINT
 
     def size(width=-1,height=-1)
       if (width > -1 and height> -1)
-        @size = Cassowary::ClPoint.new(with,height)
+        @size = Cassowary::ClPoint.new(width,height)
       elsif not @size
         #if not @size
         @size = Cassowary::ClPoint.new

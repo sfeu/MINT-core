@@ -7,9 +7,6 @@
   <transition event="present" target="p"></transition>
  </state>
  <state id="suspended"><!--   node-size-and-position x=372.00000000000006 y=712.0 w=90.0 h=30.0  -->
-  <onentry>
-   <invoke src="sync_cio_to hidden" type="x-mint"></invoke>
-  </onentry>
   <transition event="organize" target="organized"><!--   edge-path [organized]  x=481.77945151789606 y=430.1524614578103 pointx=0.0 pointy=0.0 offsetx=76.0 offsety=0.0  --></transition>
   <transition event="present" target="p"><!--   edge-path [p]  x=388.98476942531727 y=691.3273106758478  --></transition>
  </state>
@@ -17,15 +14,9 @@
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=407.01523057468273 y=682.6726893241523  --></transition>
   <state id="presenting" initial="defocused"><!--   node-size-and-position x=20.0 y=43.0 w=160.0 h=173.0  -->
    <state id="defocused"><!--   node-size-and-position x=36.5 y=43.0 w=90.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-    </onentry>
     <transition event="focus" target="focused"><!--   edge-path [focused]  x=143.0 y=98.0  --></transition>
    </state>
    <state id="focused"><!--   node-size-and-position x=36.5 y=123.0 w=90.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
-    </onentry>
     <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=123.0 y=98.0  --></transition>
     <transition cond="exists_prev" event="prev" target="defocused">
      <invoke src="focus_previous" type="x-mint"></invoke>
@@ -45,19 +36,13 @@
    <state id="dropped"><!--   node-size-and-position x=50.0 y=123.0 w=80.0 h=30.0  -->
     <transition target="choice"></transition>
    </state>
-   <state id="choice" initial="listed"><!--   node-size-and-position x=20.0 y=203.00000000000006 w=209.99999999999997 h=173.0  -->
+   <state id="choice" initial="unchosen"><!--   node-size-and-position x=20.0 y=203.00000000000006 w=209.99999999999997 h=173.0  -->
     <transition event="drag" target="dragging"><!--   edge-path [dragging]  x=160.0 y=138.0  --></transition>
-    <state id="listed"><!--   node-size-and-position x=20.0 y=42.99999999999994 w=90.0 h=30.0  -->
-     <onentry>
-      <invoke src="sync_cio_to_listed" type="x-mint"></invoke>
-     </onentry>
+    <state id="unchosen"><!--   node-size-and-position x=20.0 y=42.99999999999994 w=90.0 h=30.0  -->
      <transition cond="self.is_in?(:focused)" event="choose" target="chosen"><!--   edge-path [chosen]  x=81.0 y=98.0  --></transition>
     </state>
     <state id="chosen"><!--   node-size-and-position x=20.0 y=122.99999999999994 w=90.0 h=30.0  -->
-     <onentry>
-      <invoke src="sync_cio_to_selected" type="x-mint"></invoke>
-     </onentry>
-     <transition event="unchoose" target="listed"><!--   edge-path [listed]  x=61.0 y=98.0  --></transition>
+     <transition event="unchoose" target="unchosen"><!--   edge-path [unchosen]  x=61.0 y=98.0  --></transition>
     </state>
     <history id="H" type="deep"><!--   node-size-and-position x=170.0 y=42.99999999999994 w=20.0 h=20.0  --></history>
    </state>

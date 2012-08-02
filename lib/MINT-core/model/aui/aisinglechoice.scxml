@@ -23,15 +23,9 @@
   <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=213.25 y=258.0  --></transition>
   <state id="presenting" initial="wait_for_children"><!--   node-size-and-position x=20.0 y=40.0 w=220.0 h=340.0  -->
    <state id="defocused"><!--   node-size-and-position x=40.5 y=160.0 w=90.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_cio_to_displayed" type="x-mint"></invoke>
-    </onentry>
     <transition event="focus" target="focused"><!--   edge-path [focused]  x=161.0 y=215.0  --></transition>
    </state>
    <state id="focused"><!--   node-size-and-position x=40.5 y=240.0 w=90.0 h=30.0  -->
-    <onentry>
-     <invoke src="sync_cio_to_highlighted" type="x-mint"></invoke>
-    </onentry>
     <transition event="defocus" target="defocused"><!--   edge-path [defocused]  x=141.0 y=215.0  --></transition>
     <transition event="parent" target="defocused">
      <invoke src="focus_parent" type="x-mint"></invoke>

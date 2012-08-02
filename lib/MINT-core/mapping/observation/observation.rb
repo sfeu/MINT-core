@@ -69,15 +69,23 @@ class Observation
   def check_true_at_startup(cb)
     # check if observation is already true at startup
     model = MINT::Interactor.class_from_channel_name(element)
-    e = model.first(:name=>name)
 
-    if e
+    results = nil
+    if (name)  # if a name is specified, query directly otherwise select by state and return the first one found
+      results = []
+      results << model.first(:name=>name)
+    else
+      results = model.all
+    end
+
+    results.each { |e|
       e_states= e.states.map &:to_s
       if ((e_states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
         cb.call element, true, result(JSON.parse e.to_json(:only => e.class::PUBLISH_ATTRIBUTES)),id
         return true
       end
-    end
+    }
+
     return false
   end
 

@@ -44,8 +44,7 @@ module MINT
             process_event "move"
 
             attribute_set(:data,@d)
-            RedisConnector.redis.publish("ss:channels",{:event=>self.class.create_channel_name+".#{self.name}",:params=>{:name=>self.name,:data=>@d },:destinations=>["user:testuser"]}.to_json)
-
+            RedisConnector.redis.publish("out_channel:#{create_channel_w_name}:testuser",@data)
           end
         end
       }.callback {  fiber.resume}

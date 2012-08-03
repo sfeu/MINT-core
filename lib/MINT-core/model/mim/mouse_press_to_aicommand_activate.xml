@@ -2,10 +2,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
 
-  <operator type="complementary" id="1">
+  <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.Pointer.Mouse" name="mouse" states="left_pressed" result="p" process="onchange"/>
-      <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" states="focused" result="c" process="onchange"/>
+      <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" states="focused" result="c" process="instant"/>
     </observations>
     <actions>
       <event id="4" type="activate" target="c"/>

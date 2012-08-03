@@ -76,10 +76,6 @@ module MINT
       true
     end
 
-    def sync_event(event)
-      process_event(event, AIO_sync_callback.new)
-    end
-
     # callbacks
 
     def exists_next
@@ -94,35 +90,6 @@ module MINT
           self.parent!=nil
         end
 
-    def sync_cio_to_displayed
-      cio =  MINT::CIO.first(:name=>self.name)
-      if (cio and not cio.is_in? :displayed)
-        if (cio.is_in? :hidden or cio.is_in? :positioned)
-          cio.sync_event(:display)
-        else
-          cio.sync_event(:unhighlight)
-        end
-        #cio.states=[:displayed]
-      end
-      true
-    end
-
-    def sync_cio_to_highlighted
-      cio =  MINT::CIO.first(:name=>self.name)
-      if (cio and not cio.is_in? :highlighted)
-        cio.sync_event(:highlight)
-        # cio.states=[:highlighted]
-      end
-      true
-    end
-
-    def sync_cio_to_hidden
-      cio =  MINT::CIO.first(:name=>self.name)
-      if (cio and not cio.is_in? :hidden)
-        cio.sync_event(:hide)
-      end
-      true
-    end
 
     def focus_previous
       if (self.previous)
@@ -156,32 +123,4 @@ module MINT
 
   end
 
-
-  class AIO_sync_callback
-    def sync_cio_to_highlighted
-      true
-    end
-
-    def sync_cio_to_displayed
-      true
-    end
-
-    def sync_cio_to_suspended
-      true
-    end
-    def inform_parent_presenting
-      true
-    end
-    def present_first_child
-      true
-    end
-
-    def present_children
-      true
-    end
-
-    def stop_publish(data)
-      true
-    end
-  end
 end

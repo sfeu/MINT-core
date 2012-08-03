@@ -1,21 +1,4 @@
 module MINT
-  class CIO_sync_callback
-    def sync_aio_to_focused
-      true
-    end
-
-    def sync_aio_to_presented
-      true
-    end
-    def sync_aio_to_defocus
-      true
-    end
-
-    def sync_aio_to_suspended
-      true
-    end
-
-  end
 
   class CIO < Interactor
     include Cassowary
@@ -302,10 +285,6 @@ module MINT
     end
 
 
-    def sync_event(event)
-      process_event(event, CIO_sync_callback.new)
-    end
-
     # callbacks
 
     def  highlight_up
@@ -339,41 +318,6 @@ module MINT
         return nil # TODO not working, find abbruchbedingung!!!
       end
     end
-
-
-    def sync_aio_to_presented
-      aio =  MINT::AIO.first(:name=>self.name)
-      if (aio and not aio.is_in? :presenting)
-        aio.sync_event(:present)
-      end
-      true
-    end
-
-
-    def sync_aio_to_defocus
-      aio =  MINT::AIO.first(:name=>self.name)
-      if (aio and not aio.is_in? :defocused)
-        aio.sync_event(:defocus)
-      end
-      true
-    end
-
-    def sync_aio_to_focused
-      aio =  MINT::AIO.first(:name=>self.name)
-      if (aio and not aio.is_in? :focused)
-        aio.sync_event(:focus)
-      end
-      true
-    end
-
-    def sync_aio_to_suspended
-      aio =  MINT::AIO.first(:name=>self.name)
-      if (aio and not aio.is_in? :suspended)
-        aio.sync_event(:suspend)
-      end
-      true
-    end
-
 
 
     def print

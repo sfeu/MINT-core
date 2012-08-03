@@ -40,16 +40,16 @@
   </state>
   <state id="mode" initial="tilting_mode"><!--   node-size-and-position x=130.0 y=440.0 w=560.0 h=270.0  -->
    <state id="tilting_mode"><!--   node-size-and-position x=30.0 y=120.0 w=100.0 h=100.0  -->
-    <transition event="switch_nodding"></transition>
-    <transition event="switch_turning"><!--   edge-path [turning_mode]  x=280.0 y=250.0 pointx=0.0 pointy=-9.0 offsetx=-8.0 offsety=3.0  --></transition>
+    <transition event="switch_nodding" target="nodding_mode"></transition>
+    <transition event="switch_turning" target="turning_mode"><!--   edge-path [turning_mode]  x=280.0 y=250.0  --></transition>
    </state>
    <state id="nodding_mode"><!--   node-size-and-position x=230.0 y=120.0 w=100.0 h=100.0  -->
-    <transition event="switch_turning"></transition>
-    <transition event="switch_tilting"><!--   edge-path [tilting_mode]  x=210.0 y=200.0  --></transition>
+    <transition event="switch_turning" target="turning_mode"></transition>
+    <transition event="switch_tilting" target="tilting_mode"><!--   edge-path [tilting_mode]  x=170.0 y=130.0  --></transition>
    </state>
    <state id="turning_mode"><!--   node-size-and-position x=440.0 y=120.0 w=100.0 h=100.0  -->
-    <transition event="switch_tilting"><!--   edge-path [tilting_mode]  x=280.0 y=90.0 pointx=0.0 pointy=-9.0 offsetx=-8.0 offsety=-4.0  --></transition>
-    <transition event="switch_nodding"><!--   edge-path [nodding_mode]  x=360.0 y=210.0  --></transition>
+    <transition event="switch_tilting" target="tilting_mode"><!--   edge-path [tilting_mode]  x=240.0 y=50.0  --></transition>
+    <transition event="switch_nodding" target="nodding_mode"><!--   edge-path [nodding_mode]  x=380.0 y=140.0  --></transition>
    </state>
   </state>
  </parallel>

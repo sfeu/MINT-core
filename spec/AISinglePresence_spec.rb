@@ -100,9 +100,6 @@ describe 'AUI' do
           done
         }
 
-#                                                      ["Interactor.AIO","e2" ,["initialized","organized","suspended",["presenting", "defocused"]]],
-#                                                     ["Interactor.AIO","e3" ,["initialized","organized","suspended",["presenting", "defocused"],"suspended"]]
-
         test_complex_state_flow_w_name redis,[["Interactor.AIO","e1" ,["initialized","organized",["presenting", "defocused"],"suspended"]]],check_result do  |count|
           @a = AISinglePresenceHelper.create_data
 
@@ -117,6 +114,50 @@ describe 'AUI' do
       end
 
     end
+
+    it 'should permit navigation before the first child ' do
+      connect true do |redis|
+        # Sync AIO to defocused
+        parser = MINT::MappingParser.new
+        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m.start
+
+
+        check_result = Proc.new {
+          @a = MINT::AISinglePresence.first
+          @a.process_event :focus
+          @a.process_event :enter
+          @a.process_event :next
+          MINT::AIO.first(:name => "e2").states.should == [:defocused]
+
+          @a.process_event :prev
+          MINT::AIO.first(:name => "e2").states.should == [:suspended]
+          MINT::AIO.first(:name => "e1").states.should == [:defocused]
+
+          @a.process_event :prev
+          MINT::AIO.first(:name => "e2").states.should == [:suspended]
+          MINT::AIO.first(:name => "e1").states.should == [:defocused]
+
+          @a.process_event :next
+          MINT::AIO.first(:name => "e1").states.should == [:suspended]
+          MINT::AIO.first(:name => "e2").states.should == [:defocused]
+          done
+        }
+
+        test_complex_state_flow_w_name redis,[["Interactor.AIO.AIOUT.AIContainer.AISinglePresence","a" ,["initialized","organized",["presenting", "wait_for_children"],"children_finished","defocused"]]],check_result do  |count|
+          @a = AISinglePresenceHelper.create_data
+
+          AUIControl.organize(@a,nil,0)
+          # @a.process_event(:organize).should ==[:organized]
+          @a.states.should == [:organized]
+          @a.new_states.should == [:organized]
+          @a.process_event(:present).should ==[:wait_for_children]
+
+        end
+      end
+
+    end
+
 
     it 'should hide the other elements if a child is presented with next and prev events' do
       connect true do |redis|

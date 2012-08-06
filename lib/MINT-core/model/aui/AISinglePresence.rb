@@ -51,13 +51,15 @@ module MINT
       f.destroy
     end
 
+
+    # these methods implemenent navigation inside singlepresence (if entered) and do not permit to leave the interactor
     def exists_next_child
-      return true if active_child and active_child.next
+      return true if active_child and active_child.next and not active_child.name.eql? children.last.name
       false
     end
 
     def exists_prev_child
-      return true if active_child and active_child.previous
+      return true if active_child and active_child.previous and not active_child.name.eql? children.first.name
       false
     end
 

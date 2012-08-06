@@ -1,0 +1,26 @@
+<scxml initial="disconnected" name="disconnect" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=662.0 h=580.0  -->
+ <state id="disconnected"><!--   node-size-and-position x=260.0 y=50.0 w=100.0 h=50.0  -->
+  <transition event="connect" target="connected"></transition>
+ </state>
+ <state id="connected" initial="centered"><!--   node-size-and-position x=40.0 y=150.0 w=570.0 h=180.0  -->
+  <onentry>
+   <script>
+
+@head_threshold = 0.7;
+@nose_x,@nose_y = consume_nose_movement;
+@head_x,@head_y, @head_scale, @hand_angle = consume_head_movement;
+   </script>
+  </onentry>
+  <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=400.0 y=120.0  --></transition>
+  <state id="centered"><!--   node-size-and-position x=210.0 y=80.0 w=100.0 h=40.0  -->
+   <transition cond="@head_angle &gt; (Math::PI/2+@head_threshold)" event="head_move" target="tilting_right"></transition>
+   <transition cond="@head_angle &lt; (Math::PI/2-@head_threshold)" event="head_move" target="tilting_left"></transition>
+  </state>
+  <state id="tilting_right"><!--   node-size-and-position x=400.0 y=80.0 w=90.0 h=40.0  -->
+   <transition cond="@head_angle &lt; (Math::PI/2+@head_threshold)" event="head_move" target="centered"><!--   edge-path [centered]  x=360.0 y=130.0  --></transition>
+  </state>
+  <state id="tilting_left"><!--   node-size-and-position x=20.0 y=80.0 w=100.0 h=40.0  -->
+   <transition cond="@head_angle &gt; (Math::PI/2-@head_threshold)" event="head_move" target="centered"><!--   edge-path [centered]  x=170.0 y=120.0 pointx=0.0 pointy=-20.0 offsetx=9.0 offsety=1.0  --></transition>
+  </state>
+ </state>
+</scxml>

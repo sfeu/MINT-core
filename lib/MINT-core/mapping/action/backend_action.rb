@@ -7,7 +7,7 @@ class BackendAction < Action
 
 
   def parameter
-    @action[:parameter]
+    @action[:parameter].split(',')
   end
 
   def call_function
@@ -20,8 +20,12 @@ class BackendAction < Action
 
   def start(observation_results)
     @result = false
-    p = observation_results[parameter]
-    @result = call_function.call p
+    params = []
+    parameter.each { |p|
+      params << observation_results[p]
+    }
+
+    @result = call_function.call *params
     self
   end
 end

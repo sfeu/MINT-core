@@ -56,8 +56,9 @@ module MINT
           backend_call = MINT::const_get(attributes['class']).method(attributes['call'].to_sym) # TODO figure out a way that this can work
           @actions << BackendAction.new(:call => backend_call,:parameter => attributes['parameter'], :id => attributes['id'])
         when 'bind'
+          backend_call = MINT::const_get(attributes['class']).method(attributes['transformation'].to_sym) if attributes['transformation']
           @actions << BindAction.new(:id => attributes['id'], :elementIn => attributes['interactor_in'], :nameIn => attributes['name_in'], :attrIn => attributes['attr_in'],
-                                     :elementOut => attributes['interactor_out'], :nameOut => attributes['name_out'], :attrOut => attributes['attr_out'])
+                                     :elementOut => attributes['interactor_out'], :nameOut => attributes['name_out'], :attrOut => attributes['attr_out'],:transform => backend_call)
         when 'event'
           @actions << EventAction.new(:id => attributes['id'], :event => attributes['type'].to_sym, :target => attributes['target'])
         else

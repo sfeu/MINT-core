@@ -2,10 +2,12 @@
 module MINT
   class Head < Interactor
     attr_accessor :connection
-    attr_accessor :head_angle
-
-    #property :angle, Integer, :default  => -1
-    #property :distance, Integer, :default  => -1
+    property :head_angle, Float, :default  => Math::PI/2
+    property :head_angle_threshold, Float, :default  => 0.2
+    property :nose_x, Float, :default  => 0
+    property :nose_x_threshold, Float, :default  => 0.1
+    property :nose_y, Float, :default  => 0
+    property :nose_y_threshold, Float, :default  => 0.1
 
     def getSCXML
       "#{File.dirname(__FILE__)}/head_new.scxml"
@@ -28,12 +30,12 @@ module MINT
       puts "Started head control server on #{host}:#{port}"
     end
 
-    def consume_nose_movement
-      @connection.consume_nose_movement = true
+    def consume_nose_movement(consume = true)
+      @connection.consume_nose_movement = consume
     end
 
-    def consume_head_movement
-      @connection.consume_head_movement = true
+    def consume_head_movement(consume = true)
+      @connection.consume_head_movement = consume
       [@head_x,@head_y, @head_scale, @hand_angle]
     end
 
@@ -46,7 +48,8 @@ module MINT
       def initialize
         super()
         @consume_head_movement = false
-            @consume_nose_movement = false
+        @consume_nose_movement = false
+
       end
 
       def receive_line(data)
@@ -60,21 +63,31 @@ module MINT
                 head_y = d[2].gsub(',',".").to_f
                 head_scale =  d[3].gsub(',',".").to_f
                 @head_angle = d[4].gsub(',',".").to_f
-                @head.head_angle = @head_angle
-                @head.process_event "head_move"
 
-                @head.attribute_set(:head_angle,@head_angle)
-                RedisConnector.redis.publish("out_channel:#{@head.create_channel_w_name}:testuser",@head_angle)
+                if (@head.head_angle-@head_angle).abs > @head.head_angle_threshold
+                  @head.process_event "head_move"
+                  @head.attribute_set(:head_angle,@head_angle)
+                  @channel_name =  @head.create_attribute_channel_name("head_angle")
+                  RedisConnector.redis.publish @channel_name,{:name=>@head.name,:head_angle => @head_angle}.to_json
+                end
               end
             when "FaceMove"
               if   @consume_nose_movement
-                x = d[1].gsub(',',".").to_f
-                y = d[2].gsub(',',".").to_f
+                @nose_x = d[1].gsub(',',".").to_f
+                @nose_y = d[2].gsub(',',".").to_f
+
+                if (@head.nose_x-@nose_x).abs > @head.nose_x_threshold or (@head.nose_y-@nose_y).abs > @head.nose_y_threshold
+                  @head.process_event "face_move"
+                  @head.attribute_set(:nose_x,@nose_x)
+                  @head.attribute_set(:nose_y,@nose_y)
+                  @channel_name =  @head.create_attribute_channel_name("nose")
+                  RedisConnector.redis.publish @channel_name,{:name=>@head.name,:x => @nose_x,:y =>@nose_y}.to_json
+                end
               end
             when 'Leave'
-              #@head.process_event(:disconnect)
+              @head.process_event :face_lost
             when 'Enter'
-              #@head.process_event(:connect)
+              @head.process_event :face_found
             else
               p "ERROR\r\nReceived Unknown data:#{data}\r\n "
           end

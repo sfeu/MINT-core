@@ -3,6 +3,26 @@ require "spec_helper"
 require "MINT-core"
 
 
+class FakeSocketClient < EventMachine::Connection
+  include EM::Protocols::LineText2
+
+  attr_reader :data
+
+  def initialize
+
+  end
+
+  def set_data(data)
+    @data = data
+
+  end
+  def post_init
+    send_data "HeadMove/10,1/10,0/10,1/-1,6\r\n"
+    # send_data "HeadMove/10,1/10,0/10,1/-1,6\r\n"
+  end
+
+end
+
 describe "Complementary mapping" do
   include EventMachine::SpecHelper
 
@@ -18,7 +38,7 @@ describe "Complementary mapping" do
     end
   end
   describe "with BindAction" do
-    it "should be work correctly" do
+    it "between AIINContinuous and AIOUTContinuouss should work correctly" do
       connect true do |redis|
 
         # capture the result an the very end: the message from the volume interactor to move the progress bar
@@ -74,5 +94,65 @@ describe "Complementary mapping" do
 
       end
     end
+    it "between Head angle and AIOUTContinuouss with transformation should work correctly" do
+      connect true do |redis|
+
+        # capture the result an the very end: the message from the volume interactor to move the progress bar
+        # presentation to 20 - additionally checks for correct states for bothe interactors
+
+        redis.pubsub.subscribe("out_channel:Interactor.AIO.AIOUT.AIOUTContinuous.horizontal_level:testuser") { |message|
+
+          message.should== "40"
+
+          volume = MINT::AIOUTContinuous.first(:name=>"horizontal_level")
+          volume.states.should==[:defocused, :progressing]
+
+
+          done
+
+        }
+
+        #<observation id="22" interactor="Interactor.Head" name="head" states="tilting_detection" process="onchange"/>
+        #    <observation id="23" interactor="Interactor.AIO.AIOUT.AIOUTContinuous" name="horizontal_level" states="presenting" process="instant"/>
+        #  </observations>
+        #  <actions>
+        #    <bind id="33" interactor_in="Interactor.Head" name_in="head" attr_in="head_angle" interactor_out="Interactor.AIO.AIOUT.AIOUTContinuous" name_out="horizontal_level" attr_out="data" transformation="head_angle_transformation" class="MusicSheet"/>
+        #  </actions>
+
+        def head_angle_transformation(angle)
+          r = (angle / Math::PI * 100 * 80 / 100).abs.to_i
+          p "result #{r}"
+          return r
+        end
+
+        o1 = Observation.new(:element =>"Interactor.Head",:name => "head", :states =>[:tilting_detection], :process=>"onchange")
+        o2 = Observation.new(:element =>"Interactor.AIO.AIOUT.AIOUTContinuous",:name=>"horizontal_level", :states =>[:presenting], :process=>"onchange")
+        a1 = BindAction.new(:elementIn => "Interactor.Head",:nameIn => "head", :attrIn =>"head_angle",:attrOut=>"data",
+                            :transform => self.method(:head_angle_transformation),
+                            :elementOut =>"Interactor.AIO.AIOUT.AIOUTContinuous", :nameOut=>"horizontal_level" )
+        m = MINT::ComplementaryMapping.new(:name => "Mapping_spec", :observations => [o1,o2],:actions =>[a1])
+        m.start
+
+
+        check_result = Proc.new {
+
+        }
+
+        test_state_flow_w_name redis,"Interactor.Head","head",["disconnected",["tilting_detection", "connected", "centered"],"tilting_left"],check_result do
+          Fiber.new{
+            # setup a waiting volume and slider interactor
+            volume = MINT::AIOUTContinuous.create(:name=>"horizontal_level")
+            volume.process_event(:organize).should ==[:organized]
+            volume.process_event(:present).should ==[:defocused, :waiting]
+
+            MINT::Head.create(:name=>"head")
+            socket = EM.connect('0.0.0.0', 4242, FakeSocketClient)
+
+          }.resume
+
+        end
+      end
+    end
+
   end
 end

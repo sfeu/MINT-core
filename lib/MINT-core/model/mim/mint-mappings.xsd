@@ -53,6 +53,8 @@
       <xs:attribute name="name_in" type="xs:string" use="required"/>
       <xs:attribute name="attr_in" type="xs:string" use="required"/>
       <xs:attribute name="interactor_out" type="xs:string" use="required"/>
+      <xs:attribute name="transformation"  type="xs:string"/>  <!-- TODO: if exists transformation, class need to be there as well -->
+      <xs:attribute name="class" type="xs:string" />
       <xs:attribute name="name_out" type="xs:string" use="required"/>
       <xs:attribute name="attr_out" type="xs:string" use="required"/>
     </xs:complexType>

@@ -13,6 +13,14 @@
 
     end
 
+    class MinimalOutputSlider < CIO
+
+    end
+
+    class MinimalVerticalOutputSlider < CIO
+
+        end
+
     class ProgressBar < CIO
 
     end

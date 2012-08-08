@@ -52,10 +52,10 @@ consume_nose_movement(false);
      <transition cond="@nose_x &lt; -0.8" event="face_move" target="looking_left"></transition>
     </state>
     <state id="looking_right"><!--   node-size-and-position x=400.0 y=40.0 w=90.0 h=40.0  -->
-     <transition cond="-0.5 &lt; @nose_x &lt; 0.5" event="face_move" target="looking_straight"><!--   edge-path [looking_straight]  x=360.0 y=90.0  --></transition>
+     <transition cond="-0.5 &lt; @nose_x and @nose_x &lt; 0.5" event="face_move" target="looking_straight"><!--   edge-path [looking_straight]  x=360.0 y=90.0  --></transition>
     </state>
     <state id="looking_left"><!--   node-size-and-position x=20.0 y=40.0 w=100.0 h=40.0  -->
-     <transition cond="-0.5 &lt; @nose_x &lt; 0.5" event="face_move" target="looking_straight"><!--   edge-path [looking_straight]  x=170.0 y=80.0 pointx=0.0 pointy=-20.0 offsetx=9.0 offsety=1.0  --></transition>
+     <transition cond="-0.5 &lt; @nose_x  and @nose_x &lt; 0.5" event="face_move" target="looking_straight"><!--   edge-path [looking_straight]  x=170.0 y=80.0 pointx=0.0 pointy=-20.0 offsetx=9.0 offsety=1.0  --></transition>
     </state>
    </state>
    <state id="nodding_detection" initial="neutral"><!--   node-size-and-position x=680.0 y=110.0 w=380.0 h=170.0  -->
@@ -74,11 +74,11 @@ consume_nose_movement(false);
     <transition event="tilt_mode" target="tilting_detection"></transition>
     <transition event="turn_mode" target="turning_detection"><!--   edge-path [turning_detection]  x=610.0 y=260.0  --></transition>
     <state id="looking_down"><!--   node-size-and-position x=280.0 y=40.0 w=90.0 h=50.0  -->
-     <transition cond="0.5&gt; @nose_y &gt; -0.5" event="face_move" target="nodded"></transition>
+     <transition cond="0.5&gt; @nose_y  and @nose_y &gt; -0.5" event="face_move" target="nodded"></transition>
      <transition cond="0.5&lt; @nose_y or @nose_y &lt; -0.5" event="face_move" target="neutral"><!--   edge-path [neutral]  x=210.0 y=40.0  --></transition>
     </state>
     <state id="neutral"><!--   node-size-and-position x=30.0 y=40.0 w=80.0 h=50.0  -->
-     <transition cond="@nose_y&lt;=0.2 and 0.5&gt;@nose_x &gt;-0.5" event="face_move" target="looking_down"></transition>
+     <transition cond="@nose_y&lt;=0.2 and 0.5&gt;@nose_x  and @nose_x &gt;-0.5" event="face_move" target="looking_down"></transition>
     </state>
     <state id="nodded"><!--   node-size-and-position x=150.0 y=100.0 w=90.0 h=50.0  -->
      <transition target="neutral"></transition>

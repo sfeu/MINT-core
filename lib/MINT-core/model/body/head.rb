@@ -5,9 +5,9 @@ module MINT
     property :head_angle, Float, :default  => Math::PI/2
     property :head_angle_threshold, Float, :default  => 0.2
     property :nose_x, Float, :default  => 0
-    property :nose_x_threshold, Float, :default  => 0.1
+    property :nose_x_threshold, Float, :default  => 0.05
     property :nose_y, Float, :default  => 0
-    property :nose_y_threshold, Float, :default  => 0.1
+    property :nose_y_threshold, Float, :default  => 0.05
 
     def getSCXML
       "#{File.dirname(__FILE__)}/head_new.scxml"
@@ -82,6 +82,7 @@ module MINT
                   @head.attribute_set(:nose_y,@nose_y)
                   @channel_name =  @head.create_attribute_channel_name("nose")
                   RedisConnector.redis.publish @channel_name,{:name=>@head.name,:x => @nose_x,:y =>@nose_y}.to_json
+                  RedisConnector.redis.publish("out_channel:#{@head.create_channel_w_name}:testuser",{:name=>@head.name,:x => @nose_x,:y =>@nose_y}.to_json)
                 end
               end
             when 'Leave'

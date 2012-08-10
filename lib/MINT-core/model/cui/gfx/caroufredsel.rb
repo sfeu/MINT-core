@@ -2,9 +2,6 @@ module MINT
 
 
   class CarouFredSelImage < Image
-    def getSCXML
-      "#{File.dirname(__FILE__)}/CarouFredSelImage.scxml"
-    end
 
     def send_displayed
       parent =  AIO.get("aui",self.name).parent

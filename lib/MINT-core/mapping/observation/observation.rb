@@ -78,15 +78,27 @@ class Observation
       results = model.all
     end
 
-    results.each { |e|
-      e_states= e.states.map &:to_s
-      if ((e_states & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
-        cb.call element, true, result(JSON.parse e.to_json(:only => e.class::PUBLISH_ATTRIBUTES)),id
-        return true
-      end
+    r = results.find_all { |e|
+      ((e.states.map(&:to_s) & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
     }
 
-    return false
+    if r.length > 0
+      if r.length ==1
+        cb.call element, true, result(JSON.parse r[0].to_json(:only => r[0].class::PUBLISH_ATTRIBUTES)),id
+      else
+        res = []
+        r.each do |e|
+          res << JSON.parse(e.to_json(:only => e.class::PUBLISH_ATTRIBUTES))
+        end
+
+        cb.call element, true, result(res),id
+      end
+
+      return true
+    else
+      return false
+    end
+
   end
 
   def stop

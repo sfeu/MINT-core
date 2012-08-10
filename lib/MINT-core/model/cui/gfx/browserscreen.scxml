@@ -1,0 +1,14 @@
+<scxml initial="displaying" name="BrowserScreen" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=662.0 h=580.0  -->
+ <state id="displaying"><!--   node-size-and-position x=100.0 y=200.0 w=100.0 h=100.0  -->
+  <onentry>
+   <script>
+
+subscribe_for_refresh
+   </script>
+  </onentry>
+  <transition event="reload" target="reloaded"></transition>
+ </state>
+ <state id="reloaded"><!--   node-size-and-position x=370.0 y=200.0 w=100.0 h=100.0  -->
+  <transition target="displaying"><!--   edge-path [displaying]  x=290.0 y=190.0  --></transition>
+ </state>
+</scxml>

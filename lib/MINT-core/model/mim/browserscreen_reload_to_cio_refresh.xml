@@ -1,0 +1,13 @@
+<mapping name="BrowserScreen reload to CIO refresh" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.BrowserScreen" states="reloaded"  process="onchange"/>
+      <observation id="3" interactor="Interactor.CIO" states="displaying" result="cios" process="instant"/>
+    </observations>
+    <actions>
+      <event id="4" type="refresh" target="cios"/>
+    </actions>
+  </operator>
+</mapping>
+

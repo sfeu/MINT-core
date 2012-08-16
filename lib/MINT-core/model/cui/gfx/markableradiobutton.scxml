@@ -1,0 +1,67 @@
+<scxml initial="initialized" name="RadioButton" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=890.0 h=1000.0  -->
+ <state id="initialized"><!--   node-size-and-position x=220.0 y=130.0 w=100.0 h=40.0  -->
+  <transition event="position" target="positioning"></transition>
+ </state>
+ <state id="positioning"><!--   node-size-and-position x=220.0 y=220.0 w=100.0 h=40.0  -->
+  <transition event="calculated" target="positioned">
+   <invoke src="store_calculated_values_in_model" type="x-mint"></invoke>
+  </transition>
+ </state>
+ <state id="positioned"><!--   node-size-and-position x=220.0 y=320.0 w=100.0 h=40.0  -->
+  <transition event="display" target="p"></transition>
+  <transition event="hide" target="hidden"></transition>
+ </state>
+ <parallel id="p"><!--   node-size-and-position x=380.0 y=270.0 w=480.0 h=730.0  -->
+  <transition event="disable" target="disabled"></transition>
+  <transition event="hide" target="hidden"></transition>
+  <state id="s" initial="unselected"><!--   node-size-and-position x=290.0 y=30.0 w=180.0 h=240.0  -->
+   <state id="selected"><!--   node-size-and-position x=50.0 y=170.0 w=100.0 h=30.0  -->
+    <transition event="unselect" target="unselected"></transition>
+   </state>
+   <state id="unselected"><!--   node-size-and-position x=50.0 y=70.0 w=100.0 h=30.0  -->
+    <transition event="select" target="selected"><!--   edge-path [selected]  x=40.0 y=130.0  --></transition>
+   </state>
+  </state>
+  <state id="d"><!--   node-size-and-position x=0.0 y=30.0 w=280.0 h=360.0  -->
+   <state id="displaying" initial="displayed"><!--   node-size-and-position x=10.0 y=30.0 w=270.0 h=170.0  -->
+    <transition event="refresh" target="refreshing"><!--   edge-path [refreshing]  x=100.0 y=230.0  --></transition>
+    <state id="displayed"><!--   node-size-and-position x=80.0 y=40.0 w=100.0 h=30.0  -->
+     <transition event="highlight" target="highlighted"><!--   edge-path [highlighted]  x=70.0 y=100.0 pointx=0.0 pointy=18.0 offsetx=19.0 offsety=-14.0  --></transition>
+    </state>
+    <state id="highlighted"><!--   node-size-and-position x=80.0 y=130.0 w=100.0 h=30.0  -->
+     <transition event="unhighlight" target="displayed"><!--   edge-path [displayed]  x=170.0 y=100.0  --></transition>
+     <transition event="up" target="displayed">
+      <invoke src="highlight_up" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=210.0 y=140.0 x=210.0 y=60.0 pointx=0.0 pointy=-10.0 offsetx=0.0 offsety=5.0  --></transition>
+     <transition event="down" target="displayed">
+      <invoke src="highlight_down" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=40.0 y=140.0 x=40.0 y=60.0  --></transition>
+     <transition event="left" target="displayed">
+      <invoke src="highlight_left" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=10.0 y=150.0 x=10.0 y=50.0  --></transition>
+     <transition event="right" target="displayed">
+      <invoke src="highlight_right" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=250.0 y=150.0 x=250.0 y=50.0  --></transition>
+    </state>
+   </state>
+   <state id="refreshing"><!--   node-size-and-position x=100.0 y=260.0 w=70.0 h=40.0  -->
+    <transition target="displaying"></transition>
+   </state>
+  </state>
+  <state id="m" initial="unmarked"><!--   node-size-and-position x=290.0 y=290.0 w=180.0 h=240.0  -->
+   <state id="marked"><!--   node-size-and-position x=50.0 y=170.0 w=100.0 h=30.0  -->
+    <transition event="unmark" target="unmarked"></transition>
+   </state>
+   <state id="unmarked"><!--   node-size-and-position x=50.0 y=70.0 w=100.0 h=30.0  -->
+    <transition event="mark" target="marked"><!--   edge-path [marked]  x=40.0 y=130.0  --></transition>
+   </state>
+  </state>
+ </parallel>
+ <state id="disabled"><!--   node-size-and-position x=570.0 y=140.0 w=110.0 h=40.0  -->
+  <transition event="hide" target="hidden"></transition>
+ </state>
+ <state id="hidden"><!--   node-size-and-position x=400.0 y=140.0 w=110.0 h=40.0  -->
+  <transition event="position" target="positioning"></transition>
+  <transition event="display" target="p"><!--   edge-path [p]  x=410.0 y=240.0  --></transition>
+ </state>
+</scxml>

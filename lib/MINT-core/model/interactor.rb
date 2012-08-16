@@ -137,11 +137,11 @@ module MINT
       save_statemachine
     end
 
-    def initialize(attributes = nil)
-      super(attributes)
+   # def initialize(attributes = nil)
+   #   super(attributes)
 
   #    recover_statemachine
-    end
+   # end
 
     # The sync event method is overwritten in the derived classes to prevent synchronization cycles by setting an empty callback
     def sync_event(event)

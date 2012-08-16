@@ -40,6 +40,7 @@ require "MINT-core/model/ir/mouse"
 
 #require "MINT-core/model/body/gesture_button"
 #require "MINT-core/model/body/handgesture"
+require "MINT-core/model/body/handposture"
 require "MINT-core/model/body/head"
 
 require "MINT-core/mapping/mapping"

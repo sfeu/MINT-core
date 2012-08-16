@@ -54,73 +54,7 @@
 
     require "MINT-core/model/cui/gfx/RadioButton"
     require "MINT-core/model/cui/gfx/RadioButtonGroup"
-
-    class MarkableRadioButton < RadioButton
-      def initialize_statemachine
-        if @statemachine.nil?
-
-          @statemachine = Statemachine.build do
-
-            superstate :CIO do
-              trans :initialized,:position,:positioning
-              trans :positioning,:calculated,:positioned, :store_calculated_values_in_model
-              trans :positioned, :display, :presenting
-              trans :disabled, :hide, :hidden
-              trans :hidden,:display, :presenting
-
-
-              parallel :p do
-                statemachine :s1 do
-                  superstate :presenting do
-                    on_entry :sync_aio_to_presented
-
-                    state :displayed do
-                      on_entry :sync_aio_to_defocus
-                    end
-
-                    state :highlighted  do
-                      on_entry :sync_aio_to_focused
-                    end
-
-                    trans :displayed, :highlight, :highlighted
-                    trans :highlighted,:unhighlight, :displayed
-                    trans :highlighted, :up, :displayed, :highlight_up
-                    trans :highlighted, :down, :displayed, :highlight_down
-                    trans :highlighted, :left, :displayed, :highlight_left
-                    trans :highlighted, :right, :displayed, :highlight_right
-
-                    event :disable, :disabled
-                    event :hide, :hidden
-
-                  end
-                end
-                statemachine :s2 do
-                  superstate :selection do
-                    trans :listed, :select, :selected
-                    trans :selected, :select, :listed
-
-                    state :listed do
-                      on_entry :sync_aio_to_unchosen
-                    end
-
-                    state :selected  do
-                      on_entry :sync_aio_to_chosen
-                    end
-                  end
-                end
-                statemachine :s3 do
-                  superstate :marker do
-                    trans :unmarked, :mark, :marked
-                    trans :marked, :unmark, :unmarked
-                  end
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-
+    require "MINT-core/model/cui/gfx/MarkableRadioButton"
 
     class BasicText < CIO
     end

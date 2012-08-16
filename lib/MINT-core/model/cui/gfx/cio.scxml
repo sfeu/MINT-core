@@ -43,8 +43,12 @@
  <state id="hidden"><!--   node-size-and-position x=400.0 y=140.0 w=110.0 h=40.0  -->
   <transition event="position" target="positioning"></transition>
   <transition event="display" target="displaying"><!--   edge-path [displaying]  x=410.0 y=240.0  --></transition>
+  <transition event="refresh"><!--   edge-path [refreshing_while_hidden]  x=380.0 y=120.0  --></transition>
  </state>
  <state id="refreshing"><!--   node-size-and-position x=720.0 y=350.0 w=100.0 h=50.0  -->
   <transition target="displaying"><!--   edge-path [displaying]  x=700.0 y=420.0  --></transition>
+ </state>
+ <state id="refreshing_while_hidden"><!--   node-size-and-position x=370.0 y=50.0 w=150.0 h=40.0  -->
+  <transition target="hidden"></transition>
  </state>
 </scxml>

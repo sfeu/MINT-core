@@ -3,11 +3,11 @@
   <transition event="organize" target="organized"></transition>
  </state>
  <state id="organized"><!--   node-size-and-position x=514.0 y=123.0 w=90.0 h=30.0  -->
-  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=501.220548482104 y=434.8475385421897 pointx=0.0 pointy=0.0 offsetx=53.0 offsety=0.0  --></transition>
+  <transition event="suspend" target="suspended"><!--   edge-path [suspended]  x=560.0 y=730.0 pointx=0.0 pointy=20.0 offsetx=0.0 offsety=30.0  --></transition>
   <transition event="present" target="p"></transition>
  </state>
  <state id="suspended"><!--   node-size-and-position x=372.00000000000006 y=712.0 w=90.0 h=30.0  -->
-  <transition event="organize" target="organized"><!--   edge-path [organized]  x=481.77945151789606 y=430.1524614578103 pointx=0.0 pointy=0.0 offsetx=76.0 offsety=0.0  --></transition>
+  <transition event="organize" target="organized"><!--   edge-path [organized]  x=610.0 y=740.0 x=610.0 y=140.0 pointx=1.0 pointy=-40.0 offsetx=44.0 offsety=40.0  --></transition>
   <transition event="present" target="p"><!--   edge-path [p]  x=388.98476942531727 y=691.3273106758478  --></transition>
  </state>
  <parallel id="p"><!--   node-size-and-position x=20.0 y=203.0 w=510.0 h=459.0  -->

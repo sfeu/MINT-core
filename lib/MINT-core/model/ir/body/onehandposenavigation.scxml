@@ -1,0 +1,47 @@
+<scxml initial="disconnected" name="OneHandNav_Final" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=510.0 h=760.0  -->
+ <state id="connected" initial="NoHands"><!--   node-size-and-position x=20.0 y=110.0 w=480.0 h=640.0  -->
+  <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=360.0 y=60.0 pointx=0.0 pointy=12.0 offsetx=-24.0 offsety=-1.0  --></transition>
+  <state id="OneHand"><!--   node-size-and-position x=20.0 y=120.0 w=450.0 h=500.0  -->
+   <transition event="no_hands" target="NoHands"></transition>
+   <state id="Command"><!--   node-size-and-position x=100.0 y=370.0 w=300.0 h=110.0  -->
+    <transition event="next_gesture" target="next"><!--   edge-path [next]  x=70.0 y=330.0 pointx=0.0 pointy=-49.0 offsetx=-7.0 offsety=37.0  --></transition>
+    <transition event="prev_gesture" target="previous"><!--   edge-path [previous]  x=370.0 y=340.0 pointx=-1.0 pointy=-14.0 offsetx=77.0 offsety=-52.0  --></transition>
+    <state id="confirmed"><!--   node-size-and-position x=30.0 y=40.0 w=100.0 h=40.0  -->
+     <transition event="select"><!--   edge-path [selected]  x=160.0 y=90.0 pointx=0.0 pointy=-10.0 offsetx=-5.0 offsety=0.0  --></transition>
+    </state>
+    <state id="selected"><!--   node-size-and-position x=180.0 y=40.0 w=100.0 h=40.0  -->
+     <transition event="confirm" target="confirmed"><!--   edge-path [confirmed]  pointx=0.0 pointy=-10.0 offsetx=5.0 offsety=0.0  --></transition>
+    </state>
+   </state>
+   <state id="Navigation" initial="stopped"><!--   node-size-and-position x=20.0 y=40.0 w=420.0 h=269.0  -->
+    <onentry>
+     <script>start_ticker(800)</script>
+    </onentry>
+    <onexit>
+     <script>stop_ticker</script>
+    </onexit>
+    <state id="next"><!--   node-size-and-position x=40.0 y=60.0 w=100.0 h=50.0  -->
+     <transition event="prev_gesture" target="previous"><!--   edge-path [previous]  x=210.0 y=70.0 pointx=0.0 pointy=15.0 offsetx=-5.0 offsety=0.0  --></transition>
+     <transition event="tick"><!--   edge-path [next]  pointx=1.0 pointy=28.0 offsetx=4.0 offsety=0.0  --></transition>
+     <transition event="select" target="stopped"></transition>
+    </state>
+    <state id="previous"><!--   node-size-and-position x=270.0 y=60.0 w=100.0 h=50.0  -->
+     <transition event="next_gesture" target="next"><!--   edge-path [next]  x=209.0 y=87.0 pointx=0.0 pointy=13.0 offsetx=5.0 offsety=0.0  --></transition>
+     <transition event="tick"></transition>
+     <transition event="select" target="stopped"></transition>
+    </state>
+    <state id="stopped"><!--   node-size-and-position x=170.0 y=200.0 w=100.0 h=40.0  -->
+     <transition event="next_gesture" target="next"><!--   edge-path [next]  x=90.0 y=220.0 pointx=0.0 pointy=-30.0 offsetx=0.0 offsety=-15.0  --></transition>
+     <transition event="prev_gesture" target="previous"><!--   edge-path [previous]  x=320.0 y=220.0  --></transition>
+     <transition event="confirm" target="confirmed"></transition>
+    </state>
+   </state>
+  </state>
+  <state id="NoHands"><!--   node-size-and-position x=160.0 y=40.0 w=100.0 h=40.0  -->
+   <transition event="one_hand" target="OneHand"><!--   edge-path [OneHand]  x=170.0 y=100.0  --></transition>
+  </state>
+ </state>
+ <state id="disconnected"><!--   node-size-and-position x=170.0 y=40.0 w=100.0 h=30.0  -->
+  <transition event="connect" target="connected"><!--   edge-path [connected]  x=130.0 y=50.0 pointx=-1.0 pointy=19.0 offsetx=-41.0 offsety=2.0  --></transition>
+ </state>
+</scxml>

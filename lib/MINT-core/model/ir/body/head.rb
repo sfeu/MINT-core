@@ -1,6 +1,6 @@
 
 module MINT
-  class Head < Interactor
+  class Head < Body
     attr_accessor :connection
     property :head_angle, Float, :default  => Math::PI/2
     property :head_angle_threshold, Float, :default  => 0.2
@@ -10,7 +10,7 @@ module MINT
     property :nose_y_threshold, Float, :default  => 0.05
 
     def getSCXML
-      "#{File.dirname(__FILE__)}/head_new.scxml"
+      "#{File.dirname(__FILE__)}/head.scxml"
     end
 
     def initialize(attributes = nil)

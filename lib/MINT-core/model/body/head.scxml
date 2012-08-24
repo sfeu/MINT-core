@@ -1,56 +1,92 @@
-<scxml initial="disconnected" name="Head" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=890.0 h=880.0  -->
- <state id="disconnected"><!--   node-size-and-position x=380.0 y=30.0 w=100.0 h=50.0  -->
-  <transition event="connect" target="connected"><!--   edge-path [connected]  x=520.0 y=100.0 pointx=0.0 pointy=13.0 offsetx=24.0 offsety=12.0  --></transition>
+<scxml initial="disconnected" name="disconnect" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=1190.0 h=580.0  -->
+ <state id="disconnected"><!--   node-size-and-position x=220.0 y=30.0 w=100.0 h=50.0  -->
+  <transition event="connect" target="connected"></transition>
  </state>
- <parallel id="connected"><!--   node-size-and-position x=20.0 y=140.0 w=820.0 h=730.0  -->
-  <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=340.0 y=100.0 pointx=0.0 pointy=37.0 offsetx=-24.0 offsety=33.0  --></transition>
-  <state id="navigation" initial="centered"><!--   node-size-and-position x=10.0 y=40.0 w=790.0 h=360.0  -->
-   <state id="nodding_detection"><!--   node-size-and-position x=20.0 y=70.0 w=230.0 h=130.0  -->
-    <state id="looking_down"><!--   node-size-and-position x=130.0 y=40.0 w=90.0 h=50.0  -->
-     <transition event="center" target="centered"><!--   edge-path [centered]  pointx=0.0 pointy=-24.0 offsetx=-8.0 offsety=-5.0  --></transition>
+ <state id="connected" initial="face_detected"><!--   node-size-and-position x=40.0 y=110.0 w=1140.0 h=460.0  -->
+  <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=400.0 y=120.0  --></transition>
+  <state id="face_detected" initial="tilting_detection"><!--   node-size-and-position x=20.0 y=100.0 w=1100.0 h=340.0  -->
+   <transition event="face_lost" target="face_lost"><!--   edge-path [face_lost]  x=300.0 y=80.0  --></transition>
+   <state id="tilting_detection" initial="centered"><!--   node-size-and-position x=20.0 y=40.0 w=520.0 h=120.0  -->
+    <onentry>
+     <script>
+
+consume_head_movement(true);
+     </script>
+    </onentry>
+    <onexit>
+     <script>
+
+consume_head_movement(false);
+     </script>
+    </onexit>
+    <transition event="turn_mode" target="turning_detection"><!--   edge-path [turning_detection]  x=190.0 y=180.0  --></transition>
+    <transition event="nodd_mode" target="nodding_detection"><!--   edge-path [nodding_detection]  x=600.0 y=100.0  --></transition>
+    <state id="centered"><!--   node-size-and-position x=210.0 y=40.0 w=100.0 h=40.0  -->
+     <transition cond="@head_angle &gt; (Math::PI/2+@head_angle_threshold)" event="head_move" target="tilting_right"></transition>
+     <transition cond="@head_angle &lt; (Math::PI/2-@head_angle_threshold)" event="head_move" target="tilting_left"></transition>
     </state>
-    <state id="looking_up"><!--   node-size-and-position x=30.0 y=40.0 w=80.0 h=50.0  -->
-     <transition event="center" target="centered"><!--   edge-path [centered]  pointx=0.0 pointy=36.0 offsetx=13.0 offsety=7.0  --></transition>
+    <state id="tilting_right"><!--   node-size-and-position x=400.0 y=40.0 w=90.0 h=40.0  -->
+     <transition cond="@head_angle &lt; (Math::PI/2+@head_angle_threshold)" event="head_move" target="centered"><!--   edge-path [centered]  x=360.0 y=90.0  --></transition>
+    </state>
+    <state id="tilting_left"><!--   node-size-and-position x=20.0 y=40.0 w=100.0 h=40.0  -->
+     <transition cond="@head_angle &gt; (Math::PI/2-@head_angle_threshold)" event="head_move" target="centered"><!--   edge-path [centered]  x=170.0 y=80.0 pointx=0.0 pointy=-20.0 offsetx=9.0 offsety=1.0  --></transition>
     </state>
    </state>
-   <state id="tilting_detection"><!--   node-size-and-position x=290.0 y=70.0 w=230.0 h=130.0  -->
-    <state id="tilting_right"><!--   node-size-and-position x=10.0 y=40.0 w=100.0 h=50.0  -->
-     <transition event="center" target="centered"><!--   edge-path [centered]  x=370.0 y=210.0 pointx=0.0 pointy=8.0 offsetx=15.0 offsety=13.0  --></transition>
+   <state id="turning_detection" initial="looking_straight"><!--   node-size-and-position x=30.0 y=210.0 w=520.0 h=120.0  -->
+    <onentry>
+     <script>
+
+consume_nose_movement(true);
+     </script>
+    </onentry>
+    <onexit>
+     <script>
+
+consume_nose_movement(false);
+     </script>
+    </onexit>
+    <transition event="tilt_mode" target="tilting_detection"></transition>
+    <transition event="nodd_mode" target="nodding_detection"></transition>
+    <state id="looking_straight"><!--   node-size-and-position x=210.0 y=40.0 w=100.0 h=40.0  -->
+     <transition cond="@nose_x &gt; 0.8" event="face_move" target="looking_right"></transition>
+     <transition cond="@nose_x &lt; -0.8" event="face_move" target="looking_left"></transition>
     </state>
-    <state id="tilting_left"><!--   node-size-and-position x=120.0 y=40.0 w=100.0 h=50.0  -->
-     <transition event="center" target="centered"></transition>
+    <state id="looking_right"><!--   node-size-and-position x=400.0 y=40.0 w=90.0 h=40.0  -->
+     <transition cond="-0.5 &lt; @nose_x and @nose_x &lt; 0.5" event="face_move" target="looking_straight"><!--   edge-path [looking_straight]  x=360.0 y=90.0  --></transition>
+    </state>
+    <state id="looking_left"><!--   node-size-and-position x=20.0 y=40.0 w=100.0 h=40.0  -->
+     <transition cond="-0.5 &lt; @nose_x  and @nose_x &lt; 0.5" event="face_move" target="looking_straight"><!--   edge-path [looking_straight]  x=170.0 y=80.0 pointx=0.0 pointy=-20.0 offsetx=9.0 offsety=1.0  --></transition>
     </state>
    </state>
-   <state id="centered"><!--   node-size-and-position x=350.0 y=270.0 w=100.0 h=60.0  -->
-    <transition cond="in_tilting_mode" event="tilt_right" target="tilting_right"><!--   edge-path [tilting_right]  x=330.0 y=190.0 pointx=0.0 pointy=19.0 offsetx=-14.0 offsety=-32.0  --></transition>
-    <transition cond="in_nodding_mode" event="look_down" target="looking_down"><!--   edge-path [looking_down]  x=160.0 y=300.0 pointx=0.0 pointy=-10.0 offsetx=10.0 offsety=0.0  --></transition>
-    <transition cond="in_turning_mode" event="turn_right" target="looking_right"><!--   edge-path [looking_right]  x=650.0 y=300.0 pointx=0.0 pointy=10.0 offsetx=-20.0 offsety=0.0  --></transition>
-    <transition event="tilt_left" target="tilting_left"><!--   edge-path [tilting_left]  x=490.0 y=220.0  --></transition>
-    <transition event="look_up" target="looking_up"><!--   edge-path [looking_up]  x=90.0 y=310.0 pointx=0.0 pointy=12.0 offsetx=5.0 offsety=0.0  --></transition>
-    <transition event="turn_left" target="looking_left"><!--   edge-path [looking_left]  x=710.0 y=320.0  --></transition>
-   </state>
-   <state id="turning_detection"><!--   node-size-and-position x=540.0 y=70.0 w=230.0 h=130.0  -->
-    <state id="looking_right"><!--   node-size-and-position x=10.0 y=40.0 w=100.0 h=50.0  -->
-     <transition event="center" target="centered"><!--   edge-path [centered]  pointx=0.0 pointy=24.0 offsetx=8.0 offsety=-5.0  --></transition>
+   <state id="nodding_detection" initial="neutral"><!--   node-size-and-position x=680.0 y=110.0 w=380.0 h=170.0  -->
+    <onentry>
+     <script>
+
+consume_nose_movement(true);
+     </script>
+    </onentry>
+    <onexit>
+     <script>
+
+consume_nose_movement(false);
+     </script>
+    </onexit>
+    <transition event="tilt_mode" target="tilting_detection"></transition>
+    <transition event="turn_mode" target="turning_detection"><!--   edge-path [turning_detection]  x=610.0 y=260.0  --></transition>
+    <state id="looking_down"><!--   node-size-and-position x=280.0 y=40.0 w=90.0 h=50.0  -->
+     <transition cond="0.5&gt; @nose_y  and @nose_y &gt; -0.5" event="face_move" target="nodded"></transition>
+     <transition cond="0.5&lt; @nose_y or @nose_y &lt; -0.5" event="face_move" target="neutral"><!--   edge-path [neutral]  x=210.0 y=40.0  --></transition>
     </state>
-    <state id="looking_left"><!--   node-size-and-position x=130.0 y=40.0 w=80.0 h=50.0  -->
-     <transition event="center" target="centered"></transition>
+    <state id="neutral"><!--   node-size-and-position x=30.0 y=40.0 w=80.0 h=50.0  -->
+     <transition cond="@nose_y&lt;=0.2 and 0.5&gt;@nose_x  and @nose_x &gt;-0.5" event="face_move" target="looking_down"></transition>
+    </state>
+    <state id="nodded"><!--   node-size-and-position x=150.0 y=100.0 w=90.0 h=50.0  -->
+     <transition target="neutral"></transition>
     </state>
    </state>
   </state>
-  <state id="mode" initial="tilting_mode"><!--   node-size-and-position x=130.0 y=440.0 w=560.0 h=270.0  -->
-   <state id="tilting_mode"><!--   node-size-and-position x=30.0 y=120.0 w=100.0 h=100.0  -->
-    <transition event="switch_nodding" target="nodding_mode"></transition>
-    <transition event="switch_turning" target="turning_mode"><!--   edge-path [turning_mode]  x=280.0 y=250.0  --></transition>
-   </state>
-   <state id="nodding_mode"><!--   node-size-and-position x=230.0 y=120.0 w=100.0 h=100.0  -->
-    <transition event="switch_turning" target="turning_mode"></transition>
-    <transition event="switch_tilting" target="tilting_mode"><!--   edge-path [tilting_mode]  x=170.0 y=130.0  --></transition>
-   </state>
-   <state id="turning_mode"><!--   node-size-and-position x=440.0 y=120.0 w=100.0 h=100.0  -->
-    <transition event="switch_tilting" target="tilting_mode"><!--   edge-path [tilting_mode]  x=240.0 y=50.0  --></transition>
-    <transition event="switch_nodding" target="nodding_mode"><!--   edge-path [nodding_mode]  x=380.0 y=140.0  --></transition>
-   </state>
+  <state id="face_lost"><!--   node-size-and-position x=360.0 y=30.0 w=100.0 h=40.0  -->
+   <transition event="face_found" target="face_detected"></transition>
   </state>
- </parallel>
+ </state>
 </scxml>

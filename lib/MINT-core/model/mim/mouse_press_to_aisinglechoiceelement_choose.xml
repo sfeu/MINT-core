@@ -4,7 +4,7 @@
 
   <operator type="sequential" id="1">
     <observations>
-      <observation id="2" interactor="Interactor.Pointer.Mouse" name="mouse" states="left_pressed" result="m" process="onchange"/>
+      <observation id="2" interactor="Interactor.IR.IRMode.Pointer.Mouse" states="left_pressed" result="m" process="onchange"/>
       <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIChoiceElement.AISingleChoiceElement" states="focused" result="sce" process="instant"/>
       <observation id="4" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIChoiceElement.AISingleChoiceElement" name="sce.name" result="ttt" states="unchosen" process="instant"/>
     </observations>

@@ -1,5 +1,5 @@
 module MINT
-  class Pointer < Interactor
+  class Pointer < IRMode
     property :x, Integer, :default  => -1
     property :y, Integer, :default  => -1
 

@@ -1,0 +1,15 @@
+<mapping name="Left Button click to AISinglePresence enter" xmlns="http://www.multi-access.de"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+
+  <operator id="1" type="sequential">
+    <observations>
+      <observation id="2" interactor="Interactor.IR.IRMode.Pointer.Mouse" states="left_pressed" process="onchange" />
+      <observation id="3" interactor="Interactor.AIO.AIOUT.AIContainer.AISinglePresence" states="waiting" result="ais" process="instant" />
+    </observations>
+    <actions>
+      <event id="4" type="enter" target="ais"/>
+    </actions>
+  </operator>
+
+</mapping>

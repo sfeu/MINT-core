@@ -3,14 +3,10 @@ module MINT
 
   class AIO < Interactor
 
-    property :label, String
-    property :description, Text,   :lazy => false
-
     # TODO Links are established without Datamapper's relations because of problems with cycles and self-references (AIContainer))
     property :parent, String
     property :previous, String
     property :next, String
-    property :parent, String
 
     def getModel
       "aui"

@@ -30,7 +30,7 @@ describe 'MappingManager' do
       end
 
       m.register_callback("Reset Click", method(:my_callback))
-      m.load("./examples/mim_streaming_example.xml")
+      m.load(File.dirname(__FILE__) +"/examples/mim_streaming_example.xml")
       d = @data.shift
       d[:mapping_state].should == :loaded
       @data.length.should == 0
@@ -52,7 +52,7 @@ describe 'MappingManager' do
       end
 
       m.register_callback("Mouse Interactor Highlighting", method(:my_callback))
-      m.load("./examples/mim_streaming_example.xml")
+      m.load(File.dirname(__FILE__) +"/examples/mim_streaming_example.xml")
 
       d = @data.shift
       d[:mapping_state].should == :loaded
@@ -102,8 +102,10 @@ describe 'MappingManager' do
               data[:id].should == "2222"
               data[:state].should == :succeeded
             when 7
-              data[:mapping_state].should == :finished
+              data[:id].should == "33113"
+              data[:mapping_state].should == :succeeded
             when 8
+              data[:id].should == "33113"
               data[:mapping_state].should == :restarted #cool would be :restarted for this case
             when 9
               data[:id].should == "111"
@@ -116,7 +118,7 @@ describe 'MappingManager' do
       end
 
       m.register_callback("Mouse Interactor Highlighting",method(:my_callback))
-      m.load("./examples/mim_streaming_example.xml")
+      m.load(File.dirname(__FILE__) +"/examples/mim_streaming_example.xml")
 
 
     end

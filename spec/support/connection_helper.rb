@@ -4,7 +4,7 @@ require "MINT-core/connector/redis_connector"
 
 
 module ConnectionHelper
-  def connect(wait = false, timeout = 3 , &blk)
+  def connect(wait = false, timeout = 10, &blk)
     em(timeout) do
       RedisConnector.reset
       redis = RedisConnector.redis

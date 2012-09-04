@@ -3,11 +3,13 @@ module MINT
     def start
       @state_callback.call(@mapping[:name], {:id => @mapping[:id], :mapping_state => :started}) if @state_callback
       start_observations
+      self
     end
 
     def restart
       @state_callback.call(@mapping[:name], {:id => @mapping[:id], :mapping_state => :restarted}) if @state_callback
       start_observations
+      self
     end
 
     def start_observations

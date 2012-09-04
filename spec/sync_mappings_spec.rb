@@ -31,12 +31,12 @@ describe 'Sync wth AIO' do
 
       # Sync AIO to defocused
       parser = MINT::MappingParser.new
-      m = parser.build_from_scxml "../lib/MINT-core/model/mim/cio_display_to_aio_defocus.xml"
+      m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/cio_display_to_aio_defocus.xml"
       m.start
 
       # Sync AIO to focused
       parser = MINT::MappingParser.new
-      m = parser.build_from_scxml "../lib/MINT-core/model/mim/cio_highlight_to_aio_focus.xml"
+      m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/cio_highlight_to_aio_focus.xml"
       m.start
 
       check_result = Proc.new {
@@ -63,12 +63,12 @@ describe 'Sync wth AIO' do
 
       # Sync CIO to displayed
       parser = MINT::MappingParser.new
-      m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_defocus_to_cio_unhighlight.xml"
+      m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/aio_defocus_to_cio_unhighlight.xml"
       m.start
 
       # Sync CIO to highlighted
       parser = MINT::MappingParser.new
-      m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
+      m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
       m.start
 
       check_result = Proc.new {

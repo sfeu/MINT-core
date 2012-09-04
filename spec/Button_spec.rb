@@ -41,15 +41,15 @@ describe 'CUI' do
       connect true,120 do |redis|
 
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_present_to_cio_display.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__)+"/../lib/MINT-core/model/mim/aio_present_to_cio_display.xml"
         m.start
 
         # Sync AIO to focused
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__)+"/../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
         m.start
 
-        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "displaying", "b", "displayed", "released"],"highlighted"] do
+        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "b", "displaying", "d", "released", "init_js"] ,"displayed","highlighted"] do
           MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
           c = MINT::AICommand.create(:name=>"reset", :states=>[:organized])
           c.process_event :present
@@ -62,23 +62,23 @@ describe 'CUI' do
       connect true,120 do |redis|
 
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_present_to_cio_display.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__)+"/../lib/MINT-core/model/mim/aio_present_to_cio_display.xml"
         m.start
 
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__)+"/../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
         m.start
 
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aicommand_activate_to_button_press.xml"
+        m = parser.build_from_scxml  File.dirname(__FILE__)+"/../lib/MINT-core/model/mim/aicommand_activate_to_button_press.xml"
         m.start
 
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aicommand_deactivate_to_button_release.xml"
+        m = parser.build_from_scxml  File.dirname(__FILE__)+"/../lib/MINT-core/model/mim/aicommand_deactivate_to_button_release.xml"
         m.start
 
 
-        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "displaying", "b", "displayed", "released"],"highlighted","pressed","released"] do
+        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "b", "displaying", "d", "released", "init_js"],"displayed","highlighted","pressed","released"] do
           MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
           c = MINT::AICommand.create(:name=>"reset", :states=>[:organized])
           c.process_event :present
@@ -97,7 +97,7 @@ describe 'CUI' do
 
         DataMapper.finalize
 
-        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "displaying", "b", "displayed", "released"],"highlighted"] do
+        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "b", "displaying", "d", "released", "init_js"],"displayed","highlighted"] do
 
           b = MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
           b.process_event :display

@@ -15,6 +15,9 @@ class MappingServer
 
     def initialize
       @mapping_store = {}
+
+      # saves if a registered mapping is detail
+      @registered_as_detail = {}
       super()
     end
 
@@ -27,29 +30,30 @@ class MappingServer
           @mapping_store[mapping] =  {:name => d.first[1]['name']}
         end
       end
+      json_data = (@mapping_store[mapping]!=nil)?data.merge(@mapping_store[mapping]).to_json :  data.to_json
       if data[:mapping_state]
-        if data[:mapping_state].eql? :succeeded
-          send_data("STATUS|"+mapping+"|"+@mapping_store[mapping].to_json+"\r\n")
-          p "sent: STATUS|"+mapping+"|"+@mapping_store[mapping].to_json
-        end
-        @mapping_store[mapping]=nil
+        send_data("INFO%"+mapping+"%"+json_data+"\r\n")
+        p "sent: INFO%"+mapping+"%"+json_data
+      elsif  @registered_as_detail[mapping]
+        send_data("DETAIL%"+mapping+"%"+json_data+"\r\n")
+        p "sent: DETAIL%"+mapping+"%"+json_data
       end
-
-
+      @mapping_store[mapping]=nil
     end
 
     def receive_line(data)
       begin
         p "server received:#{data}"
-        d = data.split('|')
+        d = data.split('%')
 
         case d[0]
           when "REGISTER"
             @manager.register_callback(d[1], method(:forward_callback))
-            send_data("REGISTERED|#{d[1]}\r\n")
+            @registered_as_detail[d[1]] = d[2].eql?('DETAIL')?true:false
+            send_data("REGISTERED%#{d[1]}%#{d[2]}\r\n")
           when "LIST"
             mappings = @manager.get_mappings
-            mappings.each {|m| send_data("MAPPING|#{m}\r\n")}
+            mappings.each {|m| send_data("MAPPING#{m}\r\n")}
           else
             p "ERROR\r\nReceived Unknown data:#{data}\r\n "
         end

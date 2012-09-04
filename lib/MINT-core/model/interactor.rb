@@ -261,10 +261,6 @@ module MINT
     end
   end
 
-  class IR <Interactor
-  end
 
-  class IN < IR
-  end
 
 end

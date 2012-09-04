@@ -1,7 +1,7 @@
 
 module MINT
 
-  class OneHandPoseNavigation < HandPose
+  class OneHandPoseNavigation < Pose
 
     def getSCXML
       "#{File.dirname(__FILE__)}/onehandposenavigation.scxml"

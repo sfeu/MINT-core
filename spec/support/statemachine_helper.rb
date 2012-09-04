@@ -12,8 +12,7 @@ module StatemachineHelper
 
     EM.add_timer(3) {
       raise "failed to wait for state change to >>#{expected_states.first}<<, which not occurred during the last 3 seconds"
-     done # EM.stop
-
+      done # EM.stop
     }
   end
 
@@ -26,13 +25,17 @@ module StatemachineHelper
         r = r.lines.to_a if r.is_a? String
         m["new_states"].should == r
 
-        cb.call if expected_states.length==0
+        if expected_states.length==0
+         # redis.pubsub.unsubscribe(channel)
+          cb.call
+        end
+
       end
     }.callback {blk.call}
 
     EM.add_timer(3) {
       raise "failed to wait for state change to >>#{expected_states.first}<<, which not occurred during the last 3 seconds"
-     done # EM.stop
+      done # EM.stop
 
     }
   end
@@ -47,9 +50,9 @@ module StatemachineHelper
 
     @subcounter = interactors.size
     sub_cb_new = Proc.new do
-          @subcounter -=1
-          blk.call if @subcounter == 0
-        end
+      @subcounter -=1
+      blk.call if @subcounter == 0
+    end
 
     interactors.each do |i|
       channel, name, expected_states = i

@@ -74,7 +74,7 @@ describe 'Mapping' do
               m = MINT::SequentialMapping.new(:name=>"Sync CIO to display", :observations => [o1,o2],:actions =>[a])
               m.start
 
-              test_state_flow redis,"Interactor.CIO" ,[["displaying", "displayed"]] do
+              test_state_flow redis,"Interactor.CIO" ,[["displaying", "init_js"],"displayed"] do
                 aio = MINT::AIO.create(:name => "test", :states => [:organized])
                 cio = MINT::CIO.create(:name => "test", :states=>[:positioned])
                 aio.process_event :present
@@ -84,14 +84,14 @@ describe 'Mapping' do
           end
           it 'should support not end up in cycles for sync mappings' do
             connect true do |redis|
-              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio",:process => :continuous)
+              o1 = Observation.new(:element =>"Interactor.AIO", :states =>[:presenting],:result=>"aio",:process => :onchange)
               o2 = NegationObservation.new(:element =>"Interactor.CIO", :name =>"aio.name" ,:states =>[:displaying], :result => "cio",:process => :instant )
               a = EventAction.new(:event => :display, :target => "cio")
               m = MINT::SequentialMapping.new(:name=>"Sync CIO to display", :observations => [o1,o2],:actions =>[a])
               m.state_callback = Logging.method(:log)
               m.start
 
-              o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displaying],:result=>"cio",:process => :continuous)
+              o3 = Observation.new(:element =>"Interactor.CIO", :states =>[:displaying],:result=>"cio",:process => :onchange)
               o4 = NegationObservation.new(:element =>"Interactor.AIO", :name =>"cio.name" ,:states =>[:presenting], :result => "aio",:process => :instant)
               a1 = EventAction.new(:event => :present, :target => "aio")
               m1 = MINT::SequentialMapping.new(:name=>"Sync CIO display to AIO presenting", :observations => [o3,o4],:actions =>[a1])
@@ -132,7 +132,7 @@ describe 'Mapping' do
         it 'should fire event if both observations are true' do
           connect true do |redis|
             o1 = Observation.new(:element =>"Interactor.InteractorTest",:name => "test_1", :states =>[:organized], :process=>"onchange")
-            o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p")
+            o2 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest_2",:name => "test_2", :states =>[:initialized], :result => "p",:process=>"instant")
             a = EventAction.new(:event => :organize, :target => "p")
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1,o2],:actions =>[a])
             m.start
@@ -146,8 +146,9 @@ describe 'Mapping' do
         end
 
         it 'should handle a continuous observation' do
+          pending "rethink if step 3 really should happen"
           connect true do |redis|
-            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p",:process => :continuous)
+            o1 = Observation.new(:element =>"Interactor.InteractorTest.InteractorTest2",:name => "test", :states =>[:presenting], :result => "p",:process => :onchange)
             a = EventAction.new(:event => :step, :target => "p")
             m = MINT::ComplementaryMapping.new(:name=>"Interactor.InteractorTest Observation", :observations => [o1],:actions =>[a])
             m.start
@@ -236,10 +237,10 @@ EOS
 <mapping name="Interactor.InteractorTest Observation" xmlns="http://www.multi-access.de"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
-  <operator type="complementary">
+  <operator type="sequential">
     <observations>
       <observation interactor="Interactor.InteractorTest" name="test_1" states="organized" process="onchange"/>
-      <observation interactor="Interactor.InteractorTest.InteractorTest_2" name="test_2" states="initialized" result="p"/>
+      <observation interactor="Interactor.InteractorTest.InteractorTest_2" name="test_2" states="initialized" process="instant" result="p"/>
     </observations>
     <actions>
       <event type="organize" target="p"/>

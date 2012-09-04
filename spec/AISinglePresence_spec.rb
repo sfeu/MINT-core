@@ -58,7 +58,7 @@ describe 'AUI' do
       connect true do |redis|
         # Sync AIO to defocused
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
         m.start
 
 
@@ -88,7 +88,7 @@ describe 'AUI' do
       connect true do |redis|
         # Sync AIO to defocused
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
         m.start
 
 
@@ -119,7 +119,7 @@ describe 'AUI' do
       connect true do |redis|
         # Sync AIO to defocused
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
         m.start
 
 
@@ -163,7 +163,7 @@ describe 'AUI' do
       connect true do |redis|
         # Sync AIO to defocused
         parser = MINT::MappingParser.new
-        m = parser.build_from_scxml "../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+        m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
         m.start
 
         check_result2 = Proc.new {
@@ -201,19 +201,30 @@ describe 'AUI' do
       it 'should transform first child to presented if presented and rest to suspended' do
         connect true do |redis|
 
+          parser = MINT::MappingParser.new
+          m = parser.build_from_scxml File.dirname(__FILE__) +"/../lib/MINT-core/model/mim/aisinglepresence_present_to_child_present.xml"
+          m.start
 
+          check_result = Proc.new {
+            test_state_flow redis,"Interactor.AIO.AIOUT.AIContainer.AISinglePresence" ,
+                            ["defocused",["focused", "waiting"], "entered"] do
+              @a.process_event(:focus)
 
-          test_state_flow redis,"Interactor.AIO.AIOUT.AIContainer.AISinglePresence" ,
-                          ["initialized", "organized", ["presenting", "defocused"] ,["focused", "waiting"], "entered"] do
+              @a.process_event(:enter)
+            end
+            done
+
+          }
+
+          test_complex_state_flow_w_name redis,[["Interactor.AIO.AIOUT.AIContainer.AISinglePresence" ,"a",
+                                                 ["initialized", "organized", ["presenting", "wait_for_children"] ,"children_finished","defocused"] ]],check_result do  |count|
 
             @a = AISinglePresenceHelper.create_data
             AUIControl.organize(@a,nil,0)
 
             @a.process_event(:present)
 
-            @a.process_event(:focus)
 
-            @a.process_event(:enter)
 
           end
 

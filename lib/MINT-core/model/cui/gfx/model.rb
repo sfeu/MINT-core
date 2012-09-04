@@ -63,6 +63,5 @@
     end
   end
 
-  require "MINT-core/model/cui/gfx/screen"
 
   require "MINT-core/model/cui/gfx/caroufredsel"

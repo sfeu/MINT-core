@@ -94,7 +94,7 @@ describe "Complementary mapping" do
 
       end
     end
-    it "between Head angle and AIOUTContinuouss with transformation should work correctly" do
+    it "between Head angle and AIOUTContinuous with transformation should work correctly" do
       connect true do |redis|
 
         # capture the result an the very end: the message from the volume interactor to move the progress bar
@@ -125,20 +125,19 @@ describe "Complementary mapping" do
           return r
         end
 
-        o1 = Observation.new(:element =>"Interactor.Head",:name => "head", :states =>[:tilting_detection], :process=>"onchange")
+        o1 = Observation.new(:element =>"Interactor.IR.IRMode.Body.Head",:name => "head", :states =>[:tilting_detection], :process=>"onchange")
         o2 = Observation.new(:element =>"Interactor.AIO.AIOUT.AIOUTContinuous",:name=>"horizontal_level", :states =>[:presenting], :process=>"onchange")
-        a1 = BindAction.new(:elementIn => "Interactor.Head",:nameIn => "head", :attrIn =>"head_angle",:attrOut=>"data",
+        a1 = BindAction.new(:elementIn => "Interactor.IR.IRMode.Body.Head",:nameIn => "head", :attrIn =>"head_angle",:attrOut=>"data",
                             :transform => self.method(:head_angle_transformation),
                             :elementOut =>"Interactor.AIO.AIOUT.AIOUTContinuous", :nameOut=>"horizontal_level" )
         m = MINT::ComplementaryMapping.new(:name => "Mapping_spec", :observations => [o1,o2],:actions =>[a1])
         m.start
 
-
         check_result = Proc.new {
 
         }
 
-        test_state_flow_w_name redis,"Interactor.Head","head",["disconnected",["tilting_detection", "connected", "centered"],"tilting_left"],check_result do
+        test_state_flow_w_name redis,"Interactor.IR.IRMode.Body.Head","head",["disconnected",["tilting_detection", "face_detected", "connected", "centered"],"tilting_left"],check_result do
           Fiber.new{
             # setup a waiting volume and slider interactor
             volume = MINT::AIOUTContinuous.create(:name=>"horizontal_level")

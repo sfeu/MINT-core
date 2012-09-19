@@ -42,7 +42,7 @@ module MINT
           observation_hash[:element] = attributes['interactor']
           observation_hash[:name] = attributes['name']
           observation_hash[:id] = attributes['id']
-          attributes['states'].split("|").each do |s| observation_states << s.to_sym end
+          attributes['states'].split("|").each do |s| observation_states << s.to_sym end   if attributes['states']
           observation_hash[:states] = observation_states
           observation_hash[:process] = attributes['process'].to_s.to_sym if attributes['process']
           observation_hash[:result] = attributes['result'] if attributes['result']

@@ -105,6 +105,33 @@ describe 'AUI' do
       end
     end
 
+    it 'should transform all children to suspended if AUIControl.suspend_all is called' do
+          connect do |redis|
+            @b = MINT::AIContainer.create(:name=>"b", :children =>"a")
+            @b.states = [:defocused]
+
+            @a = Helper.create_structure
+            @a.parent = "b"
+
+            @a.children.each do |c|
+              c.states = [:defocused]
+              c.save
+            end
+            @a.states = [:focused]
+
+            #@b.process_event(:suspend).should ==[:suspended]
+            AUIControl.suspend_all
+
+            @a = MINT::AIContainer.first(:name=>"a")
+            @a.states.should == [:suspended]
+            @a.children.each do |c|
+              c.states.should == [:suspended]
+            end
+          end
+        end
+
+
+
 
     it 'AIO should handle parent' do
       connect do |redis|

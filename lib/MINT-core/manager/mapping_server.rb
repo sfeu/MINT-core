@@ -26,19 +26,29 @@ class MappingServer
 
       if (data[:result])
         d = data[:result]
-        if not @mapping_store[mapping] and d.first and d.first[1]['name']
-          @mapping_store[mapping] =  {:name => d.first[1]['name']}
+        if not d.nil? and not d.empty? and not @mapping_store[mapping]
+          #a= d.first
+          #b = a[1]['name']
+          if d.first[1].is_a? Hash
+            @mapping_store[mapping] =  {:name => d.first[1]['name']}
+
+          else
+
+            @mapping_store[mapping] =  {:name => d.first[1].map{|x| x['name']}}
+          end
         end
       end
       json_data = (@mapping_store[mapping]!=nil)?data.merge(@mapping_store[mapping]).to_json :  data.to_json
-      if data[:mapping_state]
+      if data[:mapping_state] and data[:mapping_state] == :succeeded
         send_data("INFO%"+mapping+"%"+json_data+"\r\n")
         p "sent: INFO%"+mapping+"%"+json_data
+        @mapping_store[mapping]=nil
       elsif  @registered_as_detail[mapping]
         send_data("DETAIL%"+mapping+"%"+json_data+"\r\n")
         p "sent: DETAIL%"+mapping+"%"+json_data
+        @mapping_store[mapping]=nil
       end
-      @mapping_store[mapping]=nil
+
     end
 
     def receive_line(data)
@@ -53,7 +63,7 @@ class MappingServer
             send_data("REGISTERED%#{d[1]}%#{d[2]}\r\n")
           when "LIST"
             mappings = @manager.get_mappings
-            mappings.each {|m| send_data("MAPPING#{m}\r\n")}
+            mappings.each {|m| send_data("MAPPING%#{m}\r\n")}
           else
             p "ERROR\r\nReceived Unknown data:#{data}\r\n "
         end

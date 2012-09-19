@@ -10,6 +10,14 @@ module AUIControl
     end
   end
 
+  def AUIControl.suspend_all
+    aics = AIContainer.all(:parent =>nil)
+    aics.each do |aic|
+      p "Suspend AIC: #{aic.name}"
+      aic.process_event :suspend
+    end
+  end
+
   def AUIControl.suspend_others(ais)
     ais = AISinglePresence.first(:name=>ais['name'])
     ais.children.each do |aio|

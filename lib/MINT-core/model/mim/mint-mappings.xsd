@@ -38,7 +38,7 @@
       <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
       <xs:attribute name="interactor" type="xs:string" use="required"/>
       <xs:attribute name="name" type="xs:string" />
-      <xs:attribute name="states" type="xs:string" use="required"/>
+      <xs:attribute name="states" type="xs:string"/>
       <xs:attribute name="result" type="xs:string"/>
       <xs:attribute name="type" type="observationType"/>
       <xs:attribute name="process" type="processType"/>

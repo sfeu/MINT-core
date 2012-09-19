@@ -5,7 +5,6 @@
 
   <include href="browserscreen_reload_to_cio_refresh.xml" start="true" />
   <include href="mouse_stop_to_cio_highlight.xml" start="true" />
-  <include href="mouse_release_to_aicommand_deactivate.xml" start="true" />
   <include href="mouse_press_to_aicommand_activate.xml" start="true" />
   <include href="aicommand_activate_to_button_press.xml" start="true" />
   <include href="aicommand_deactivate_to_button_release.xml" start="true" />
@@ -15,6 +14,8 @@
   <include href="aio_suspend_to_cio_hide.xml" start="true" />
   <include href="button_press_to_aicommand_activate.xml" start="true" />
   <include href="button_release_to_aicommand_deactivate.xml" start="true" />
+  <include href="left_button_aisinglepresence_enter.xml" start="true"/>
+
   <include href="cio_display_to_aio_defocus.xml" start="true" />
   <include href="cio_display_to_aio_present.xml" start="true" />
   <include href="cio_hide_to_aio_suspend.xml" start="true" />
@@ -30,6 +31,12 @@
   <include href="radiobutton_selected_to_aisinglechoiceelement_choose.xml" start="true" />
   <include href="mouse_press_to_aisinglechoiceelement_choose.xml" start="true" />
   <!--include href="mouse_press_to_aisinglechoiceelement_unchoose.xml" start="true" /-->
+  <include href="head_tilting_right_to_aisinglepresence_next.xml" start="true"/>
+  <include href="head_tilting_left_to_aisinglepresence_prev.xml" start="true"/>
+  <include href="head_looking_right_to_aisinglepresence_next.xml" start="true"/>
+  <include href="head_looking_left_to_aisinglepresence_prev.xml" start="true"/>
+  <include href="head_nodding_to_aisinglepresence_next.xml" start="true"/>
+
 </mim>
 
         

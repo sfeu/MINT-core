@@ -81,7 +81,7 @@ class Observation
     end
 
     # if no states variable is set, there is no need to filter states
-    if states and results.length > 0
+    if states and states.length >0  and results.length > 0
       r = results.find_all { |e|
         ((e.states.map(&:to_s) & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
       }

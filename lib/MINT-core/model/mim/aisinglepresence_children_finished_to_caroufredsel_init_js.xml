@@ -3,8 +3,8 @@
   <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.AIO.AIOUT.AIContainer.AISinglePresence" states="children_finished" result="ais" process="onchange"/>
-      <observation id="3" interactor="Interactor.CIO.CarouFredSel" name="ais.name" states="wait_for_children" result="cio" process="instant"/>
-      <observation id="4" interactor="Interactor.CIO.CarouFredSelImage" name="ais.active_child.name" states="displaying" result="page" process="continuous"/>
+      <observation id="3" interactor="Interactor.CIO.CIC.CarouFredSel" name="ais.name" states="wait_for_children" result="cio" process="instant"/>
+      <observation id="4" interactor="Interactor.CIO.Image.CarouFredSelImage" name="ais.active_child.name" states="displaying" result="page" process="continuous"/>
     </observations>
     <actions>
       <event id="5" type="init_js" target="cio"/>

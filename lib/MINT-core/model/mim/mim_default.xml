@@ -37,6 +37,8 @@
   <include href="head_looking_left_to_aisinglepresence_prev.xml" start="true"/>
   <include href="head_nodding_to_aisinglepresence_next.xml" start="true"/>
 
+  <!-- browser refresh handling -->
+  <include href="caroufredsel_refreshing_to_caroufredsel_init_js.xml" start="true"/>
 </mim>
 
         

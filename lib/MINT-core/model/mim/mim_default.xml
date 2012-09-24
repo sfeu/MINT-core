@@ -3,7 +3,8 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
 
-  <include href="browserscreen_reload_to_cio_refresh.xml" start="true" />
+  <include href="browserscreen_reload_to_cio_hidden_refresh.xml" start="true" />
+  <include href="browserscreen_reload_to_cio_displaying_refresh.xml" start="true" />
   <include href="mouse_stop_to_cio_highlight.xml" start="true" />
   <include href="mouse_press_to_aicommand_activate.xml" start="true" />
   <include href="mouse_release_to_aicommand_deactivate.xml" start="true" />

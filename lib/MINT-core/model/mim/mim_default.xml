@@ -6,6 +6,7 @@
   <include href="browserscreen_reload_to_cio_refresh.xml" start="true" />
   <include href="mouse_stop_to_cio_highlight.xml" start="true" />
   <include href="mouse_press_to_aicommand_activate.xml" start="true" />
+  <include href="mouse_release_to_aicommand_deactivate.xml" start="true" />
   <include href="aicommand_activate_to_button_press.xml" start="true" />
   <include href="aicommand_deactivate_to_button_release.xml" start="true" />
   <include href="aio_defocus_to_cio_unhighlight.xml" start="true" />

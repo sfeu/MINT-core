@@ -80,6 +80,15 @@ module MINT
       attribute_set(:states, states_copy)
     end
 
+    def sync_states()
+      values = RedisConnector.sync_redis.hmget "mint_interactors:#{getModel}#{name}","states","new_states","abstract_states"
+
+      attribute_set(:abstract_states, values[2])
+      attribute_set(:new_states, values[1])
+      attribute_set(:states, values[0])
+      recover_statemachine
+    end
+
     def self.notify(action,query,callback,time = nil)
       RedisConnector.sub.subscribe("#{self.create_channel_name}")
 

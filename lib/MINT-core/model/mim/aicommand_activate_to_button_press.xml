@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
   <operator type="sequential" id="1">
     <observations>
-      <observation id="2" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" states="activated" result="aio" process="onchange"/>
+      <observation id="2" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AICommand" states="activated" result="aio" process="onchange"/>
       <observation id="3" type="negation" interactor="Interactor.CIO.Button" name="aio.name" states="pressed" result="cio" process="instant"/>
     </observations>
     <actions>

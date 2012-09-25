@@ -5,7 +5,7 @@
   <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.IR.IRMode.Pointer.Mouse" states="left_released" process="onchange"/>
-      <observation id="4" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" states="activated" result="c" process="instant"/>
+      <observation id="4" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AICommand" states="activated" result="c" process="instant"/>
     </observations>
     <actions>
       <event id="5" type="deactivate" target="c"/>

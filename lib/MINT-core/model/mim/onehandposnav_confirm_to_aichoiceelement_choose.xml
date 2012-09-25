@@ -5,7 +5,7 @@
   <operator id="1" type="sequential">
     <observations>
       <observation id="2" interactor="Interactor.IR.IRMode.Body.Hand.Pose.OneHandPoseNavigation" states="confirm"  process="onchange" />
-      <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIChoiceElement" states="focused" result="aic" process="instant" />
+      <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AIChoiceElement" states="focused" result="aic" process="instant" />
     </observations>
     <actions>
       <event id="4" type="choose" target="aic"/>

@@ -5,8 +5,8 @@
   <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.IR.IRMode.Pointer.Mouse" states="left_pressed" process="onchange"/>
-      <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" states="focused" result="c" process="instant"/>
-      <observation id="4" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" name="c.name" states="deactivated" process="instant"/>
+      <observation id="3" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AICommand" states="focused" result="c" process="instant"/>
+      <observation id="4" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AICommand" name="c.name" states="deactivated" process="instant"/>
     </observations>
     <actions>
       <event id="5" type="activate" target="c"/>

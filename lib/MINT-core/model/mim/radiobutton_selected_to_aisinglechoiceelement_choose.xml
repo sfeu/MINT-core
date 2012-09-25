@@ -3,7 +3,7 @@
   <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.CIO.RadioButton" states="selected" result="cio" process="onchange"/>
-      <observation id="3" type="negation" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIChoiceElement.AISingleChoiceElement" name="cio.name" states="chosen" result="aio" process="instant"/>
+      <observation id="3" type="negation" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AIChoiceElement.AISingleChoiceElement" name="cio.name" states="chosen" result="aio" process="instant"/>
     </observations>
     <actions>
       <event id="4" type="choose" target="aio"/>

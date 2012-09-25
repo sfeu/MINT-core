@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
   <operator type="sequential" id="1">
     <observations>
-      <observation id="2" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIChoiceElement.AISingleChoiceElement" states="chosen" result="aio" process="onchange"/>
+      <observation id="2" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AIChoiceElement.AISingleChoiceElement" states="chosen" result="aio" process="onchange"/>
       <observation id="3" type="negation" interactor="Interactor.CIO.RadioButton" name="aio.name" states="selected" result="cio" process="instant"/>
     </observations>
     <actions>

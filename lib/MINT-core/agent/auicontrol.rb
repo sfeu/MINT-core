@@ -33,7 +33,7 @@ module AUIControl
       # aio.entry = aio.children[0]
       prev = aio
       aio.children.each do |child|
-        if (child.kind_of? MINT::AIReference) # skip AIReferences for prev/next navigation
+        if (child.instance_of? MINT::AIReference) # skip AIReferences for prev/next navigation
           child.process_event("organize")
           next
         end

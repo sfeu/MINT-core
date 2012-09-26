@@ -39,6 +39,11 @@
   <include href="head_looking_left_to_aisinglepresence_prev.xml" start="true"/>
   <include href="head_nodding_to_aisinglepresence_next.xml" start="true"/>
 
+  <!-- Gesture-based Navigation -->
+  <include href="onehandposnav_previous_to_aio_prev.xml" start="true"/>
+  <include href="onehandposnav_next_to_aio_next.xml" start="true"/>
+  <include href="onehandposnav_confirm_to_aichoiceelement_choose.xml" start="true"/>
+
   <!-- browser refresh handling -->
   <include href="caroufredsel_refreshing_to_caroufredsel_init_js.xml" start="true"/>
 </mim>

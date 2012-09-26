@@ -10,7 +10,6 @@ module MINT
     def initialize(attributes = nil)
       super(attributes)
 
-      start
     end
   end
 end

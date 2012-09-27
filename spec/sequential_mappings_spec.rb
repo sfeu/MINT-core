@@ -39,22 +39,26 @@ describe 'In a sequential mapping' do
       end
 
       m.register_callback("BrowserScreen reload to CIO refresh", method(:my_callback))
-      m.load("./examples/mim_streaming_example.xml")
+      m.load("#{File.dirname(__FILE__)}/examples/mim_streaming_example.xml")
 
 
       check_result = Proc.new {
         MINT::CIO.first(:name=>"c1").states.should ==[:displayed]
         MINT::CIO.first(:name=>"c2").states.should ==[:displayed]
+        MINT::CIO.first(:name=>"c3").states.should ==[:hidden]
 
         done
       }
 
-      test_complex_state_flow_w_name redis,[["Interactor.CIO","c1" ,["init_js","displayed"]],["Interactor.CIO","c2" ,["init_js","displayed"]]],check_result do  |count|
-        b = MINT::BrowserScreen.create(:name=>'screen')
-        MINT::CIO.create(:name =>"c1", :states=>[:displayed])
-        MINT::CIO.create(:name =>"c2", :states=>[:displayed])
-        b.process_event :reload
+      test_complex_state_flow_w_name redis,[["Interactor.CIO","c1" ,["refreshing",["displaying", "init_js"],"displayed"]],["Interactor.CIO","c2" ,["refreshing",["displaying", "init_js"],"displayed"]],["Interactor.CIO","c3" ,["hidden"]]],check_result do  |count|
+        Fiber.new{
+          b = MINT::BrowserScreen.create(:name=>'screen')
+          MINT::CIO.create(:name =>"c1", :states=>[:displayed])
+          MINT::CIO.create(:name =>"c2", :states=>[:displayed])
+          MINT::CIO.create(:name =>"c3", :states=>[:hidden])
 
+          b.process_event :reload
+        }.resume
       end
     end
   end

@@ -54,7 +54,7 @@ def create_scenario
   MINT::AIChoiceElement.create(:name => "Schweinebraten", :label =>"Schweinebraten",:parent =>"FoundRecipes")
   MINT::AIChoiceElement.create(:name => "Lammkotletts",:label =>"Lammkotletts",:parent =>"FoundRecipes")
   MINT::AIChoiceElement.create(:name => "Spagetti",:label =>"Spagetti",:parent =>"FoundRecipes")
-  MINT::AICommand.create(:name=>"Start",:label=>"Kochassistent starten",:parent =>"RecipeSelection",:description=>"Hier koennen Sie den Kochassistenten starten.")
+  MINT::AICommand.create(:name=>"Start",:label=>"Kochassistent starten",:parent =>"RecipeSelection")
 
 end
 

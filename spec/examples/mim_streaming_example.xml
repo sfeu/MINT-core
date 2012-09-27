@@ -5,6 +5,6 @@
 
   <include href="reset_click.xml"/>
   <include href="mouse_highlight.xml" start="true"/>
-  <include href="browserscreen_reload_to_cio_refresh.xml" start="true"/>
-
+  <include href="browserscreen_reload_to_cio_refresh_hidden.xml" start="true"/>
+  <include href="browserscreen_reload_to_cio_refresh_displaying.xml" start="true"/>
 </mim>

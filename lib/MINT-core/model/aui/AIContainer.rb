@@ -35,8 +35,9 @@ module MINT
     end
 
     def suspend_children
-      if (self.children)
-        self.children.each do |c|
+      cs = self.children
+      if (cs)
+        cs.each do |c|
           c.process_event("suspend")
         end
 

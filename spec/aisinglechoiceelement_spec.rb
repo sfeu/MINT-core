@@ -48,7 +48,7 @@ describe 'SingleChoiceElement' do
         end
         def sync_cio_to_highlighted
         end
-        def sync_cio_to_listed
+        def sync_cio_to_unchosen
         end
         def exists_next
           true
@@ -64,16 +64,16 @@ describe 'SingleChoiceElement' do
       @a.process_event(:organize,callback).should == [:organized]
       callback.called.should == false
 
-      @a.process_event(:present,callback).should == [:defocused, :listed]
-      @a.states.should == [:defocused, :listed]
-      @a.new_states.should == [:defocused, :listed, :p, :presenting, :choice, :c]
+      @a.process_event(:present,callback).should == [:defocused, :unchosen]
+      @a.states.should == [:defocused, :unchosen]
+      @a.new_states.should == [:defocused, :unchosen, :p, :presenting, :choice, :c]
       callback.called.should == false
 
-      @a.process_event(:focus,callback).should == [:focused, :listed]
+      @a.process_event(:focus,callback).should == [:focused, :unchosen]
       @a.new_states.should == [:focused]
       callback.called.should == false
 
-      @a.process_event(:next,callback).should == [:defocused, :listed]
+      @a.process_event(:next,callback).should == [:defocused, :unchosen]
       @a.new_states.should == [:defocused]
       callback.called.should == true
     end
@@ -87,8 +87,8 @@ describe 'SingleChoiceElement' do
       b =  MINT::AIO.first(:name=>"test")
       b.states.should == [:organized]
       b.new_states.should == [:organized]
-      b.process_event(:present).should == [:defocused, :listed]
-      b.new_states.should == [:defocused, :listed, :p, :presenting, :choice, :c]
+      b.process_event(:present).should == [:defocused, :unchosen]
+      b.new_states.should == [:defocused, :unchosen, :p, :presenting, :choice, :c]
     end
   end
 
@@ -96,12 +96,12 @@ describe 'SingleChoiceElement' do
     connect do |redis|
       @a = MINT::AISingleChoiceElement.create(:name => "test")
       @a.process_event(:organize).should == [:organized]
-      @a.process_event(:present).should == [:defocused, :listed]
-      @a.process_event(:focus).should == [:focused, :listed]
+      @a.process_event(:present).should == [:defocused, :unchosen]
+      @a.process_event(:focus).should == [:focused, :unchosen]
       @a.save!
       b =  MINT::AIO.first(:name=>"test")
-      b.states.should ==[:focused, :listed]
-      b.process_event(:defocus).should == [:defocused, :listed]
+      b.states.should ==[:focused, :unchosen]
+      b.process_event(:defocus).should == [:defocused, :unchosen]
       #b.process_event(:choose).should == [:presented, :choosing]
     end
   end
@@ -110,9 +110,9 @@ describe 'SingleChoiceElement' do
     connect do |redis|
       @a = MINT::AISingleChoiceElement.create(:name => "test")
       @a.process_event(:organize).should == [:organized]
-      @a.process_event(:present).should == [:defocused, :listed]
+      @a.process_event(:present).should == [:defocused, :unchosen]
       @a.save!
-      b =  MINT::AIO.first(:states=>/listed/)
+      b =  MINT::AIO.first(:states=>/unchosen/)
       b.name.should == "test"
       c =  MINT::AIO.first(:states=>/defocused/)
       c.name.should == "test"
@@ -123,7 +123,7 @@ describe 'SingleChoiceElement' do
     connect do |redis|
       @a = MINT::AISingleChoiceElement.create(:name => "test")
       @a.process_event(:organize).should == [:organized]
-      @a.process_event(:present).should == [:defocused, :listed]
+      @a.process_event(:present).should == [:defocused, :unchosen]
       @a.save!
       puts @a.abstract_states
       b =  MINT::AIO.first(:abstract_states=>/presenting/)
@@ -142,7 +142,7 @@ describe 'SingleChoiceElement' do
     connect do |redis|
       @a = MINT::AISingleChoiceElement.create(:name => "test")
       @a.process_event(:organize).should == [:organized]
-      @a.process_event(:present).should == [:defocused, :listed]
+      @a.process_event(:present).should == [:defocused, :unchosen]
       @a.abstract_states.should == "AISingleChoiceElement|root|p|presenting|choice|c"
     end
   end
@@ -151,7 +151,7 @@ describe 'SingleChoiceElement' do
     connect do |redis|
       @a = MINT::AISingleChoiceElement.create(:name => "test")
       @a.process_event(:organize).should == [:organized]
-      @a.process_event(:present).should == [:defocused, :listed]
+      @a.process_event(:present).should == [:defocused, :unchosen]
       @a.process_event(:suspend).should == [:suspended]
       @a.abstract_states.should == "AISingleChoiceElement|root"
     end

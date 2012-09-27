@@ -4,6 +4,7 @@
     <observations>
       <observation id="2" interactor="Interactor.CIO" states="highlighted" result="cio" process="onchange"/>
       <observation id="3" type="negation" interactor="Interactor.AIO" name="cio.name" states="focused" result="cio" process="instant"/>
+      <observation id="5" interactor="Interactor.CIO" states="highlighted" name="cio.name" process="instant"/>
     </observations>
     <actions>
       <event id="4" type="focus" target="cio"/>

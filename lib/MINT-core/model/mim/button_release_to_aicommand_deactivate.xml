@@ -3,7 +3,7 @@
   <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.CIO.Button" states="released" result="cio" process="onchange"/>
-      <observation id="3" type="negation" interactor="Interactor.AIO.AIIN.AIINDiscrete.AICommand" name="cio.name" states="deactivated" result="aio" process="instant"/>
+      <observation id="3" type="negation" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AICommand" name="cio.name" states="deactivated" result="aio" process="instant"/>
     </observations>
     <actions>
       <event id="4" type="deactivate" target="aio"/>

@@ -10,6 +10,14 @@ module AUIControl
     end
   end
 
+  def AUIControl.suspend_all
+    aics = AIContainer.all(:parent =>nil)
+    aics.each do |aic|
+      p "Suspend AIC: #{aic.name}"
+      aic.process_event :suspend
+    end
+  end
+
   def AUIControl.suspend_others(ais)
     ais = AISinglePresence.first(:name=>ais['name'])
     ais.children.each do |aio|
@@ -25,6 +33,10 @@ module AUIControl
       # aio.entry = aio.children[0]
       prev = aio
       aio.children.each do |child|
+        if (child.instance_of? MINT::AIReference) # skip AIReferences for prev/next navigation
+          child.process_event("organize")
+          next
+        end
         prev.next = child.name
         prev.process_event("organize") #if not prev.kind_of? MINT::AIContainer
 

@@ -1,7 +1,7 @@
 
 module MINT
 
-  class OneHandPoseNavigation < HandPose
+  class OneHandPoseNavigation < Pose
 
     def getSCXML
       "#{File.dirname(__FILE__)}/onehandposenavigation.scxml"
@@ -10,7 +10,6 @@ module MINT
     def initialize(attributes = nil)
       super(attributes)
 
-      start
     end
   end
 end

@@ -1,5 +1,5 @@
 module MINT
-  class AICommand < AIINDiscrete
+  class AICommand < AIReference
     def getSCXML
       "#{File.dirname(__FILE__)}/aicommand.scxml"
     end

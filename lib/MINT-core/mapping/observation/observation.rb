@@ -73,14 +73,21 @@ class Observation
     results = nil
     if (name)  # if a name is specified, query directly otherwise select by state and return the first one found
       results = []
-      results << model.first(:name=>name)
+      r =model.first(:name=>name)
+      return false if r.nil? # handles the case that the named interactor does not exist!
+      results << r
     else
       results = model.all
     end
 
-    r = results.find_all { |e|
-      ((e.states.map(&:to_s) & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
-    }
+    # if no states variable is set, there is no need to filter states
+    if states and states.length >0  and results.length > 0
+      r = results.find_all { |e|
+        ((e.states.map(&:to_s) & states).length>0) or ((e.abstract_states.split('|') & states).length>0)
+      }
+    else
+      r = results
+    end
 
     if r.length > 0
       if r.length ==1

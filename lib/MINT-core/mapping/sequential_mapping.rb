@@ -54,6 +54,7 @@ module MINT
     def restart
       @active_observation = 0
       super
+      self
     end
   end
 end

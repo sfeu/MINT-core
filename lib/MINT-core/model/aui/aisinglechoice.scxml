@@ -12,7 +12,6 @@
  </state>
  <parallel id="p"><!--   node-size-and-position x=20.0 y=280.0 w=410.0 h=380.0  -->
   <onentry>
-   <invoke src="present_children" type="x-mint"></invoke>
    <invoke src="inform_parent_presenting" type="x-mint"></invoke>
   </onentry>
   <onexit>

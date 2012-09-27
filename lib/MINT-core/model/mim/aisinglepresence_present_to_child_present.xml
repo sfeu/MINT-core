@@ -3,7 +3,7 @@
   <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.AIO.AIOUT.AIContainer.AISinglePresence" states="presenting" result="ais" process="onchange"/>
-      <observation id="3" type="negation" interactor="Interactor.AIO" name="ais.active_child.name" states="presenting" result="active_child" process="instant"/>
+      <observation id="3" type="negation" interactor="Interactor.AIO" name="ais.active_child.name"  result="active_child" process="instant"/>
     </observations>
     <actions>
       <event id="4" type="present" target="active_child"/>

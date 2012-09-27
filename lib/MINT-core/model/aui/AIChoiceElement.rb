@@ -1,5 +1,5 @@
 module MINT
-   class AIChoiceElement < AIINDiscrete
+   class AIChoiceElement < AIReference
 
      def unchoose_others
        aios = []

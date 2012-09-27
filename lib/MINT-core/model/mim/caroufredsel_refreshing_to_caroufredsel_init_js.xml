@@ -1,0 +1,14 @@
+<mapping name="CarouFredSel refreshing to initjs CarouFredSel" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="3" interactor="Interactor.CIO.CIC.CarouFredSel" states="refreshing" result="cio" process="onchange"/>
+      <observation id="2" interactor="Interactor.AIO.AIOUT.AIContainer.AISinglePresence" name="cio.name" result="ais" process="instant"/>
+      <observation id="4" interactor="Interactor.CIO.Image.CarouFredSelImage" name="ais.active_child.name" states="displaying" result="page" process="continuous"/>
+    </observations>
+    <actions>
+      <event id="5" type="init_js" target="cio"/>
+    </actions>
+  </operator>
+</mapping>
+

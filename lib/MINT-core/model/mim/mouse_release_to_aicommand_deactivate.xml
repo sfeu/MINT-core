@@ -1,0 +1,16 @@
+<mapping name="Sync Mouse release to AICommand deactivate" xmlns="http://www.multi-access.de"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.IR.IRMode.Pointer.Mouse" states="left_released" process="onchange"/>
+      <observation id="4" interactor="Interactor.AIO.AIIN.AIINDiscrete.AIReference.AICommand" states="activated" result="c" process="instant"/>
+    </observations>
+    <actions>
+      <event id="5" type="deactivate" target="c"/>
+    </actions>
+  </operator>
+
+</mapping>
+

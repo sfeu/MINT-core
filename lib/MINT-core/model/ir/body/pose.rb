@@ -89,6 +89,9 @@ module MINT
         pose.buffer = data
       end
 
+      def unbind
+        pose.process_event :disconnect
+      end
 
     end
 

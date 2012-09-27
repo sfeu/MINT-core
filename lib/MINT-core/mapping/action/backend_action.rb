@@ -7,6 +7,7 @@ class BackendAction < Action
 
 
   def parameter
+    return [] if @action[:parameter].nil?
     @action[:parameter].split(',')
   end
 

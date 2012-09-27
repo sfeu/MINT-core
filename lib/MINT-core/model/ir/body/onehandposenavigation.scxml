@@ -1,15 +1,9 @@
 <scxml initial="disconnected" name="OneHandNav_Final" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=670.0 h=760.0  -->
- <state id="connected" initial="NoHands"><!--   node-size-and-position x=20.0 y=110.0 w=630.0 h=640.0  -->
+ <state id="connected" initial="NoHands"><!--   node-size-and-position x=20.0 y=110.0 w=640.0 h=640.0  -->
   <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=360.0 y=60.0 pointx=0.0 pointy=12.0 offsetx=-24.0 offsety=-1.0  --></transition>
-  <state id="OneHand"><!--   node-size-and-position x=20.0 y=120.0 w=610.0 h=500.0  -->
+  <state id="OneHand"><!--   node-size-and-position x=20.0 y=120.0 w=620.0 h=500.0  -->
    <transition event="no_hands" target="NoHands"><!--   edge-path [NoHands]  x=270.0 y=100.0 pointx=0.0 pointy=-30.0 offsetx=20.0 offsety=29.0  --></transition>
-   <state id="Navigation" initial="stopped"><!--   node-size-and-position x=20.0 y=40.0 w=590.0 h=440.0  -->
-    <onentry>
-     <script>start_ticker(800)</script>
-    </onentry>
-    <onexit>
-     <script>stop_ticker</script>
-    </onexit>
+   <state id="Navigation" initial="stopped"><!--   node-size-and-position x=20.0 y=40.0 w=600.0 h=440.0  -->
     <state id="Command"><!--   node-size-and-position x=140.0 y=330.0 w=300.0 h=110.0  -->
      <transition event="next_pose" target="next"><!--   edge-path [next]  x=110.0 y=290.0 pointx=0.0 pointy=-49.0 offsetx=-7.0 offsety=37.0  --></transition>
      <transition event="previous_pose" target="previous"><!--   edge-path [previous]  x=410.0 y=300.0 pointx=-1.0 pointy=-14.0 offsetx=77.0 offsety=-52.0  --></transition>
@@ -20,26 +14,32 @@
       <transition event="confirm_pose" target="confirmed"><!--   edge-path [confirmed]  x=160.0 y=40.0 pointx=0.0 pointy=-10.0 offsetx=5.0 offsety=0.0  --></transition>
      </state>
     </state>
-    <state id="next"><!--   node-size-and-position x=120.0 y=60.0 w=80.0 h=50.0  -->
-     <transition event="previous_pose" target="previous"><!--   edge-path [previous]  x=270.0 y=70.0 pointx=0.0 pointy=15.0 offsetx=-5.0 offsety=0.0  --></transition>
-     <transition event="select_pose" target="stopped"></transition>
-     <transition event="tick" target="next_tick"><!--   edge-path [next_tick]  x=100.0 y=70.0 pointx=0.0 pointy=-25.0 offsetx=-5.0 offsety=0.0  --></transition>
-    </state>
-    <state id="previous"><!--   node-size-and-position x=330.0 y=60.0 w=100.0 h=50.0  -->
-     <transition event="next_pose" target="next"><!--   edge-path [next]  x=269.0 y=87.0 pointx=0.0 pointy=13.0 offsetx=5.0 offsety=0.0  --></transition>
-     <transition event="tick" target="prev_tick"><!--   edge-path [prev_tick]  x=460.0 y=110.0  --></transition>
-     <transition event="select_pose" target="stopped"></transition>
-    </state>
     <state id="stopped"><!--   node-size-and-position x=230.0 y=200.0 w=100.0 h=40.0  -->
      <transition event="next_pose" target="next"><!--   edge-path [next]  x=150.0 y=220.0 pointx=0.0 pointy=-30.0 offsetx=0.0 offsety=-15.0  --></transition>
      <transition event="previous_pose" target="previous"><!--   edge-path [previous]  x=380.0 y=220.0  --></transition>
      <transition event="confirm_pose" target="confirmed"></transition>
     </state>
-    <state id="prev_tick"><!--   node-size-and-position x=490.0 y=70.0 w=100.0 h=50.0  -->
-     <transition target="previous"></transition>
+    <state id="next"><!--   node-size-and-position x=100.0 y=130.0 w=80.0 h=50.0  -->
+     <onentry>
+      <script>start_ticker(800)</script>
+     </onentry>
+     <onexit>
+      <script>stop_ticker</script>
+     </onexit>
+     <transition event="previous_pose" target="previous"><!--   edge-path [previous]  x=250.0 y=140.0 pointx=0.0 pointy=15.0 offsetx=-5.0 offsety=0.0  --></transition>
+     <transition event="select_pose" target="stopped"></transition>
+     <transition event="tick" target="next"><!--   edge-path [next]  pointx=0.0 pointy=-25.0 offsetx=-5.0 offsety=0.0  --></transition>
     </state>
-    <state id="next_tick"><!--   node-size-and-position x=0.0 y=60.0 w=70.0 h=50.0  -->
-     <transition target="next"></transition>
+    <state id="previous"><!--   node-size-and-position x=310.0 y=130.0 w=100.0 h=50.0  -->
+     <onentry>
+      <script>start_ticker(800)</script>
+     </onentry>
+     <onexit>
+      <script>stop_ticker</script>
+     </onexit>
+     <transition event="next_pose" target="next"><!--   edge-path [next]  x=249.0 y=157.0 pointx=0.0 pointy=13.0 offsetx=5.0 offsety=0.0  --></transition>
+     <transition event="tick" target="previous"></transition>
+     <transition event="select_pose" target="stopped"></transition>
     </state>
    </state>
   </state>

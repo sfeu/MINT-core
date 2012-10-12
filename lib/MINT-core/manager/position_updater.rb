@@ -19,8 +19,8 @@ class PositionUpdater
       redis.pubsub.psubscribe("in_channel:Interactor.CIO.coordinates.*") { |key, message|
         found=JSON.parse message
         cio = CIO.get "cui-gfx",found['name']
-        cio.x =found['x']
-        cio.y = found['y']
+        #cio.x =found['x']
+        #cio.y = found['y']
         cio.width=found['width']
         cio.height = found['height']
         cio.save

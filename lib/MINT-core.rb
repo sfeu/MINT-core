@@ -48,6 +48,7 @@ require "MINT-core/model/ir/mouse"
 #require "MINT-core/model/body/handgesture"
 require "MINT-core/model/ir/body/body"
 require "MINT-core/model/ir/body/hand"
+require "MINT-core/model/ir/body/fingertip"
 
 require "MINT-core/model/ir/body/pose"
 require "MINT-core/model/ir/body/OneHandPoseNavigation"

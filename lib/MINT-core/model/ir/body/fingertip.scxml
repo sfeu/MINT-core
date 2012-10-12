@@ -1,0 +1,43 @@
+<scxml initial="disconnected" name="Fingertip" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=870.0 h=660.0  -->
+ <state id="disconnected"><!--   node-size-and-position x=280.0 y=60.0 w=100.0 h=50.0  -->
+  <onentry>
+   <log expr="consume(name)"></log>
+  </onentry>
+  <transition event="connect" target="connected"></transition>
+ </state>
+ <state id="connected"><!--   node-size-and-position x=70.0 y=190.0 w=760.0 h=410.0  -->
+  <onentry>
+   <script>
+
+@d = consume(&quot;data&quot;)
+   </script>
+  </onentry>
+  <transition event="disconnect" target="disconnected"><!--   edge-path [disconnected]  x=400.0 y=160.0  --></transition>
+  <parallel id="finger"><!--   node-size-and-position x=40.0 y=50.0 w=610.0 h=290.0  -->
+   <state id="touch_handling" initial="waiting"><!--   node-size-and-position x=20.0 y=40.0 w=290.0 h=170.0  -->
+    <state id="waiting"><!--   node-size-and-position x=30.0 y=40.0 w=100.0 h=40.0  -->
+     <transition event="press" target="touching"></transition>
+    </state>
+    <state id="touching"><!--   node-size-and-position x=30.0 y=120.0 w=100.0 h=30.0  -->
+     <transition event="release" target="touched"></transition>
+    </state>
+    <state id="touched"><!--   node-size-and-position x=170.0 y=60.0 w=90.0 h=30.0  -->
+     <onentry>
+      <script>
+ start_one_time_tick(0.3,:tick)
+   </script>
+     </onentry>
+     <transition event="tick" target="waiting"></transition>
+    </state>
+   </state>
+   <state id="movement" initial="stopped"><!--   node-size-and-position x=340.0 y=40.0 w=150.0 h=190.0  -->
+    <state id="stopped"><!--   node-size-and-position x=20.0 y=40.0 w=100.0 h=40.0  -->
+     <transition event="move" target="moving"><!--   edge-path [moving]  x=20.0 y=100.0 pointx=0.0 pointy=-14.0 offsetx=-8.0 offsety=6.0  --></transition>
+    </state>
+    <state id="moving"><!--   node-size-and-position x=20.0 y=120.0 w=100.0 h=40.0  -->
+     <transition event="stop" target="stopped"></transition>
+    </state>
+   </state>
+  </parallel>
+ </state>
+</scxml>

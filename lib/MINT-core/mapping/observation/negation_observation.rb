@@ -4,6 +4,7 @@ class NegationObservation < Observation
     # check if observation is already true at startup
     model = MINT::Interactor.class_from_channel_name(element)
     e = model.first(:name=>name)
+    p "Error interactor #{name} of class #{model} is not available!" if e.nil?
     e_states= e.states.map &:to_s
     if e
       if ((e_states & states).length == 0) and ((e.abstract_states.split('|') & states).length == 0)

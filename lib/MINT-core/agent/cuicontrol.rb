@@ -23,7 +23,9 @@ module CUIControl
  #      puts "found #{found.inspect}"
 
        if (highlighted_cio)
-         highlighted_cio.process_event("unhighlight") # old focus
+         highlighted_cio.process_event("unhighlight")
+         MINT::AIO.first(:name=>highlighted_cio.name).process_event("defocus")
+          # old focus
    #      puts "unhighlight:"+highlighted_cio.name
          # @highlighted_cio.update(:state=>"calculated") # old focus
        end
@@ -31,6 +33,7 @@ module CUIControl
        if (found.first)
          highlighted_cio = MINT::CIO.first(:name=>found.first.name)
          highlighted_cio.process_event("highlight")
+         MINT::AIO.first(:name=>highlighted_cio.name).process_event("focus")
   #       puts "highlighted:"+highlighted_cio.name
        else
     #     puts "no highlight"

@@ -1,0 +1,15 @@
+<mapping name="Performance Mapping" xmlns="http://www.multi-access.de"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+
+  <operator type="sequential"  id="33113" >
+    <observations>
+      <observation id="111" interactor="Interactor.InteractorTest" name="test" states="organized" result="p" process="onchange"/>
+      <observation id="5" interactor="Interactor.PerformanceCounter" state="initialized" result="counter" process="instant"/>
+    </observations>
+    <actions>
+      <event id="6" type="finished" target="counter"/>
+    </actions>
+  </operator>
+</mapping>
+

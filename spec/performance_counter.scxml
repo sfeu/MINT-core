@@ -1,0 +1,9 @@
+<scxml initial="initialized" name="PerformanceCounter" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=630.0 h=510.0  -->
+ <state id="initialized"><!--   node-size-and-position x=10.0 y=40.0 w=80.0 h=30.0  -->
+  <transition cond="counter &lt; (amount-1)" event="finished">
+   <invoke src="inc_counter" type="x-mint"></invoke>
+  </transition>
+  <transition cond="counter == (amount-1)" event="finished" target="finished"></transition>
+ </state>
+ <state id="finished"><!--   node-size-and-position x=30.0 y=140.0 w=100.0 h=40.0  --></state>
+</scxml>

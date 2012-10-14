@@ -14,7 +14,7 @@ module MINT
       redis.pubsub.psubscribe(subscription) { |key,message|
 
        # if (key.eql? subscription)
-          data = JSON.parse message
+          data = MultiJson.decode message
 
           if data["cmd"].eql? "pointer"
             x,y = data["data"]

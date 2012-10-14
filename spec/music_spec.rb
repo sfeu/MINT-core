@@ -9,9 +9,9 @@ describe 'AUI' do
         MINT::AIContainer.create(:name=>"interactive_sheet", :children => "sheets|option")
         MINT::AIContainer.create(:name=>"sheets", :children => "", :parent => "interactive_sheet")
         MINT::AISingleChoice.create(:name=>"option", :children => "nodding|tilting|turning", :parent => "interactive_sheet")
-        MINT::AISingleChoiceElement.create(:name=>"nodding",:label=>"Nodding", :parent => "option")
-        MINT::AISingleChoiceElement.create(:name=>"tilting",:label=>"Tilting", :parent => "option")
-        MINT::AISingleChoiceElement.create(:name=>"turning",:label=>"Turning", :parent => "option")
+        MINT::AISingleChoiceElement.create(:name=>"nodding",:text=>"Nodding", :parent => "option")
+        MINT::AISingleChoiceElement.create(:name=>"tilting",:text=>"Tilting", :parent => "option")
+        MINT::AISingleChoiceElement.create(:name=>"turning",:text=>"Turning", :parent => "option")
       end
 
       def self.create_structure_CUI

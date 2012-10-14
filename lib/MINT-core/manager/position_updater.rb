@@ -6,7 +6,6 @@ require "MINT-scxml"
 
 require 'redis'
 require 'hiredis'
-require 'json'
 
 class PositionUpdater
 
@@ -17,7 +16,7 @@ class PositionUpdater
       redis = EventMachine::Hiredis.connect
 
       redis.pubsub.psubscribe("in_channel:Interactor.CIO.coordinates.*") { |key, message|
-        found=JSON.parse message
+        found=MultiJson.decode message
         cio = CIO.get "cui-gfx",found['name']
         #cio.x =found['x']
         #cio.y = found['y']

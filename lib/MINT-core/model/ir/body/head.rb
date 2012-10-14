@@ -68,7 +68,7 @@ module MINT
                   @head.process_event "head_move"
                   @head.attribute_set(:head_angle,@head_angle)
                   @channel_name =  @head.create_attribute_channel_name("head_angle")
-                  RedisConnector.redis.publish @channel_name,{:name=>@head.name,:head_angle => @head_angle}.to_json
+                  RedisConnector.redis.publish @channel_name,MultiJson.encode({:name=>@head.name,:head_angle => @head_angle})
                 end
               end
             when "FaceMove"
@@ -81,8 +81,8 @@ module MINT
                   @head.attribute_set(:nose_x,@nose_x)
                   @head.attribute_set(:nose_y,@nose_y)
                   @channel_name =  @head.create_attribute_channel_name("nose")
-                  RedisConnector.redis.publish @channel_name,{:name=>@head.name,:x => @nose_x,:y =>@nose_y}.to_json
-                  RedisConnector.redis.publish("out_channel:#{@head.create_channel_w_name}:testuser",{:name=>@head.name,:x => @nose_x,:y =>@nose_y}.to_json)
+                  RedisConnector.redis.publish @channel_name,MultiJson.encode({:name=>@head.name,:x => @nose_x,:y =>@nose_y})
+                  RedisConnector.redis.publish("out_channel:#{@head.create_channel_w_name}:testuser",MultiJson.encode({:name=>@head.name,:x => @nose_x,:y =>@nose_y}))
                 end
               end
             when 'Leave'

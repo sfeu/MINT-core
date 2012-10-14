@@ -62,14 +62,14 @@ class BindAction < Action
     redis.pubsub.subscribe(channelIn) { |message|
 
 
-      found=JSON.parse message
+      found=MultiJson.decode message
 
       if nameIn.eql? found['name']
 
         if found.has_key? @action[:attrIn]
           result =  found[@action[:attrIn]]
           result = @action[:transform].call result if @action[:transform]
-          redis.publish channelOut, {:name=>@action[:nameOut], @action[:attrOut] => result}.to_json
+          redis.publish channelOut, MultiJson.encode({:name=>@action[:nameOut], @action[:attrOut] => result})
 
         end
 

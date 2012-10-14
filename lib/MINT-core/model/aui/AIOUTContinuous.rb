@@ -34,7 +34,7 @@ module MINT
       fiber = Fiber.current
 
       redis.pubsub.subscribe(channel_name) { |message|
-        found=JSON.parse message
+        found=MultiJson.decode message
 
         if self.name.eql? found['name']
           if found['data']

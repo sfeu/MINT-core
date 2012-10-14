@@ -14,7 +14,7 @@ module MINT
       RedisConnector.sub.psubscribe(subscription) # TODO all users
       RedisConnector.sub.on(:pmessage) { |key, channel, message|
         if (key.eql? subscription)
-          x,y = JSON.parse message
+          x,y = MultiJson.decode message
           cache_coordinates x,y
           process_event("move") if not is_in? :moving
           restart_timeout

@@ -8,7 +8,7 @@ class NegationObservation < Observation
     e_states= e.states.map &:to_s
     if e
       if ((e_states & states).length == 0) and ((e.abstract_states.split('|') & states).length == 0)
-        cb.call element, true, result(JSON.parse e.to_json(:only => e.class::PUBLISH_ATTRIBUTES)),id
+        cb.call element, true, result(MultiJson.decode e.to_json(:only => e.class::PUBLISH_ATTRIBUTES)),id
         return true
       end
     end
@@ -32,7 +32,7 @@ class NegationObservation < Observation
     redis = RedisConnector.redis
     @proc_observation = Proc.new { |key,message|
       if @should_listen
-        found=JSON.parse message
+        found=MultiJson.decode message
 
         if name.nil? or name.eql? found["name"]
 

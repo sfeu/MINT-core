@@ -39,7 +39,7 @@ module MINT
           end
 
           attribute_set(:data,message.to_i)
-          RedisConnector.redis.publish channel_name,{:name=>self.name,:data => data}.to_json
+          RedisConnector.redis.publish channel_name,MultiJson.encode({:name=>self.name,:data => data})
         end
 
       }.callback {  fiber.resume}

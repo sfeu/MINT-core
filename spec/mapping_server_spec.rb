@@ -37,7 +37,7 @@ class FakeMappingServerClient < EventMachine::Connection
       d = rd.split("%")
       if d.length ==3
         if d[1].eql?  @mapping_name and (d[0].eql? "INFO" or d[0].eql? @detail_level)
-          JSON.parse(d[2]).should == @expected_data.shift
+          MultiJson.decode(d[2]).should == @expected_data.shift
 
           EM::stop if @expected_data.length == 0
         end
@@ -133,7 +133,7 @@ describe "Mapping server" do
       socket = EM.connect('0.0.0.0', 12345, FakeMappingServerClient  )
       socket.set_expectations("Mouse Interactor Highlighting","INFO",[{"id"=>"33113", "mapping_state"=>"loaded"},
                                                                         {"id"=>"33113", "mapping_state"=>"started"},
-                                                                        {"id"=>"33113", "mapping_state"=>"succeeded"},
+                                                                        {"id"=>"33113", "mapping_state"=>"succeeded", "name"=>"mouse"},
                                                                         {"id"=>"33113", "mapping_state"=>"restarted"}])
       m = server.manager
 

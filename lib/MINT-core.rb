@@ -18,6 +18,9 @@ require 'dm-types'
 require "MINT-scxml"
 require "eventmachine"
 require 'em-hiredis'
+require 'multi_json'
+require 'oj'
+MultiJson.engine = :oj
 
 require "MINT-core/connector/redis_connector"
 require "MINT-core/agent/agent"

@@ -91,11 +91,11 @@ class Observation
 
     if r.length > 0
       if r.length ==1
-        cb.call element, true, result(JSON.parse r[0].to_json(:only => r[0].class::PUBLISH_ATTRIBUTES)),id
+        cb.call element, true, result(MultiJson.decode r[0].to_json(:only => r[0].class::PUBLISH_ATTRIBUTES)),id
       else
         res = []
         r.each do |e|
-          res << JSON.parse(e.to_json(:only => e.class::PUBLISH_ATTRIBUTES))
+          res << MultiJson.decode(e.to_json(:only => e.class::PUBLISH_ATTRIBUTES))
         end
 
         cb.call element, true, result(res),id
@@ -135,8 +135,7 @@ class Observation
 
     @proc_observation = Proc.new { |key, message|
       if @should_listen
-        found=JSON.parse message
-
+        found=MultiJson.decode message
         if name.nil? or name.eql? found["name"]
           if found.has_key? "new_states"
             if (found["new_states"] & states).length>0 # checks if both arrays share at least one element

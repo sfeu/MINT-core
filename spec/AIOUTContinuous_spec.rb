@@ -51,19 +51,20 @@ describe 'AUI' do
     it 'should transform to progressing and regressing state and consume value' do
       connect true  do |redis|
         test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" , [ "initialized", "organized",  ["presenting", "f", "p", "defocused", "waiting"],"focused",["moving", "progressing"],"regressing"] do
-          Fiber.new{
-          MINT::AIOUTContinuous.new(:name=>"a").save
-          @a = MINT::AIOUTContinuous.first
+          Fiber.new {
+            MINT::AIOUTContinuous.new(:name=>"a").save
+            @a = MINT::AIOUTContinuous.first
 
-          @a.process_event(:organize).should ==[:organized]
+            @a.process_event(:organize).should ==[:organized]
 
-          @a.process_event(:present).should ==[:defocused, :waiting]
-          @a.process_event(:focus).should ==[:focused, :waiting]
+            @a.process_event(:present).should ==[:defocused, :waiting]
+            @a.process_event(:focus).should ==[:focused, :waiting]
 
-          channel_name = @a.create_attribute_channel_name('data')
+            channel_name = @a.create_attribute_channel_name('data')
 
-          redis.publish(channel_name,{:data=>10,:name=>"a"}.to_json)
-          redis.publish(channel_name,{:data=>5,:name=>"a"}.to_json)
+            redis.publish(channel_name,MultiJson.encode({:data=>10,:name=>"a"}))
+            redis.publish(channel_name,MultiJson.encode({:data=>5,:name=>"a"}))
+
           }.resume
         end
       end

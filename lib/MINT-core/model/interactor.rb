@@ -93,7 +93,7 @@ module MINT
       RedisConnector.sub.subscribe("#{self.create_channel_name}")
 
       RedisConnector.sub.on(:message) { |channel, message|
-        found=JSON.parse message
+        found=MultiJson.decode message
         puts query.inspect
         query.keys.each do |k|
           if found[k.to_s]

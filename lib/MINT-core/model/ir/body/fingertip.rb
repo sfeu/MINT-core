@@ -81,7 +81,7 @@ module MINT
     redis.pubsub.subscribe("ss:event") { |message|
 
       # if (key.eql? subscription)
-      data = JSON.parse message
+      data = MultiJson.decode message
 
       if data["e"].eql? "touches"
         touches = data["p"][0]

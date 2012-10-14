@@ -6,55 +6,55 @@ def create_scenario
 
   @aui = MINT::AIContainer.create(:name=>"RecipeFinder",
                             :children => "RecipeFinder_label|RecipeFinder_description|RecipeFilter|RecipeSelection")
-  MINT::AIReference.create(:name=>"RecipeFinder_label",:parent =>"RecipeFinder",:label=>"Willkommen")
+  MINT::AIReference.create(:name=>"RecipeFinder_label",:parent =>"RecipeFinder",:text=>"Willkommen")
   MINT::AIContext.create(:name=>"RecipeFinder_description",:parent =>"RecipeFinder",:text=>"Willkommen beim 4 Sterne Koch Assistenten.")
   MINT::AIContainer.create(:name=>"RecipeFilter",:parent =>"RecipeFinder",
                      :children => "RecipeFilter_label|RecipeFilter_description|RecipeCuisine|RecipeCategory|RecipeCalories")
-  MINT::AIReference.create(:name=>"RecipeFilter_label",:parent =>"RecipeFilter",:label=>"Suchkriterien")
+  MINT::AIReference.create(:name=>"RecipeFilter_label",:parent =>"RecipeFilter",:text=>"Suchkriterien")
   MINT::AIContext.create(:name=>"RecipeFilter_description",:parent =>"RecipeFilter",:text=>"In diesem Feld koennen Sie mit genauen Angaben zu Ihrem Gericht-Wunsch die Suche nach Ihrem Rezeptvorschlag eingrenzen.")
   MINT::AIContainer.create(:name=>"RecipeCuisine",:parent =>"RecipeFilter",
                      :children => "RecipeCuisine_label|RecipeCuisine_description|RecipeCuisine_choice")
-  MINT::AIReference.create(:name=>"RecipeCuisine_label",:parent =>"RecipeCuisine",:label=>"Nationale Kueche")
+  MINT::AIReference.create(:name=>"RecipeCuisine_label",:parent =>"RecipeCuisine",:text=>"Nationale Kueche")
   MINT::AIContext.create(:name=>"RecipeCuisine_description",:parent =>"RecipeCuisine",:text=>"Welche nationale Kueche waehlen Sie? ")
   MINT::AIMultiChoice.create(:name=>"RecipeCuisine_choice",:parent =>"RecipeCuisine",
                        :children => "French|German|Italian|Chinese")
-  MINT::AIChoiceElement.create(:name => "French", :parent =>"RecipeCuisine_choice",:label =>"Franzoesisch")
-  MINT::AIChoiceElement.create(:name => "German",:parent =>"RecipeCuisine_choice",:label =>"Deutsch")
-  MINT::AIChoiceElement.create(:name => "Italian",:parent =>"RecipeCuisine_choice",:label =>"Italienisch")
-  MINT::AIChoiceElement.create(:name => "Chinese",:parent =>"RecipeCuisine_choice",:label =>"Chinesisch")
+  MINT::AIChoiceElement.create(:name => "French", :parent =>"RecipeCuisine_choice",:text =>"Franzoesisch")
+  MINT::AIChoiceElement.create(:name => "German",:parent =>"RecipeCuisine_choice",:text =>"Deutsch")
+  MINT::AIChoiceElement.create(:name => "Italian",:parent =>"RecipeCuisine_choice",:text =>"Italienisch")
+  MINT::AIChoiceElement.create(:name => "Chinese",:parent =>"RecipeCuisine_choice",:text =>"Chinesisch")
 
   MINT::AIContainer.create(:name=>"RecipeCategory",:parent =>"RecipeFilter",
                      :children => "RecipeCategory_label|RecipeCategory_description|RecipeCategory_choice")
-  MINT::AIReference.create(:name=>"RecipeCategory_label",:parent =>"RecipeCategory",:label=>"Menueart ")
+  MINT::AIReference.create(:name=>"RecipeCategory_label",:parent =>"RecipeCategory",:text=>"Menueart ")
   MINT::AIContext.create(:name=>"RecipeCategory_description",:parent =>"RecipeCategory",:text=>" Welche Menueart moechten Sie kochen? ")
   MINT::AIMultiChoice.create(:name=>"RecipeCategory_choice",:parent =>"RecipeCategory",
                        :children => "Main|Pastry|Dessert|Starter")
-  MINT::AIChoiceElement.create(:name => "Main", :parent =>"RecipeCategory_choice",:label =>"Hauptgericht")
-  MINT::AIChoiceElement.create(:name => "Pastry",:parent =>"RecipeCategory_choice",:label =>"Gebaeck")
-  MINT::AIChoiceElement.create(:name => "Dessert",:parent =>"RecipeCategory_choice",:label =>"Nachtisch")
-  MINT::AIChoiceElement.create(:name => "Starter",:parent =>"RecipeCategory_choice",:label =>"Vorspeise")
+  MINT::AIChoiceElement.create(:name => "Main", :parent =>"RecipeCategory_choice",:text =>"Hauptgericht")
+  MINT::AIChoiceElement.create(:name => "Pastry",:parent =>"RecipeCategory_choice",:text =>"Gebaeck")
+  MINT::AIChoiceElement.create(:name => "Dessert",:parent =>"RecipeCategory_choice",:text =>"Nachtisch")
+  MINT::AIChoiceElement.create(:name => "Starter",:parent =>"RecipeCategory_choice",:text =>"Vorspeise")
 
   MINT::AIContainer.create(:name=>"RecipeCalories",:parent =>"RecipeFilter",
                      :children => "RecipeCalories_label|RecipeCalories_description|RecipeCalories_choice")
-  MINT::AIReference.create(:name=>"RecipeCalories_label",:parent =>"RecipeCalories",:label=>"gesundheitsbewusst ")
+  MINT::AIReference.create(:name=>"RecipeCalories_label",:parent =>"RecipeCalories",:text=>"gesundheitsbewusst ")
   MINT::AIContext.create(:name=>"RecipeCalories_description",:parent =>"RecipeCalories",:text=>" Wollen Sie gesundheitsbewusst kochen? ")
   MINT::AISingleChoice.create(:name=>"RecipeCalories_choice",:parent =>"RecipeCalories",
                         :children => "Diet|LowFat|NotRelevant")
-  MINT::AIChoiceElement.create(:name => "Diet", :label =>"Hauptgericht",:parent =>"RecipeCalories_choice")
-  MINT::AIChoiceElement.create(:name => "LowFat",:label =>"Gebaeck",:parent =>"RecipeCalories_choice")
-  MINT::AIChoiceElement.create(:name => "NotRelevant",:label =>"Nachtisch",:parent =>"RecipeCalories_choice")
+  MINT::AIChoiceElement.create(:name => "Diet", :text =>"Hauptgericht",:parent =>"RecipeCalories_choice")
+  MINT::AIChoiceElement.create(:name => "LowFat",:text =>"Gebaeck",:parent =>"RecipeCalories_choice")
+  MINT::AIChoiceElement.create(:name => "NotRelevant",:text =>"Nachtisch",:parent =>"RecipeCalories_choice")
 
 
   MINT::AIContainer.create(:name =>"RecipeSelection",:parent =>"RecipeFinder",
                      :children => "RecipeSelection_label|RecipeSelection_description|FoundRecipes|Start")
-  MINT::AIReference.create(:name=>"RecipeSelection_label",:label=>"Rezeptdetails",:parent =>"RecipeSelection")
+  MINT::AIReference.create(:name=>"RecipeSelection_label",:text=>"Rezeptdetails",:parent =>"RecipeSelection")
   MINT::AIContext.create(:name=>"RecipeSelection_description",:parent =>"RecipeSelection",:text=>"Hier werden Ihre Rezeptvorschlaege mit den Details angezeigt und Sie koennen bestimmen, fuer wieviele Personen das Rezept berechnet werden soll.")
   MINT::AISingleChoice.create(:name=>"FoundRecipes",:parent =>"RecipeSelection",
                         :children => "Schweinebraten|Lammkotletts|Spagetti")
-  MINT::AIChoiceElement.create(:name => "Schweinebraten", :label =>"Schweinebraten",:parent =>"FoundRecipes")
-  MINT::AIChoiceElement.create(:name => "Lammkotletts",:label =>"Lammkotletts",:parent =>"FoundRecipes")
-  MINT::AIChoiceElement.create(:name => "Spagetti",:label =>"Spagetti",:parent =>"FoundRecipes")
-  MINT::AICommand.create(:name=>"Start",:label=>"Kochassistent starten",:parent =>"RecipeSelection")
+  MINT::AIChoiceElement.create(:name => "Schweinebraten", :text =>"Schweinebraten",:parent =>"FoundRecipes")
+  MINT::AIChoiceElement.create(:name => "Lammkotletts",:text =>"Lammkotletts",:parent =>"FoundRecipes")
+  MINT::AIChoiceElement.create(:name => "Spagetti",:text =>"Spagetti",:parent =>"FoundRecipes")
+  MINT::AICommand.create(:name=>"Start",:text=>"Kochassistent starten",:parent =>"RecipeSelection")
 
 end
 
@@ -125,7 +125,7 @@ describe 'AUI-Agent' do
       connect do |redis|
         MINT::AIContainer.create(:name=>"RecipeFinder",
                            :children => "RecipeFinder_label")
-        MINT::AIReference.create(:name=>"RecipeFinder_label",:parent =>"RecipeFinder",:label=>"Willkommen")
+        MINT::AIReference.create(:name=>"RecipeFinder_label",:parent =>"RecipeFinder",:text=>"Willkommen")
 
         MINT::AIO.first(:name=>"RecipeFinder_label").parent.name.should == "RecipeFinder"
       end

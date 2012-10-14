@@ -47,7 +47,7 @@ describe "Complementary mapping" do
         redis.pubsub.subscribe("ss:channels") { |message|
 
           if channel.eql? 'ss:channels'
-            r = JSON.parse msg
+            r = MultiJson.decode msg
 
             r["params"]["data"].should== 20
 

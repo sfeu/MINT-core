@@ -1,8 +1,8 @@
 module StatemachineHelper
   def test_state_flow(redis, channel, expected_states, &blk)
     redis.pubsub.subscribe(channel) { |message|
-      p [:message, channel, message]
-      m = JSON.parse message
+      # p [:message, channel, message]
+      m = MultiJson.decode message
       r = expected_states.shift
       r = r.lines.to_a if r.is_a? String
       m["new_states"].should == r
@@ -18,9 +18,9 @@ module StatemachineHelper
 
   def test_state_flow_w_name(redis, channel, name, expected_states, cb,  &blk)
     redis.pubsub.subscribe(channel) { |message|
-      m = JSON.parse message
+      m = MultiJson.decode message
       if m["name"].eql? name
-        p [:message, channel, message]
+        #p [:message, channel, message]
         r = expected_states.shift
         r = r.lines.to_a if r.is_a? String
         m["new_states"].should == r
@@ -33,7 +33,7 @@ module StatemachineHelper
       end
     }.callback {blk.call}
 
-    EM.add_timer(3) {
+    EM.add_timer(60) {
       raise "failed to wait for state change to >>#{expected_states.first}<<, which not occurred during the last 3 seconds"
       done # EM.stop
 
@@ -71,7 +71,7 @@ module StatemachineHelper
 
     end_reached = publish_data.length
     publish_data.each_with_index do |data,i|
-      redis.publish(channel,data.to_json).callback { |c|
+      redis.publish(channel,MultiJson.encode(data.to_json)).callback { |c|
         #interactor.method(attribute).call.should == value[i]
         done if end_reached == i
       }

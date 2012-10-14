@@ -3,7 +3,6 @@ require 'rubygems'
 require "bundler/setup"
 require "MINT-core"
 require "MINT-scxml"
-require 'json'
 
 class SCXMLServer
   attr_accessor :connections
@@ -25,7 +24,7 @@ class SCXMLServer
 
       redis.pubsub.psubscribe(@interactor) { |key, message|
 
-        found=JSON.parse message
+        found=MultiJson.decode message
         if @name.nil? or @name.eql? found["name"]
           if found.has_key? "new_states"
             # send new state

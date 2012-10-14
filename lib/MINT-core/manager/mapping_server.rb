@@ -3,7 +3,6 @@ require 'rubygems'
 require "bundler/setup"
 require "MINT-core"
 require "MINT-scxml"
-require 'json'
 
 class MappingServer
   attr_accessor :connections
@@ -38,7 +37,7 @@ class MappingServer
           end
         end
       end
-      json_data = (@mapping_store[mapping]!=nil)?data.merge(@mapping_store[mapping]).to_json :  data.to_json
+      json_data = (@mapping_store[mapping]!=nil)?MultiJson.encode(data.merge(@mapping_store[mapping])) :  MultiJson.encode(data)
       if data[:mapping_state] and data[:mapping_state] == :succeeded
         send_data("INFO%"+mapping+"%"+json_data+"\r\n")
         p "sent: INFO%"+mapping+"%"+json_data

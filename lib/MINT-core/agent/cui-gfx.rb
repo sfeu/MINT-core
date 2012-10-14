@@ -129,7 +129,7 @@ class LayoutAgent < MINT::Agent
 
       Redis.new.subscribe("juggernaut") do |on|
         on.message do |c,msg|
-          r = JSON.parse(msg)
+          r = MultiJson.decode msg
           if (r["channels"].include? "pointer")
             if /POS/.match(r["data"])
               z,x,y = /POS-(\d+),(\d+)/.match(r["data"]).to_a.map &:to_i

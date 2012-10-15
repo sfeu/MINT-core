@@ -15,7 +15,7 @@ share_examples_for 'An AIO interactor' do
 
   it 'should publish initialize when created' do
     connect true  do |redis|
-      test_state_flow redis,@interactor_class.create_channel_name ,%w(initialized) do
+      test_state_flow redis,@interactor_class.create_channel_name+".test" ,%w(initialized) do
         @interactor_class.create(:name => "test")
       end
     end

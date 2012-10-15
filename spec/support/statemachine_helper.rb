@@ -17,7 +17,7 @@ module StatemachineHelper
   end
 
   def test_state_flow_w_name(redis, channel, name, expected_states, cb,  &blk)
-    redis.pubsub.subscribe(channel) { |message|
+    redis.pubsub.subscribe(channel+".#{name}") { |message|
       m = MultiJson.decode message
       if m["name"].eql? name
         #p [:message, channel, message]

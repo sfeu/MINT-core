@@ -30,7 +30,7 @@ describe 'CUI' do
 
         DataMapper.finalize
 
-        test_state_flow redis,"Interactor.CIO.Button" ,%w(initialized) do
+        test_state_flow redis,"Interactor.CIO.Button.test" ,%w(initialized) do
 
           MINT::Button.create(:name => "test")
 
@@ -49,7 +49,7 @@ describe 'CUI' do
         m = parser.build_from_scxml File.dirname(__FILE__)+"/../lib/MINT-core/model/mim/aio_focus_to_cio_highlight.xml"
         m.start
 
-        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "b", "displaying", "d", "released", "init_js"] ,"displayed","highlighted"] do
+        test_state_flow redis,"Interactor.CIO.Button.reset" ,[["p", "b", "displaying", "d", "released", "init_js"] ,"displayed","highlighted"] do
           MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
           c = MINT::AICommand.create(:name=>"reset", :states=>[:organized])
           c.process_event :present
@@ -78,7 +78,7 @@ describe 'CUI' do
         m.start
 
 
-        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "b", "displaying", "d", "released", "init_js"],"displayed","highlighted","pressed","released"] do
+        test_state_flow redis,"Interactor.CIO.Button.reset" ,[["p", "b", "displaying", "d", "released", "init_js"],"displayed","highlighted","pressed","released"] do
           MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
           c = MINT::AICommand.create(:name=>"reset", :states=>[:organized])
           c.process_event :present
@@ -97,7 +97,7 @@ describe 'CUI' do
 
         DataMapper.finalize
 
-        test_state_flow redis,"Interactor.CIO.Button" ,[["p", "b", "displaying", "d", "released", "init_js"],"displayed","highlighted"] do
+        test_state_flow redis,"Interactor.CIO.Button.reset" ,[["p", "b", "displaying", "d", "released", "init_js"],"displayed","highlighted"] do
 
           b = MINT::Button.create(:name=>"reset",:height =>60, :width => 200, :x=>380, :y => 150, :states=>[:positioned], :highlightable =>true)
           b.process_event :display

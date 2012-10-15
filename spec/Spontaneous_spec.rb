@@ -40,7 +40,7 @@ describe 'Spontaneous' do
     it 'should do the spontaneous transition to positioned and publish passing of positioning state ' do
       connect true do |redis|
 
-        test_state_flow redis,"Interactor.Spontaneous" ,["initialized",["superstate", "positioning"],"positioned"] do
+        test_state_flow redis,"Interactor.Spontaneous.test" ,["initialized",["superstate", "positioning"],"positioned"] do
 
           @a = Spontaneous.create(:name => "test")
           @a.process_event(:position)

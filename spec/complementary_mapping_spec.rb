@@ -74,8 +74,8 @@ describe "Complementary mapping" do
 
         }
 
-        test_state_flow redis,"Interactor.AIO.AIIN.AIINContinuous",["initialized","organized",["presenting", "defocused"],["focused", "waiting"],["moving","progressing"]] do
-          Fiber.new{
+        test_state_flow redis,"Interactor.AIO.AIIN.AIINContinuous.slider",["initialized","organized",["presenting", "defocused"],["focused", "waiting"],["moving","progressing"]] do
+          Fiber.new {
             # setup a waiting volume and slider interactor
             volume = MINT::AIOUTContinuous.create(:name=>"volume")
             volume.process_event(:organize).should ==[:organized]

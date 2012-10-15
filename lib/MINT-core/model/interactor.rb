@@ -73,7 +73,7 @@ module MINT
       attribute_set(:new_states, states.join('|'))
       attribute_set(:states, atomic_states.join('|'))
 
-      RedisConnector.redis.publish self.class.create_channel_name, self.to_json(:only => self.class::PUBLISH_ATTRIBUTES)
+      RedisConnector.redis.publish self.create_channel_w_name, self.to_json(:only => self.class::PUBLISH_ATTRIBUTES)
 
       attribute_set(:abstract_states, as_copy)
       attribute_set(:new_states, new_copy)

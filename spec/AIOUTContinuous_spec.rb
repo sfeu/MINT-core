@@ -23,7 +23,7 @@ describe 'AUI' do
     it 'should initialize with initiated' do
 
       connect true do |redis|
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized)  do
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous.a" ,%w(initialized)  do
 
           MINT::AIOUTContinuous.new(:name=>"a").save
           @a = MINT::AIOUTContinuous.first
@@ -36,7 +36,7 @@ describe 'AUI' do
 
     it 'should transform to organizing state ' do
       connect  true do |redis|
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" ,%w(initialized organized)   do
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous.a" ,%w(initialized organized)   do
 
           MINT::AIOUTContinuous.new(:name=>"a").save
           @a = MINT::AIOUTContinuous.first
@@ -50,7 +50,7 @@ describe 'AUI' do
 
     it 'should transform to progressing and regressing state and consume value' do
       connect true  do |redis|
-        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous" , [ "initialized", "organized",  ["presenting", "f", "p", "defocused", "waiting"],"focused",["moving", "progressing"],"regressing"] do
+        test_state_flow redis,"Interactor.AIO.AIOUT.AIOUTContinuous.a" , [ "initialized", "organized",  ["presenting", "f", "p", "defocused", "waiting"],"focused",["moving", "progressing"],"regressing"] do
           Fiber.new {
             MINT::AIOUTContinuous.new(:name=>"a").save
             @a = MINT::AIOUTContinuous.first

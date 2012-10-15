@@ -133,7 +133,7 @@ class Observation
       return self
     end
 
-    @proc_observation = Proc.new { |key, message|
+    @proc_observation_wo_name = Proc.new { |key, message|
       if @should_listen
         found=MultiJson.decode message
         if name.nil? or name.eql? found["name"]
@@ -149,6 +149,22 @@ class Observation
         end
       end
     }
+
+    @proc_observation = Proc.new { |message|
+          if @should_listen
+            found=MultiJson.decode message
+              if found.has_key? "new_states"
+                if (found["new_states"] & states).length>0 # checks if both arrays share at least one element
+                  cb.call element, true , result(found),id
+                else
+                  if (found["states"] & states).length == 0
+                    cb.call element, false, {},id
+                  end
+                end
+              end
+          end
+        }
+
     res = false
 
     res = check_true_at_startup(cb) if is_continuous? or is_instant?
@@ -162,10 +178,18 @@ class Observation
       @should_listen = true
       redis = RedisConnector.redis
 
-      redis.pubsub.psubscribe("#{element}*",@proc_observation).callback { |count|
-        @cb_observation_has_subscribed = true
-        call_subscribed_callbacks
-      }
+      if (name)
+        redis.pubsub.subscribe("#{element}.#{name}",@proc_observation).callback { |count|
+          @cb_observation_has_subscribed = true
+          call_subscribed_callbacks
+        }
+      else
+        redis.pubsub.psubscribe("#{element}*",@proc_observation_wo_name).callback { |count|
+          @cb_observation_has_subscribed = true
+          call_subscribed_callbacks
+        }
+      end
+
     end
     self
   end

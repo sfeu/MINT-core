@@ -73,7 +73,7 @@ class Observation
     results = nil
     if (name)  # if a name is specified, query directly otherwise select by state and return the first one found
       results = []
-      r =model.first(:name=>name)
+      r =model.get(model.getModel,name)
       return false if r.nil? # handles the case that the named interactor does not exist!
       results << r
     else

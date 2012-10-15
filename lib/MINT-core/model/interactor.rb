@@ -6,15 +6,16 @@ module MINT
   class Interactor
     include DataMapper::Resource
 
-    def getModel
+    def self.getModel
       "core"
     end
+
 
     private
 
 
     property :classtype, Discriminator
-    property :mint_model, String, :default => lambda { |r,p| r.getModel}, :key=>true
+    property :mint_model, String, :default => lambda { |r,p| r.class.getModel}, :key=>true
 
     # Each abstract  {Interactor} needs to have a name that we will use as the primary key for each model.
     property :name, String, :key => true
@@ -81,7 +82,7 @@ module MINT
     end
 
     def sync_states()
-      values = RedisConnector.sync_redis.hmget "mint_interactors:#{getModel}#{name}","states","new_states","abstract_states"
+      values = RedisConnector.sync_redis.hmget "mint_interactors:#{self.class.getModel}#{name}","states","new_states","abstract_states"
 
       attribute_set(:abstract_states, values[2])
       attribute_set(:new_states, values[1])

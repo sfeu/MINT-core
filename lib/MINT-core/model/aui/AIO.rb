@@ -8,9 +8,10 @@ module MINT
     property :previous, String
     property :next, String
 
-    def getModel
+    def self.getModel
       "aui"
     end
+
 
     def getSCXML
       "#{File.dirname(__FILE__)}/aio.scxml"

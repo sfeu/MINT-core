@@ -3,7 +3,7 @@ module MINT
   class CIO < Interactor
     include Cassowary
 
-    def getModel
+    def self.getModel
       "cui-gfx"
     end
 
@@ -50,7 +50,7 @@ module MINT
     def left
       p = super
       if p
-        CIO.get(getModel,p)
+        CIO.get(CIO.getModel,p)
       else
         nil
       end
@@ -59,7 +59,7 @@ module MINT
     def right
       p = super
       if p
-        CIO.get(getModel,p)
+        CIO.get(CIO.getModel,p)
       else
         nil
       end
@@ -68,7 +68,7 @@ module MINT
     def up
       p = super
       if p
-        CIO.get(getModel,p)
+        CIO.get(CIO.getModel,p)
       else
         nil
       end
@@ -77,7 +77,7 @@ module MINT
     def down
       p = super
       if p
-        CIO.get(getModel,p)
+        CIO.get(CIO.getModel,p)
       else
         nil
       end

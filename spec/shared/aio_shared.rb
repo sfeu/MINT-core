@@ -30,7 +30,7 @@ share_examples_for 'An AIO interactor' do
   it 'should save with correct identifier' do
     @a = @interactor_class.create(:name => "test")
     redis = Redis.connect
-    r = redis.hgetall("mint_interactors:"+@a.getModel+"test")
+    r = redis.hgetall("mint_interactors:"+@interactor_class.getModel+"test")
     r['name'].should == "test"
   end
 
@@ -45,7 +45,7 @@ share_examples_for 'An AIO interactor' do
     @a = @interactor_class.create(:name => "test")
     @a.process_event(:organize).should == [:organized]
     @a.save
-    b =  @interactor_class.first(:mint_model =>@a.getModel, :name => "test")
+    b =  @interactor_class.first(:mint_model =>@interactor_class.getModel, :name => "test")
     b.states.should == [:organized]
   end
 

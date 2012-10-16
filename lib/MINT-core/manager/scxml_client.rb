@@ -18,8 +18,26 @@ class SCXMLClient
   class StatefulProtocol < EventMachine::Connection
     include EM::Protocols::LineText2
 
+    @@host = nil
+    @@port = nil
+
     def initialize
+
+
       super()
+    end
+
+    def unbind
+      puts "#{@@host}: #{@@port}"
+       puts "-- disconnected from remote server!"
+       puts "-- attempting reconnection"
+       #reconnect @@ip, @@port # use reconnect, already provided by E
+      EventMachine.add_timer 15, proc { reconnect(@@host,@@port) }
+    end
+
+    def self.config(host,port)
+      @@host = host
+      @@port = port
     end
 
     def subscribe_redis(interactor,name)
@@ -80,7 +98,10 @@ class SCXMLClient
 
   def start(host="0.0.0.0",port=3003)
 
+    StatefulProtocol.config(host,port)
+
     socket = EM.connect(host, port, StatefulProtocol) do |conn|
+     # conn.config(host,port)
       conn.subscribe_redis(@interactor,@name)
 
       puts "SCXML client connection..."

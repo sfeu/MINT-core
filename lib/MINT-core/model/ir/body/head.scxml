@@ -22,14 +22,14 @@ consume_head_movement(false);
     <transition event="turn_mode" target="turning_detection"><!--   edge-path [turning_detection]  x=190.0 y=180.0  --></transition>
     <transition event="nodd_mode" target="nodding_detection"><!--   edge-path [nodding_detection]  x=600.0 y=100.0  --></transition>
     <state id="centered"><!--   node-size-and-position x=210.0 y=40.0 w=100.0 h=40.0  -->
-     <transition cond="@head_angle &gt; (Math::PI/2+@head_angle_threshold)" event="head_move" target="tilting_right"></transition>
-     <transition cond="@head_angle &lt; (Math::PI/2-@head_angle_threshold)" event="head_move" target="tilting_left"></transition>
+     <transition cond="@head_angle &gt; ((Math::PI/2)+0.4)" event="head_move" target="tilting_right"></transition>
+     <transition cond="@head_angle &lt; ((Math::PI/2)-0.4)" event="head_move" target="tilting_left"></transition>
     </state>
     <state id="tilting_right"><!--   node-size-and-position x=400.0 y=40.0 w=90.0 h=40.0  -->
-     <transition cond="@head_angle &lt; (Math::PI/2+@head_angle_threshold)" event="head_move" target="centered"><!--   edge-path [centered]  x=360.0 y=90.0  --></transition>
+     <transition cond="@head_angle &lt; ((Math::PI/2)+0.4)" event="head_move" target="centered"><!--   edge-path [centered]  x=360.0 y=90.0  --></transition>
     </state>
     <state id="tilting_left"><!--   node-size-and-position x=20.0 y=40.0 w=100.0 h=40.0  -->
-     <transition cond="@head_angle &gt; (Math::PI/2-@head_angle_threshold)" event="head_move" target="centered"><!--   edge-path [centered]  x=170.0 y=80.0 pointx=0.0 pointy=-20.0 offsetx=9.0 offsety=1.0  --></transition>
+     <transition cond="@head_angle &gt; ((Math::PI/2)-0.4)" event="head_move" target="centered"><!--   edge-path [centered]  x=170.0 y=80.0 pointx=0.0 pointy=-20.0 offsetx=9.0 offsety=1.0  --></transition>
     </state>
    </state>
    <state id="turning_detection" initial="looking_straight"><!--   node-size-and-position x=30.0 y=210.0 w=520.0 h=120.0  -->

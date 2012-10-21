@@ -50,6 +50,9 @@
   <transition event="display" target="displaying"><!--   edge-path [displaying]  x=410.0 y=240.0  --></transition>
  </state>
  <state id="refreshing"><!--   node-size-and-position x=780.0 y=440.0 w=70.0 h=50.0  -->
+  <onentry>
+   <invoke src="refresh_children" type="x-mint"></invoke>
+  </onentry>
   <transition target="displaying"></transition>
  </state>
 </scxml>

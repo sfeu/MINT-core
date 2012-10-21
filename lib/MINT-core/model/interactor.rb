@@ -10,6 +10,9 @@ module MINT
       "core"
     end
 
+    def self.get(name)
+        self.class.get(getModel,name)
+    end
 
     private
 

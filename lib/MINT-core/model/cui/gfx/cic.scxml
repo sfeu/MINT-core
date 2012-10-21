@@ -1,0 +1,57 @@
+<scxml initial="initialized" name="CIC" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=0.0 y=0.0 w=885.0 h=723.0  -->
+ <state id="initialized"><!--   node-size-and-position x=220.0 y=130.0 w=100.0 h=40.0  -->
+  <transition event="position" target="positioning"></transition>
+ </state>
+ <state id="positioning"><!--   node-size-and-position x=220.0 y=220.0 w=100.0 h=40.0  -->
+  <transition event="calculated" target="positioned">
+   <invoke src="store_calculated_values_in_model" type="x-mint"></invoke>
+  </transition>
+ </state>
+ <state id="positioned"><!--   node-size-and-position x=220.0 y=320.0 w=100.0 h=40.0  -->
+  <transition event="display" target="displaying"></transition>
+  <transition event="hide" target="hidden"></transition>
+ </state>
+ <state id="displaying" initial="init_js"><!--   node-size-and-position x=380.0 y=270.0 w=280.0 h=240.0  -->
+  <transition event="disable" target="disabled"></transition>
+  <transition event="hide" target="hidden"></transition>
+  <transition event="refresh" target="refreshing"></transition>
+  <state id="displayed"><!--   node-size-and-position x=90.0 y=100.0 w=100.0 h=30.0  -->
+   <transition event="highlight" target="highlighted"><!--   edge-path [highlighted]  x=80.0 y=160.0 pointx=0.0 pointy=18.0 offsetx=19.0 offsety=-14.0  --></transition>
+  </state>
+  <state id="highlighted"><!--   node-size-and-position x=90.0 y=190.0 w=100.0 h=30.0  -->
+   <transition event="unhighlight" target="displayed"><!--   edge-path [displayed]  x=180.0 y=160.0  --></transition>
+   <transition event="up" target="displayed">
+    <invoke src="highlight_up" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=220.0 y=200.0 x=220.0 y=120.0 pointx=0.0 pointy=-10.0 offsetx=0.0 offsety=5.0  --></transition>
+   <transition event="down" target="displayed">
+    <invoke src="highlight_down" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=50.0 y=200.0 x=50.0 y=120.0  --></transition>
+   <transition event="left" target="displayed">
+    <invoke src="highlight_left" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=20.0 y=210.0 x=20.0 y=110.0  --></transition>
+   <transition event="right" target="displayed">
+    <invoke src="highlight_right" type="x-mint"></invoke>
+<!--   edge-path [displayed]  x=260.0 y=210.0 x=260.0 y=110.0  --></transition>
+  </state>
+  <state id="init_js"><!--   node-size-and-position x=90.0 y=40.0 w=100.0 h=30.0  -->
+   <transition target="displayed"></transition>
+  </state>
+ </state>
+ <state id="disabled"><!--   node-size-and-position x=570.0 y=140.0 w=110.0 h=40.0  -->
+  <transition event="hide" target="hidden"></transition>
+ </state>
+ <state id="hidden"><!--   node-size-and-position x=400.0 y=140.0 w=110.0 h=40.0  -->
+  <transition event="position" target="positioning"></transition>
+  <transition event="display" target="displaying"><!--   edge-path [displaying]  x=410.0 y=240.0  --></transition>
+  <transition event="refresh" target="refreshing_while_hidden"><!--   edge-path [refreshing_while_hidden]  x=490.0 y=110.0 pointx=0.0 pointy=-39.0 offsetx=10.0 offsety=-15.0  --></transition>
+ </state>
+ <state id="refreshing"><!--   node-size-and-position x=720.0 y=350.0 w=100.0 h=50.0  -->
+  <onentry>
+   <invoke src="refresh_children" type="x-mint"></invoke>
+  </onentry>
+  <transition target="displaying"><!--   edge-path [displaying]  x=700.0 y=420.0  --></transition>
+ </state>
+ <state id="refreshing_while_hidden"><!--   node-size-and-position x=370.0 y=50.0 w=150.0 h=40.0  -->
+  <transition target="hidden"></transition>
+ </state>
+</scxml>

@@ -1,0 +1,12 @@
+<mapping name="BrowserScreen reload to CUIControl refresh all" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
+  <operator type="sequential" id="1">
+    <observations>
+      <observation id="2" interactor="Interactor.IR.IRMedia.Screen.BrowserScreen" states="reloaded"  process="onchange"/>
+    </observations>
+    <actions>
+      <backend id="2222" call="refresh_all" class="CUIControl" />
+    </actions>
+  </operator>
+</mapping>
+

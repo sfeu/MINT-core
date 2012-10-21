@@ -1,12 +1,11 @@
-<mapping name="BrowserScreen reload to CIO hidden refresh" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<mapping name="BrowserScreen reload to CUIControl refresh all" xmlns="http://www.multi-access.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.multi-access.de mint-mappings.xsd">
   <operator type="sequential" id="1">
     <observations>
       <observation id="2" interactor="Interactor.IR.IRMedia.Screen.BrowserScreen" states="reloaded"  process="onchange"/>
-      <observation id="5" interactor="Interactor.CIO" states="hidden" result="hidden_cios" process="instant"/>
     </observations>
     <actions>
-      <event id="6" type="refresh" target="hidden_cios"/>
+      <backend id="2222" call="refresh_all" class="CUIControl" />
     </actions>
   </operator>
 </mapping>

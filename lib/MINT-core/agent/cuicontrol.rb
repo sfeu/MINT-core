@@ -24,7 +24,7 @@ module CUIControl
 
        if (highlighted_cio)
          highlighted_cio.process_event("unhighlight")
-         MINT::AIO.first(:name=>highlighted_cio.name).process_event("defocus")
+         MINT::AIO.get(highlighted_cio.name).process_event("defocus")
           # old focus
    #      puts "unhighlight:"+highlighted_cio.name
          # @highlighted_cio.update(:state=>"calculated") # old focus
@@ -33,7 +33,7 @@ module CUIControl
        if (found.first)
          highlighted_cio = MINT::CIO.first(:name=>found.first.name)
          highlighted_cio.process_event("highlight")
-         MINT::AIO.first(:name=>highlighted_cio.name).process_event("focus")
+         MINT::AIO.get(highlighted_cio.name).process_event("focus")
   #       puts "highlighted:"+highlighted_cio.name
        else
     #     puts "no highlight"
@@ -43,6 +43,15 @@ module CUIControl
     return true
    end
 
+  def CUIControl.refresh_all
+     aics = AIO.all(:parent =>nil).map &:name
+     aics.each do |name|
+       cio = CIO.get(name)
+       p "refrehsing #{cio.name}"
+       cio.process_event :refresh
+     end
+   end
+
   def CUIControl.fill_active_cio_cache(result=nil)
     @active_cios = CIO.all.select{ |e| e.is_in?(:displaying) and e.highlightable}
     puts "CIO cache initialized with #{@active_cios.inspect} elements"
@@ -50,7 +59,7 @@ module CUIControl
 
   def CUIControl.add_to_cache(cio)
   if cio['highlightable'] and not @active_cios.index{|x|x.name==cio["name"]}
-     c =  CIO.get("cui-gfx",cio["name"])
+     c =  CIO.get(cio["name"])
      @active_cios << c
      puts "Added #{cio['name']} to CIO cache #{c.x}/#{c.y}"
 
@@ -61,7 +70,7 @@ module CUIControl
   def CUIControl.update_cache(cio)
     index = @active_cios.index{|x|x.name==cio["name"]}
     if index
-     c =  CIO.get("cui-gfx",cio["name"])
+     c =  CIO.get(cio["name"])
      @active_cios[index] = c
      puts "Updated#{cio['name']} to CIO cache #{c.x}/#{c.y} #{c.width}/#{c.height}"
 

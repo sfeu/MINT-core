@@ -3,6 +3,27 @@ module MINT
     property :rows, Integer
     property :cols, Integer
 
+    def getSCXML
+             "#{File.dirname(__FILE__)}/cic.scxml"
+       end
+    def getChildren
+      aio = getAIO()
+      children = aio.children.map &:name
+      cios = []
+      children.each do |name|
+        cios << CIO.get(CIO.getModel(),name)
+      end
+      cios
+    end
+
+    def refresh_children
+      p "i refresh children"
+      getChildren.each do |cio|
+        p "refreshing #{cio.name}"
+        cio.process_event :refresh
+      end
+    end
+
     def calculate_position(parent_cic,elements,solver,i,b,layer=0)
       p "container #{self.name} #{b}"
       aic = AIContainer.first(:name=>self.name)

@@ -47,6 +47,10 @@ module MINT
 
     PUBLISH_ATTRIBUTES += [:x,:y,:width,:height,:highlightable,:depends]
 
+    def getAIO
+      AIO.get(AIO.getModel(),name)
+    end
+
     def left
       p = super
       if p

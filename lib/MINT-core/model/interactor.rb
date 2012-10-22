@@ -10,8 +10,17 @@ module MINT
       "core"
     end
 
-    def self.get(name)
-        self.class.get(getModel,name)
+
+    class << self
+        alias get_dm get
+    end
+
+    def self.get(*name)
+        if name.length == 1
+          get_dm(getModel,name[0])
+        else
+          get_dm(*name)
+        end
     end
 
     private

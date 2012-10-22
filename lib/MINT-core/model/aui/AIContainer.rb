@@ -11,7 +11,7 @@ module MINT
         result=[]
         c = p.split("|")
         c.each  do |name|
-          result << AIO.get("aui",name)
+          result << AIO.get(name)
         end
         return result
       else

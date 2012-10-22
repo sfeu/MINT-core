@@ -126,6 +126,20 @@ include into file .gemrc in home folder
 
  sudo apt-get install libcassowary0
 
+== Windows Installation
+
+* Download and install node.js from http://nodejs.org
+
+* Download and install the unofficial redis windows version from http://redis.io/download
+
+* Download and install ruby 1.9.3 using the Ruby Installer from http://rubyinstaller.org/downloads/
+
+* Start 'Ruby Command prompt' from system menu
+
+* install bundler germ 'gem install bundler'
+
+   == 2. INSTALL MINT platform
+
 * create a directory inside your home folder and change into it
 
  mkdir rails-projects

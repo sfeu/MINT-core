@@ -9,7 +9,7 @@ require 'rubygems'
 require "bundler/setup"
 require 'statemachine'
 require "cassowary"
-require 'RMagick'
+#require 'RMagick'
 require 'drb/drb'
 require 'redis'
 require 'dm-core'

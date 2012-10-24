@@ -8,7 +8,7 @@ module CUIControl
     if (@cached_highlighted)
       check = MINT::CIO.get(@cached_highlighted)
       if (check.is_in? "highlighted")
-        retrun check
+        return check
       end
     end
 
@@ -52,7 +52,7 @@ module CUIControl
       end
 
       if (found.first)
-        highlighted_cio = MINT::CIO.first(:name=>found.first.name)
+        highlighted_cio = MINT::CIO.get(found.first.name)
         highlighted_cio.process_event("highlight")
         MINT::AIO.get(highlighted_cio.name).process_event("focus")
         #       puts "highlighted:"+highlighted_cio.name

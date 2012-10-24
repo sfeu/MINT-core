@@ -3,7 +3,7 @@ class NegationObservation < Observation
   def check_true_at_startup(cb)
     # check if observation is already true at startup
     model = MINT::Interactor.class_from_channel_name(element)
-    e = model.first(:name=>name)
+    e = model.get(name)
     p "Error interactor #{name} of class #{model} is not available!" if e.nil?
     e_states= e.states.map &:to_s
     if e

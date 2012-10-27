@@ -100,15 +100,18 @@ class SCXMLClient
 
     StatefulProtocol.config(host,port)
 
-    socket = EM.connect(host, port, StatefulProtocol) do |conn|
+    #socket = EM.connect(host, port, StatefulProtocol) do |conn|
+    EventMachine::start_server host, port, StatefulProtocol do |conn|
      # conn.config(host,port)
       conn.subscribe_redis(@interactor,@name)
+      #@connections << conn
 
-      puts "SCXML client connection..."
+      puts "SCXML Tool connection..."
 
       # inform about all currently activated states
       # @state_store[@interactor]
     end
+    puts "Started server on #{host}:#{port}"
   end
 
 end

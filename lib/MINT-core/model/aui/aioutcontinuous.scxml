@@ -55,6 +55,9 @@ inform_parent_presenting;
     </state>
    </state>
    <state id="waiting"><!--   node-size-and-position x=64.18937509355491 y=43.0 w=70.0 h=40.0  -->
+    <onentry>
+     <script>stop_timeout</script>
+    </onentry>
     <transition cond="@d&gt;@data" event="move" target="progressing"><!--   edge-path [progressing]  pointx=0.0 pointy=-30.0 offsetx=0.0 offsety=-18.0  --></transition>
     <transition cond="@d&lt;@data" event="move" target="regressing"><!--   edge-path [regressing]  x=186.0 y=65.0 x=196.0 y=335.0 pointx=-1.0 pointy=11.0 offsetx=46.0 offsety=1.0  --></transition>
    </state>

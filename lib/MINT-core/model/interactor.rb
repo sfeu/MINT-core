@@ -5,7 +5,7 @@ module MINT
   #
   class Interactor
     include DataMapper::Resource
-
+    include MINT::InteractorHelpers
     def self.getModel
       "core"
     end

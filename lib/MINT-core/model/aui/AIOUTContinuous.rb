@@ -42,6 +42,7 @@ module MINT
             @data = attribute_get(:data)
 
             process_event "move"
+            restart_timeout(1,:halt)
 
             attribute_set(:data,@d)
             RedisConnector.redis.publish("out_channel:#{create_channel_w_name}:testuser",@data)

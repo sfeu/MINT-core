@@ -25,6 +25,7 @@ require 'oj'
 require "MINT-core/connector/redis_connector"
 require "MINT-core/agent/agent"
 
+require "MINT-core/model/interactor_helpers"
 require "MINT-core/model/interactor"
 require "MINT-core/model/task"
 require "MINT-core/agent/auicontrol"

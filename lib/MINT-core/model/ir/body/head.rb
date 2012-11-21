@@ -15,8 +15,6 @@ module MINT
 
     def initialize(attributes = nil)
       super(attributes)
-
-      start
     end
 
     def start(host ="0.0.0.0", port=4242)

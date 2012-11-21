@@ -26,7 +26,7 @@ module StatemachineHelper
         m["new_states"].should == r
 
         if expected_states.length==0
-         # redis.pubsub.unsubscribe(channel)
+         redis.pubsub.unsubscribe(channel+".#{name}")
           cb.call
         end
 

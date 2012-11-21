@@ -50,9 +50,13 @@ describe 'In a sequential mapping' do
         done
       }
 
-      test_complex_state_flow_w_name redis,[["Interactor.CIO","c1" ,["refreshing",["displaying", "init_js"],"displayed"]],["Interactor.CIO","c2" ,["refreshing",["displaying", "init_js"],"displayed"]],["Interactor.CIO","c3" ,["hidden"]]],check_result do  |count|
+      test_complex_state_flow_w_name redis,[["Interactor.CIO","c1" ,["refreshing",["displaying", "init_js"],"displayed"]],["Interactor.CIO","c2" ,["refreshing",["displaying", "init_js"],"displayed"]],["Interactor.CIO","c3" ,["refreshing_while_hidden","hidden"]]],check_result do  |count|
         Fiber.new{
           b = MINT::BrowserScreen.create(:name=>'screen')
+          MINT::AIO.create(:name =>"c1", :states=>[:presenting])
+                    MINT::AIO.create(:name =>"c2", :states=>[:presenting])
+                    MINT::AIO.create(:name =>"c3", :states=>[:suspended])
+
           MINT::CIO.create(:name =>"c1", :states=>[:displayed])
           MINT::CIO.create(:name =>"c2", :states=>[:displayed])
           MINT::CIO.create(:name =>"c3", :states=>[:hidden])

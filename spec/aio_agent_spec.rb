@@ -150,16 +150,16 @@ describe 'AUI-Agent' do
         create_scenario
         AUIControl.organize(@aui)
         @aui.save!#.should==true
-        @aui.next.name.should=="RecipeFinder_label"
-        @aui.next.next.next.next.name.should=="RecipeFilter_label"
+        @aui.next.name.should=="RecipeFinder_description" # a label does forward the navigation
+        @aui.next.next.next.next.name.should=="RecipeCuisine"
 
 
         n = MINT::AIO.first(:name => "RecipeFinder")
         10.times {n=n.next}
-        n.name.should=="French"
+        n.name.should=="Chinese"
         12.times {n=n.next}
-        n.name.should=="RecipeCalories"
-        14.times {n=n.next}
+        n.name.should=="LowFat"
+        8.times {n=n.next}
         n.name.should=="Start"
       end      end
 
@@ -175,10 +175,10 @@ describe 'AUI-Agent' do
                    #n.name.should=="Start"
 
         10.times {n=n.previous}
-        n.name.should=="Diet"
+        n.name.should=="RecipeCalories_choice"
         4.times {n=n.previous}
-        n.name.should=="RecipeCalories"
-        22.times {n=n.previous}
+        n.name.should=="Dessert"
+        16.times {n=n.previous}
         n.name.should=="RecipeFinder"
       end      end
 

@@ -4,6 +4,10 @@ module CUIControl
   @active_cios = []
   @cached_highlighted = nil
 
+  def CUIControl.clearHighlighted
+    @cached_highlighted = nil
+
+  end
   def CUIControl.retrieveHighlighted
     if (@cached_highlighted)
       check = MINT::CIO.get(@cached_highlighted)

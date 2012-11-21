@@ -95,6 +95,7 @@ describe "Complementary mapping" do
       end
     end
     it "between Head angle and AIOUTContinuous with transformation should work correctly" do
+      pending "test not finished"
       connect true do |redis|
 
         # capture the result an the very end: the message from the volume interactor to move the progress bar
